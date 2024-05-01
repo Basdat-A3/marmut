@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Lagu</title>
+  </head>
+  <body>
+    <h1>Create Lagu</h1>
+
+    <h3 onclick="window.location.href='create_songs_artist.html';">
+      Logged in as: Artist
+    </h3>
+    <form action="/add_song" method="post">
+      <label for="song-album">Album: Album1</label>
+      <br /><br />
+
+      <label for="song-title">Judul Lagu:</label>
+      <input
+        type="text"
+        id="song-title"
+        name="song_title"
+        required
+      /><br /><br />
+
+      <label for="song-artist">Artis: Artis 1</label>
+      <br /><br />
+
+      <label for="song-writer">Songwriter:</label>
+      <select id="song-writer" name="song_writer" multiple required>
+        <option value="Songwriter1">Songwriter1</option>
+        <option value="Songwriter2">Songwriter2</option>
+        <option value="Songwriter2">Songwriter3</option></select
+      ><br /><br />
+
+      <label for="song-genre">Genre:</label>
+      <select id="song-genre" name="song_genre" multiple required>
+        <option value="Genre1">Pop</option>
+        <option value="Genre2">Rock</option>
+        <option value="Genre2">Classical</option></select
+      ><br /><br />
+
+      <label for="song-duration">Durasi (menit):</label>
+      <input
+        type="text"
+        id="song-duration"
+        name="song_duration"
+        required
+      /><br /><br />
+
+      <button type="submit">Submit</button>
+    </form>
+  </body>
+</html>

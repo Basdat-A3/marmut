@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Daftar Lagu dalam Album</title>
+  </head>
+  <body>
+    <h1>Daftar Lagu dalam Album</h1>
+
+    <!-- Dropdown untuk memilih album yang ingin dilihat daftar lagunya -->
+    <label for="select-album">Pilih Album:</label>
+    <select id="select-album" name="album" onchange="updateSongList()">
+      <option value="">Pilih Album</option>
+      <!-- Placeholder for album options -->
+      <option value="Album1">Album1</option>
+      <option value="Album2">Album2</option>
+    </select>
+
+    <table border="1">
+      <thead>
+        <tr>
+          <th colspan="5">Daftar Lagu</th>
+        </tr>
+        <tr>
+          <th>Judul</th>
+          <th>Durasi</th>
+          <th>Total Play</th>
+          <th>Total Download</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="song-list">
+        <!-- Placeholder for songs list -->
+        <tr>
+          <td>Lagu1</td>
+          <td>3 menit</td>
+          <td>5</td>
+          <td>1</td>
+          <td>
+            <button>Lihat Detail</button>
+            <button>Hapus</button>
+          </td>
+        </tr>
+        <tr>
+          <td>Lagu2</td>
+          <td>4 menit</td>
+          <td>10</td>
+          <td>2</td>
+          <td>
+            <button>Lihat Detail</button>
+            <button>Hapus</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

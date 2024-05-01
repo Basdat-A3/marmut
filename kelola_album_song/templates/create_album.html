@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Album</title>
+  </head>
+  <body>
+    <h1>Create Album</h1>
+    <form action="/create_album" method="post">
+      <label for="album-title">Judul Album:</label>
+      <input
+        type="text"
+        id="album-title"
+        name="album_title"
+        required
+      /><br /><br />
+
+      <label for="album-label">Label:</label>
+      <select id="album-label" name="album_label" required>
+        <option value="">Pilih Label</option>
+        <!-- Placeholder for label options -->
+        <option value="LabelA">LabelA</option>
+        <option value="LabelB">LabelB</option></select
+      ><br /><br />
+
+      <button type="submit">Submit</button>
+    </form>
+  </body>
+</html>
