@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Playlist - Marmut</title>
+    <style>
+        /* CSS untuk styling */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .playlist-box {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 20px;
+            text-align: center; /* Menengahkan konten */
+        }
+        .song-list {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 20px;
+        }
+        .song-list table {
+            width: 100%;
+        }
+        .song-list table th, .song-list table td {
+            padding: 8px;
+        }
+        .song-list table th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>  
+        <!-- Kotak detail playlist -->
+        <div class="playlist-box">
+            <h2>User Playlist Detail</h2>
+            <p style="text-align: left;">Judul: Playlist1</p>
+            <p style="text-align: left;">Pembuat: Pembuat1</p>
+            <p style="text-align: left;">Jumlah Lagu: 12</p>
+            <p style="text-align: left;">Total Durasi: 8 jam 20 menit</p>
+            <p style="text-align: left;">Tanggal Dibuat: 18/03/24</p>
+            <p style="text-align: left;">Deskripsi: Lorem Ipsum ....</p>
+            <a href="#">[Shuffle Play]</a>
+            <a href="playlist.html">[Kembali]</a>        
+
+            <!-- Daftar lagu -->
+            <div class="song-list">
+                <h3>DAFTAR LAGU</h3>
+                <table>
+                    <tr>
+                        <th>Judul Lagu</th>
+                        <th>Oleh</th>
+                        <th>Durasi</th>
+                        <th>Actions</th>
+                    </tr>
+                    <!-- Contoh baris lagu -->
+                    <tr>
+                        <td>Song1</td>
+                        <td>Artist1</td>
+                        <td>2 menit</td>
+                        <td>
+                            <a href="../PLAY_SONG/detail_song.html">[Lihat]</a>
+                            <a href="#">[Play]</a>
+                            <a href="#">[Hapus]</a>
+                        </td>
+                    </tr>
+                    <!-- Baris lagu berikutnya -->
+                    <tr>
+                        <td>Song2</td>
+                        <td>Artist2</td>
+                        <td>3 menit</td>
+                        <td>
+                            <a href="../PLAY_SONG/detail_song.html">[Lihat]</a>
+                            <a href="#">[Play]</a>
+                            <a href="#">[Hapus]</a>
+                        </td>
+                    </tr>
+                    <!-- Baris lagu berikutnya -->
+                    <!-- ... -->
+                </table>
+                <a href="tambah_lagu.html">[Tambah Lagu]</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
