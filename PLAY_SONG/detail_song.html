@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Song Detail</title>
+    <style>
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .song-detail {
+            border: 1px solid #ccc;
+            padding: 50px;
+            width: 600px;
+            overflow: auto;  
+        }
+        .controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .song-info {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="song-detail">
+            <h1 style="text-align: center;">SONG DETAIL</h1>
+            <div class="song-info">
+                <p>Judul: Song1</p>
+                <p>Album: Album1</p>
+                <p>Genre(s):</p>
+                <ul>
+                    <li>Genre1</li>
+                    <li>Genre2</li>
+                </ul>
+                <p>Artist: Artist1</p>
+                <p>Songwriter(s):</p>
+                <ul>
+                    <li>Songwriter1</li>
+                    <li>Songwriter2</li>
+                </ul>
+                <p>Durasi: 3 menit</p>
+                <p>Tanggal Rilis: 18/03/24</p>
+                <p>Tahun: 2024</p>
+                <p>Total Play: 0</p>
+                <p>Total Downloads: 0</p>
+            </div>
+            <div class="controls">
+                <form action="play_song.html" method="post">
+                    <label for="progress">Progress: </label>
+                    <input type="range" id="progress" name="progress" min="0" max="100">
+                    <button type="submit" name="play">Play</button>
+                </form>
+                <form action="download_song.html" method="post">
+                    <button type="submit" name="download">Download</button>
+                </form>
+                <form action="add_to_playlist.html" method="post">
+                    <button type="submit" name="add_to_playlist">Add to Playlist</button>
+                </form>
+                <a href="song_list.html">Kembali</a>
+            </div>
+            
+        </div>
+    </div>
+</body>
+</html>

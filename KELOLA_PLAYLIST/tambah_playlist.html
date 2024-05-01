@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tambah Playlist - Marmut</title>
+    <!-- CSS untuk styling -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .add-playlist-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .add-playlist-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .add-playlist-container table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .add-playlist-container th, .add-playlist-container td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+        .add-playlist-container th {
+            background-color: #f2f2f2;
+        }
+        .add-playlist-container input[type="text"], 
+        .add-playlist-container input[type="submit"] {
+            width: calc(100% - 22px);
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        .add-playlist-container input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .add-playlist-container input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="add-playlist-container">
+        <h2>Tambah Playlist</h2>
+        <form action="#" method="post">
+            <table>
+                <tr>
+                    <th>Judul</th>
+                    <td><input type="text" name="judul"></td>
+                </tr>
+                <tr>
+                    <th>Deskripsi</th>
+                    <td><input type="text" name="deskripsi"></td>
+                </tr>
+            </table>
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Song to Playlist</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            max-width: 700px;
+            width: 100%;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        label, select {
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        label {
+            width: 100px; /* lebar label */
+            text-align: right; /* agar teks di label rata kanan */
+            margin-right: 10px; /* margin kanan untuk memberi jarak antara label dan dropdown */
+        }
+
+        button {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ADD SONG TO USER PLAYLIST</h1>
+        <p>Judul: Song1</p>
+        <p>Artist: Artist1</p>
+        <form action="add_to_playlist_handler.html" method="post">
+            <label for="playlist">Playlist:</label>
+            <select id="playlist" name="playlist" required>
+                <option value="">Pilih Playlist</option>
+                <!-- Daftar Playlist Pengguna diambil dari Database -->
+                <option value="Playlist1">Playlist1</option>
+                <option value="Playlist2">Playlist2</option>
+            </select>
+            <br>
+            <button type="submit" name="add_to_playlist">TAMBAH</button>
+        </form>
+        <a href="song_detail.html">Kembali</a>
+    </div>
+</body>
+</html>
