@@ -11,6 +11,3 @@ def create_episode(request):
 
 def daftar_episode(request):
     return render(request, 'daftar_episode.html')
-
-def daftar_episode_sebuah_podcast(request):
-    return render(request, 'daftar_episode_sebuah_podcast.html')

@@ -1,18 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base_podcaster.html' %}
+{% load static %}
+
+{% block meta %}
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Daftar Episode pada Podcast1</title>
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <!-- DataTables CSS -->
   <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
 </head>
-<body>
+
+{% endblock meta %}
+
+{% block content %}
 
 <div class="container mt-5">
   <h2>Daftar Episode pada Podcast Close The Mic</h2>
+  <br>
   <table id="episodeTable" class="table table-striped table-bordered" style="width:100%">
     <thead>
       <tr>
@@ -23,22 +24,6 @@
         <th>Action</th>
       </tr>
     </thead>
-    <!-- <tbody>
-      <tr>
-        <td>SubJudul1</td>
-        <td>Lorem Ipsum...</td>
-        <td>59 menit</td>
-        <td>18/03/2024</td>
-        <td><a href="#" class="btn btn-danger btn-sm">Hapus</a></td>
-      </tr>
-      <tr>
-        <td>SubJudul2</td>
-        <td>Lorem Ipsum...</td>
-        <td>1 jam 2 menit</td>
-        <td>25/03/2024</td>
-        <td><a href="#" class="btn btn-danger btn-sm">Hapus</a></td>
-      </tr>
-    </tbody> -->
 
     <tbody>
       <tr>
@@ -75,5 +60,5 @@
   });
 </script>
 
-</body>
-</html>
+{% endblock content %}
+
