@@ -22,14 +22,13 @@
                   <label for="nama" class="form-label">Nama</label>
                   <input type="text" class="form-control" placeholder="" id="nama">
                 </div>
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                      Gender
-                    </button>
-                    <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="#">Perempuan</a></li>
-                      <li><a class="dropdown-item" href="#">Laki-laki</a></li>
-                    </ul>
+                <div class="mb-3">
+                  <label for="nama" class="form-label">Gender</label>
+                  <select class="form-select " aria-label="example">
+                    <option selected>Select your gender</option>
+                    <option value="0">Perempuan</option>
+                    <option value="1">Laki-laki</option>
+                  </select>
                 </div>
             </div>
             <div class="col">
@@ -46,6 +45,7 @@
                     <input type="text" class="form-control" placeholder="" id="KotaAsal">
                   </div>
                 <div class="mb-3">
+                    <p>Role:</p>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
                         <label class="form-check-label" for="flexCheckDefault">
@@ -66,7 +66,7 @@
                     </div>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary mt-4">Register</button>
+            <button type="submit" class="btn btn-primary mt-5">Register</button>
           </form>
           <p class="my-4">Already have an account? <a href="{% url 'authentication:login' %}">Login</a></p>
     </div>
