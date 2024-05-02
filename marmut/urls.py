@@ -22,4 +22,7 @@ urlpatterns = [
     path('', include('album_song_royalti.urls')),
     path('auth/', include('authentication.urls')),
     path('dashboard/', include('dashboard.urls')),
+    path('', include('kelola_podcast.urls')),
+    path('', include('melihat_chart.urls')),
+    path('', include('play_podcast.urls')),
 ]
