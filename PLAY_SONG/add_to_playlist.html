@@ -4,14 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Song to Playlist</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
         }
 
         .container {
@@ -21,6 +17,8 @@
             border-radius: 5px;
             max-width: 700px;
             width: 100%;
+            margin: auto;
+            margin-top: 20px;
         }
 
         form {
@@ -33,9 +31,9 @@
         }
 
         label {
-            width: 100px; /* lebar label */
-            text-align: right; /* agar teks di label rata kanan */
-            margin-right: 10px; /* margin kanan untuk memberi jarak antara label dan dropdown */
+            width: 100px;
+            text-align: right; 
+            margin-right: 10px; 
         }
 
         button {
@@ -45,21 +43,22 @@
 </head>
 <body>
     <div class="container">
-        <h1>ADD SONG TO USER PLAYLIST</h1>
+        <h2 class="mb-4">ADD SONG TO USER PLAYLIST</h2>
         <p>Judul: Song1</p>
         <p>Artist: Artist1</p>
         <form action="add_to_playlist_handler.html" method="post">
-            <label for="playlist">Playlist:</label>
-            <select id="playlist" name="playlist" required>
-                <option value="">Pilih Playlist</option>
-                <!-- Daftar Playlist Pengguna diambil dari Database -->
-                <option value="Playlist1">Playlist1</option>
-                <option value="Playlist2">Playlist2</option>
-            </select>
-            <br>
-            <a href="success_add_playlist.html">Tambah</a>
+            <div class="form-group">
+                <label for="playlist">Playlist:</label>
+                <select id="playlist" name="playlist" class="form-control" required>
+                    <option value="">Pilih Playlist</option>
+                    <!-- Contoh Daftar Playlist Pengguna diambil dari Database -->
+                    <option value="Playlist1">Playlist1</option>
+                    <option value="Playlist2">Playlist2</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Tambah</button>
         </form>
-        <a href="song_detail.html">Kembali</a>
+        <a href="song_detail.html" class="btn btn-secondary mt-3">Kembali</a>
     </div>
 </body>
 </html>

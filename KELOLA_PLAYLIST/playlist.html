@@ -4,82 +4,67 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Playlist - Marmut</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* CSS untuk styling */
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
+        body{
+            margin-top: 50px;
         }
         .playlist-box {
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin-bottom: 20px;
-            text-align: center; /* Menengahkan konten */
-        }
-        .song-list {
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin-top: 20px;
+            padding: 20px;
         }
         .song-list table {
             width: 100%;
         }
         .song-list table th, .song-list table td {
             padding: 8px;
-        }
-        .song-list table th {
-            background-color: #f2f2f2;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container-fluid">
 
-        <!-- Kotak daftar playlist -->
         <div class="playlist-box">
-            <h2>User Playlist</h2>
-            <!-- Jika belum ada playlist -->
-            <p>Anda Belum Memiliki Playlist</p>
-            <!-- Di dalam halaman utama -->
-            <a href="tambah_playlist.html">[Tambah Playlist]</a>
-
+            <h2 class="text-center">User Playlist</h2>
+            
+            <div class="container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Judul</th>
+                            <th scope="col">Jumlah Lagu</th>
+                            <th scope="col">Total Durasi</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Playlist1</td>
+                            <td>0</td>
+                            <td>0 menit</td>
+                            <td>
+                                <a href="playlist_detail.html" class="btn btn-primary">Detail</a>
+                                <a href="#" class="btn btn-secondary">Ubah</a>
+                                <a href="#" class="btn btn-danger">Hapus</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Playlist2</td>
+                            <td>2</td>
+                            <td>4 menit</td>
+                            <td>
+                                <a href="playlist_detail.html" class="btn btn-primary">Detail</a>
+                                <a href="#" class="btn btn-secondary">Ubah</a>
+                                <a href="#" class="btn btn-danger">Hapus</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <p class="text-center"><a href="tambah_playlist.html" class="btn btn-success">Tambah Playlist</a></p>
         </div>
 
-        <div class="song-list">
-            <h2 style="text-align: center;">User Playlist</h2>
-            <table>
-                <tr>
-                    <th>Judul</th>
-                    <th>Jumlah Lagu</th>
-                    <th>Total Durasi</th>
-                    <th>Action</th>
-                </tr>
-                <tr>
-                    <td>Playlist1</td>
-                    <td>0</td>
-                    <td>0 menit</td>
-                    <td>
-                        <a href="playlist_detail.html">[Detail]</a>
-                        <a href="#">[Ubah]</a>
-                        <a href="#">[Hapus]</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Playlist2</td>
-                    <td>2</td>
-                    <td>4 menit</td>
-                    <td>
-                        <a href="playlist_detail.html">[Detail]</a>
-                        <a href="#">[Ubah]</a>
-                        <a href="#">[Hapus]</a>
-                    </td>
-                </tr>
-                <!-- Baris playlist berikutnya -->
-                <!-- ... -->
-            </table>
-            <p style="text-align: center;"><a href="tambah_playlist.html">[Tambah Playlist]</a></p>
-        </div>
-
+    </div>
 </body>
 </html>

@@ -4,33 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Song Detail</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        body {
+            padding-top: 50px; 
+            padding-bottom: 50px; 
         }
         .song-detail {
             border: 1px solid #ccc;
             padding: 50px;
-            width: 600px;
-            overflow: auto;  
-        }
-        .controls {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            max-width: 600px;
+            margin: 0 auto;
         }
         .song-info {
             margin-bottom: 20px;
         }
+        .controls {
+            text-align: center;
+          
+        }
+        .controls button {
+            margin-bottom: 10px; /* Tambahkan ruang bawah */
+        }
+
     </style>
 </head>
 <body>
     <div class="container">
         <div class="song-detail">
-            <h1 style="text-align: center;">SONG DETAIL</h1>
+            <h2 class="text-center">SONG DETAIL</h2>
             <div class="song-info">
                 <p>Judul: Song1</p>
                 <p>Album: Album1</p>
@@ -53,19 +55,20 @@
             </div>
             <div class="controls">
                 <form action="play_song.html" method="post">
-                    <label for="progress">Progress: </label>
-                    <input type="range" id="progress" name="progress" min="0" max="100">
-                    <button type="submit" name="play">Play</button>
+                    <div class="form-group">
+                        <label for="progress">Progress:</label>
+                        <input type="range" class="form-control-range" id="progress" name="progress" min="0" max="100">
+                    </div>
+                    <button type="submit" class="btn btn-primary" name="play">Play</button>
                 </form>
                 <form action="download_song.html" method="post">
-                    <button type="submit" name="download">Download</button>
+                    <button type="submit" class="btn btn-success" name="download">Download</button>
                 </form>
                 <form action="add_to_playlist.html" method="post">
-                    <button type="submit" name="add_to_playlist">Add to Playlist</button>
+                    <button type="submit" class="btn btn-info" name="add_to_playlist">Add to Playlist</button>
                 </form>
-                <a href="../KELOLA_PLAYLIST/playlist.html">Kembali</a>
+                <a href="../KELOLA_PLAYLIST/playlist.html" class="btn btn-secondary">Kembali</a>
             </div>
-            
         </div>
     </div>
 </body>

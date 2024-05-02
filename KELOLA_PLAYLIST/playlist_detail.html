@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Playlist - Marmut</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* CSS untuk styling */
+        body{
+            margin-top: 50px;
+        }
         .container {
             max-width: 800px;
             margin: 0 auto;
@@ -15,7 +18,7 @@
             border: 1px solid #ccc;
             padding: 10px;
             margin-bottom: 20px;
-            text-align: center; /* Menengahkan konten */
+            text-align: center; 
         }
         .song-list {
             border: 1px solid #ccc;
@@ -34,7 +37,7 @@
     </style>
 </head>
 <body>  
-        <!-- Kotak detail playlist -->
+
         <div class="playlist-box">
             <h2>User Playlist Detail</h2>
             <p style="text-align: left;">Judul: Playlist1</p>
@@ -43,10 +46,9 @@
             <p style="text-align: left;">Total Durasi: 8 jam 20 menit</p>
             <p style="text-align: left;">Tanggal Dibuat: 18/03/24</p>
             <p style="text-align: left;">Deskripsi: Lorem Ipsum ....</p>
-            <a href="#">[Shuffle Play]</a>
-            <a href="playlist.html">[Kembali]</a>        
+            <button class="btn btn-primary">Shuffle Play</button>
+            <a href="playlist.html" class="btn btn-secondary">Kembali</a>
 
-            <!-- Daftar lagu -->
             <div class="song-list">
                 <h3>DAFTAR LAGU</h3>
                 <table>
@@ -62,26 +64,24 @@
                         <td>Artist1</td>
                         <td>2 menit</td>
                         <td>
-                            <a href="../PLAY_SONG/detail_song.html">[Lihat]</a>
-                            <a href="#">[Play]</a>
-                            <a href="#">[Hapus]</a>
+                            <button class="btn btn-info">Lihat</button>
+                            <button class="btn btn-success">Play</button>
+                            <button class="btn btn-danger">Hapus</button>
                         </td>
                     </tr>
-                    <!-- Baris lagu berikutnya -->
                     <tr>
                         <td>Song2</td>
                         <td>Artist2</td>
                         <td>3 menit</td>
                         <td>
-                            <a href="../PLAY_SONG/detail_song.html">[Lihat]</a>
-                            <a href="#">[Play]</a>
-                            <a href="#">[Hapus]</a>
+                            <button class="btn btn-info">Lihat</button>
+                            <button class="btn btn-success">Play</button>
+                            <button class="btn btn-danger">Hapus</button>
                         </td>
                     </tr>
-                    <!-- Baris lagu berikutnya -->
-                    <!-- ... -->
+    
                 </table>
-                <a href="tambah_lagu.html">[Tambah Lagu]</a>
+                <a href="tambah_lagu.html" class="btn btn-primary">Tambah Lagu</a>
             </div>
         </div>
     </div>
