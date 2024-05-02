@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'album_song_royalti',
+    'kelola_playlist',
+    'play_song',
     'authentication',
     'dashboard',
     'kelola_podcast',
