@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Playlist - Marmut</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand">Marmut</a>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <form class="d-flex" method="get">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="q">
+                <span style="margin-right: 10px;"></span> 
+                <button class="btn btn-outline-light" type="submit">Search</button>
+            </form>            
+          <ul class="navbar-nav ms-3">
+            <li class="nav-item">
+              <a class="nav-link " aria-current="page">Chart</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link ">Manage Playlist</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" >Dashboard</a>
+            </li>
+            <li class="nav-item ">
+              <a class="nav-link" >Logout</a>
+            </li>
+            <li class="nav-item ">
+              <a class="btn btn-light" >Premium Plan</a>
+            </li>
+          </ul>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+      </div>
+    </nav>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .playlist-box {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 20px;
+            text-align: center; 
+        }
+        .song-list {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 20px;
+        }
+        .song-list table {
+            width: 100%;
+        }
+        .song-list table th, .song-list table td {
+            padding: 8px;
+        }
+        .song-list table th {
+            background-color: #f2f2f2;
+        }
+
+    </style>
+</head>
+<body>  
+
+        <div class="playlist-box">
+            <h2>User Playlist Detail</h2>
+            <p style="text-align: left;">Judul: Playlist1</p>
+            <p style="text-align: left;">Pembuat: Pembuat1</p>
+            <p style="text-align: left;">Jumlah Lagu: 12</p>
+            <p style="text-align: left;">Total Durasi: 8 jam 20 menit</p>
+            <p style="text-align: left;">Tanggal Dibuat: 18/03/24</p>
+            <p style="text-align: left;">Deskripsi: Lorem Ipsum ....</p>
+            <button class="btn btn-primary">Shuffle Play</button>
+            <a href="playlist.html" class="btn btn-secondary">Kembali</a>
+
+            <div class="song-list">
+                <h3>DAFTAR LAGU</h3>
+                <table>
+                    <tr>
+                        <th>Judul Lagu</th>
+                        <th>Oleh</th>
+                        <th>Durasi</th>
+                        <th>Actions</th>
+                    </tr>
+                    <!-- Contoh baris lagu -->
+                    <tr>
+                        <td>Song1</td>
+                        <td>Artist1</td>
+                        <td>2 menit</td>
+                        <td>
+                            <button class="btn btn-info">Lihat</button>
+                            <button class="btn btn-success">Play</button>
+                            <button class="btn btn-danger">Hapus</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Song2</td>
+                        <td>Artist2</td>
+                        <td>3 menit</td>
+                        <td>
+                            <button class="btn btn-info">Lihat</button>
+                            <button class="btn btn-success">Play</button>
+                            <button class="btn btn-danger">Hapus</button>
+                        </td>
+                    </tr>
+    
+                </table>
+                <a href="tambah_lagu.html" class="btn btn-primary">Tambah Lagu</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
