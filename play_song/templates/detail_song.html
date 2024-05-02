@@ -7,22 +7,32 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .song-detail {
-            border: 1px solid #ccc;
-            padding: 50px;
-            max-width: 600px;
-            margin: 20PX;
+        border: 1px solid #ccc;
+        padding: 20px;
+        max-width: 600px;
+        margin: 20px auto;
         }
         .song-info {
             margin-bottom: 20px;
         }
         .controls {
             text-align: center;
-          
         }
         .controls button {
-            margin-bottom: 10px; /* Tambahkan ruang bawah */
+            margin-bottom: 10px; 
+        }
+ 
+        .navbar {
+            justify-content: flex-end;
         }
 
+        .navbar-nav {
+            flex-direction: row;
+        }
+
+        .navbar-collapse {
+            justify-content: flex-end;
+        }
     </style>
 </head>
 <body>
@@ -32,12 +42,12 @@
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <form class="d-flex ms-auto"  method="get">
+          <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <form class="d-flex"  method="get">
               <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="q">
               <button class="btn btn-outline-light" type="submit">Search</button>
             </form>
-            <ul class="navbar-nav ms-3">
+            <ul class="navbar-nav">
               <li class="nav-item">
                 <a class="nav-link " aria-current="page">Chart</a>
               </li>
@@ -54,7 +64,6 @@
                 <a class="btn btn-light" >Premium Plan</a>
               </li>
             </ul>
-            
           </div>
         </div>
       </nav>

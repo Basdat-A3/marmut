@@ -1,9 +1,10 @@
 from django.urls import path
 
-from marmut.kelola_playlist.views import *
+from . import views
 app_name = 'kelola_playlist'
 
 
 urlpatterns = [
-    path('playlist/', playlist, name='playlist'),
+    path('playlist/', views.playlist),
+    # path('create_podcast/', views.create_podcast),
 ]

@@ -6,12 +6,10 @@
     <title>User Playlist - Marmut</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
-
         .container {
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
-
         }
         .playlist-box {
             border: 1px solid #ccc;
@@ -39,11 +37,8 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
           <a class="navbar-brand">Marmut</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <form class="d-flex ms-auto"  method="get">
+          <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <form class="d-flex" method="get">
               <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="q">
               <button class="btn btn-outline-light" type="submit">Search</button>
             </form>
@@ -64,7 +59,9 @@
                 <a class="btn btn-light" >Premium Plan</a>
               </li>
             </ul>
-            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
           </div>
         </div>
       </nav>
@@ -74,7 +71,6 @@
             <!-- Jika belum ada playlist -->
             <p>Anda Belum Memiliki Playlist</p>
             <a href="tambah_playlist.html" class="btn btn-primary">Tambah Playlist</a>
-
         </div>
     </div>
 </body>
