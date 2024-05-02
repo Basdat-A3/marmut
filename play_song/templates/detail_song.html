@@ -6,15 +6,11 @@
     <title>Song Detail</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
-            padding-top: 50px; 
-            padding-bottom: 50px; 
-        }
         .song-detail {
             border: 1px solid #ccc;
             padding: 50px;
             max-width: 600px;
-            margin: 0 auto;
+            margin: 20PX;
         }
         .song-info {
             margin-bottom: 20px;
@@ -30,6 +26,39 @@
     </style>
 </head>
 <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand">Marmut</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <form class="d-flex ms-auto"  method="get">
+              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="q">
+              <button class="btn btn-outline-light" type="submit">Search</button>
+            </form>
+            <ul class="navbar-nav ms-3">
+              <li class="nav-item">
+                <a class="nav-link " aria-current="page">Chart</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link ">Manage Playlist</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" >Dashboard</a>
+              </li>
+              <li class="nav-item ">
+                <a class="nav-link" >Logout</a>
+              </li>
+              <li class="nav-item ">
+                <a class="btn btn-light" >Premium Plan</a>
+              </li>
+            </ul>
+            
+          </div>
+        </div>
+      </nav>
+
     <div class="container">
         <div class="song-detail">
             <h2 class="text-center">SONG DETAIL</h2>
