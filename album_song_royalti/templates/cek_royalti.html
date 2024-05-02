@@ -1,0 +1,39 @@
+{% extends 'base_artist_songwriter.html' %}
+{% load static %}
+
+{% block meta %}
+<head>
+    <title>List Royalti</title>
+</head>
+{% endblock meta %}
+
+{% block content %}
+<div class="container mt-4">
+  <h1 class="mb-4">List Royalti</h1>
+
+  <table class="table table-striped table-bordered">
+    <thead class="table-dark">
+      <tr>
+        <th colspan="5" class="text-center">Daftar Royalti</th>
+      </tr>
+      <tr>
+        <th>Judul Lagu</th>
+        <th>Judul Album</th>
+        <th>Total Play</th>
+        <th>Total Download</th>
+        <th>Total Royalti Didapat</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Placeholder for Royalti list -->
+      <tr>
+        <td>Lagu 1</td>
+        <td>Album 1</td>
+        <td>3</td>
+        <td>0</td>
+        <td>Rp 460000</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+{% endblock content%}
