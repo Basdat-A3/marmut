@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class KelolaAlbumSongConfig(AppConfig):
+class AlbumSongRoyaltiConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'kelola_album_song'
+    name = 'album_song_royalti'
