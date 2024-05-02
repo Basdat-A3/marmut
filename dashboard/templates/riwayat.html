@@ -1,0 +1,66 @@
+{% extends 'base_user_premium.html' %}
+
+{% block meta %}
+    <title>Dashboard</title>
+    <style>
+      .bg-yellow{
+        background-color: #c6c639;
+      }
+      .bg-green{
+        background-color: #97b51d;
+      }
+
+      .container{
+        min-height: 100vh;
+      }
+
+      .text-white {
+        color: white;
+      }
+    </style>
+{% endblock meta %}
+
+{% block content %}
+<style></style>
+<div class="container border p-lg-5 text-white text-center">
+    <div class="bg-dark d-flex flex-column justify-content-center align-items-center rounded p-lg-5">
+      <h2 class="mb-5">RIWAYAT TRANSAKSI PAKET</h2>
+      <table class="table table-striped">
+        <thead class="table-primary">
+            <tr>
+              <th scope="col">Jenis</th>
+              <th scope="col">Tanggal Dimulai</th>
+              <th scope="col">Tanggal Berakhir</th>
+              <th scope="col">Metode Pembayaran</th>
+              <th scope="col">Nominal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1 Bulan</th>
+              <td>8 April 2024 17.23</td>
+              <td>8 Mei 2024 17.23</td>
+              <td>OVO</td>
+              <td>Rp35.000</td>
+            </tr>
+            <tr>
+              <th scope="row">1 Bulan</th>
+              <td>8 Mei 2024 17.23</td>
+              <td>8 Juni 2024 17.23</td>
+              <td>DANA</td>
+              <td>Rp35.000</td>
+            </tr>
+            <tr>
+              <th scope="row">3 Bulan</th>
+              <td>8 Agustus 2024 17.23</td>
+              <td>8 November 2024 17.23</td>
+              <td>Transfer Bank</td>
+              <td>Rp99.000</td>
+            </tr>
+          </tbody>
+      </table>
+      <a href="{% url 'dashboard:paket' %}" class="btn btn-primary">Kembali</a>
+    </div>
+  </div>
+
+{% endblock content %}

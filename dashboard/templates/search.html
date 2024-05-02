@@ -1,0 +1,74 @@
+{% extends 'base_user.html' %}
+
+{% block meta %}
+    <title>Dashboard</title>
+    <style>
+      .bg-yellow{
+        background-color: #c6c639;
+      }
+      .bg-green{
+        background-color: #97b51d;
+      }
+
+      .container{
+        min-height: 100vh;
+      }
+
+      .text-white {
+        color: white;
+      }
+    </style>
+{% endblock meta %}
+
+{% block content %}
+<div class="container border p-lg-5 text-white text-center">
+    <div class="bg-dark d-flex flex-column justify-content-center align-items-center rounded p-lg-5">
+      <h2 class="mb-5">Hasil pencarian untuk "All"</h2>
+      <table class="table table-striped">
+        <thead class="table-primary rounded">
+            <tr>
+              <th scope="col">Type</th>
+              <th scope="col">Judul</th>
+              <th scope="col">Oleh</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Song</th>
+              <td>All I Ask</td>
+              <td>Adele</td>
+              <td>
+                <a href="#" class="btn btn-primary">Lihat</a>
+              </td>
+            </tr>
+            <tr>
+                <th scope="row">Song</th>
+                <td>All Of Me</td>
+                <td>John Legend</td>
+                <td>
+                  <a href="#" class="btn btn-primary">Lihat</a>
+                </td>
+              </tr>
+            <tr>
+              <th scope="row">Podcast</th>
+              <td>All Around Bogor</td>
+              <td>Alexia Sasaki</td>
+              <td>
+                <a href="#" class="btn btn-primary">Lihat</a>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Playlist</th>
+              <td>Dangdut Academy All Star</td>
+              <td>Dadang Dudut</td>
+              <td>
+                <a href="#" class="btn btn-primary">Lihat</a>
+              </td>
+            </tr>
+          </tbody>
+      </table>
+    </div>
+  </div>
+
+{% endblock content %}

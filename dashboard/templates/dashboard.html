@@ -1,0 +1,86 @@
+{% extends 'base_user.html' %}
+
+{% block meta %}
+    <title>Dashboard</title>
+    <style>
+      .bg-yellow{
+        background-color: #c6c639;
+      }
+      .bg-green{
+        background-color: #97b51d;
+      }
+
+      .container{
+        min-height: 100vh;
+      }
+
+      .text-white {
+        color: white;
+      }
+    </style>
+{% endblock meta %}
+
+{% block content %}
+<style></style>
+<div class="container border p-lg-5 text-white text-center">
+    <div class="bg-dark d-flex flex-column justify-content-center align-items-center rounded p-lg-5">
+      <h2 class="mb-5">User Dashboard</h2>
+      <div class="row bg-primary p-3 rounded w-50">
+        <div class="col">
+          <div class="d-flex flex-column align-items-start m-3">
+            Name
+            <b>Fathan Naufal Adhitama</b>
+          </div>
+          <div class="d-flex flex-column align-items-start m-3">
+            Email
+            <b>fathanrocker@gmail.com</b>
+          </div>
+          <div class="d-flex flex-column align-items-start m-3">
+            Kota Asal
+            <b>Manchester</b>
+          </div>
+          <div class="d-flex flex-column align-items-start m-3">
+            Gender
+            <b>Laki-laki</b>
+          </div>
+        </div>
+        <div class="col">
+            <div class="d-flex flex-column align-items-start m-3">
+                Tempat Lahir
+                <b>Padang</b>
+              </div>
+              <div class="d-flex flex-column align-items-start m-3">
+                Tanggal Lahir
+                <b>17 Agustus 1999</b>
+              </div>
+              <div class="d-flex flex-column align-items-start m-3">
+                Role
+                <b>Listener</b>
+              </div>
+        </div>
+      </div>
+      <section class="row py-5">
+        <h2 class="mb-5">Playlists</h2>
+        <div class="col-sm-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">galau brutal full english</h5>
+              <p class="card-text">lagu sedih tapi pake bahasa inggris</p>
+              <a href="#" class="btn btn-primary">View Playlist</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">WORKOUT PLAYLIST 2024 💪🔥</h5>
+              <p class="card-text">Running Songs - Gym Motivation </p>
+              <a href="#" class="btn btn-primary">View Playlist</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+{% endblock content %}

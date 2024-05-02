@@ -1,0 +1,87 @@
+{% extends 'base_user_premium.html' %}
+
+{% block meta %}
+    <title>Dashboard</title>
+    <style>
+      .bg-yellow{
+        background-color: #c6c639;
+      }
+      .bg-green{
+        background-color: #97b51d;
+      }
+
+      .container{
+        min-height: 100vh;
+      }
+
+      .text-white {
+        color: white;
+      }
+    </style>
+{% endblock meta %}
+
+{% block content %}
+<div class="container border p-lg-5 text-white text-center">
+    <div class="bg-dark d-flex flex-column justify-content-center align-items-center rounded p-lg-5">
+      <h2 class="mb-5">DAFTAR LAGU</h2>
+      <table class="table table-striped">
+        <thead class="table-primary rounded">
+            <tr>
+              <th scope="col">Judul</th>
+              <th scope="col">Oleh</th>
+              <th scope="col">Tanggal Download</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Aku Udah Bisa Goreng Nugget Sendiri</td>
+              <td>Refo Dan Fauna</td>
+              <td>1 Januari 2024</td>
+              <td>
+                <a href="#" class="btn btn-primary">Lihat</a>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Hapus
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td>Sama Sama Tahu</td>
+              <td>HIVI!</td>
+              <td>1 April 2024</td>
+              <td>
+                <a href="#" class="btn btn-primary">Lihat</a>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Hapus
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td>Perempuan Yang Sedang Dalam Pelukan</td>
+              <td>Payung Teduh</td>
+              <td>1 Mei 2024</td>
+              <td>
+                <a href="#" class="btn btn-primary">Lihat</a>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Hapus
+                </button>
+              </td>
+            </tr>
+          </tbody>
+      </table>
+    </div>
+  </div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-body">
+        Berhasil menghapus Lagu dengan judul ‘Sama Sama Tahu’ dari daftar unduhan!
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kembali</button>
+        </div>
+    </div>
+    </div>
+</div>
+{% endblock content %}

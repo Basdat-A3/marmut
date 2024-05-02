@@ -41,6 +41,11 @@ INSTALLED_APPS = [
     'album_song_royalti',
     'kelola_playlist',
     'play_song',
+    'authentication',
+    'dashboard',
+    'kelola_podcast',
+    'melihat_chart',
+    'play_podcast',
 ]
 
 MIDDLEWARE = [

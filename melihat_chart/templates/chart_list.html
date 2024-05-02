@@ -1,15 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base_user.html' %}
+{% load static %}
+
+{% block meta %}
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chart List</title>
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <!-- DataTables CSS -->
   <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
 </head>
-<body>
+
+{% endblock meta %}
+
+
+{% block content %}
 
 <div class="container mt-5">
   <h2>Chart List</h2>
@@ -45,21 +47,22 @@
 <!-- Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
 <!-- DataTables JS -->
 <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
 
 <script>
-    $(document).ready(function() {
-      $('#chartTable').DataTable({
-        "searching": false,
-        "lengthChange": false,
-        "paging": false,
-        "info": false
-      });
+  $(document).ready(function() {
+    $('#chartTable').DataTable({
+      "searching": false,
+      "lengthChange": false,
+      "paging": false,
+      "info": false
     });
-  </script>
+  });
+</script>
 
-</body>
-</html>
+{% endblock content%}
+
+
