@@ -1,0 +1,31 @@
+{% extends 'base_artist_songwriter.html' %}
+{% load static %}
+
+{% block meta %}
+<head>
+    <title>Create Album</title>
+</head>
+{% endblock meta %}
+
+{% block content %}
+<div class="container">
+  <h1>Create Album</h1>
+  <form action="/create_album" method="post">
+    <div class="mb-3">
+      <label for="album-title" class="form-label">Judul Album:</label>
+      <input type="text" class="form-control" id="album-title" name="album_title" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="album-label" class="form-label">Label:</label>
+      <select class="form-select" id="album-label" name="album_label" required>
+        <option value="">Pilih Label</option>
+        <option value="LabelA">LabelA</option>
+        <option value="LabelB">LabelB</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+{% endblock content%}
