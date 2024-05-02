@@ -1,0 +1,81 @@
+{% extends 'base_user.html' %}
+{% load static %}
+
+{% block meta %}
+
+<head>
+  <title>Podcast Detail</title>
+  <!-- DataTables CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
+</head>
+
+{% endblock meta %}
+
+{% block content %}
+
+
+<div class="container mt-5">
+  <!-- Podcast Detail Section -->
+  <h2>Podcast Detail</h2>
+  <div class="card mt-3">
+    <div class="card-body">
+      <p><strong>Judul:</strong> Close The Mic</p>
+      <p><strong>Genre(s):</strong> Technology, Comedy</p>
+      <p><strong>Podcaster:</strong> Alexia Sasaki</p>
+      <p><strong>Total Durasi:</strong> 25 menit</p>
+      <p><strong>Tanggal Rilis:</strong> 15/03/2001</p>
+      <p><strong>Tahun:</strong> 2001</p>
+    </div>
+  </div>
+
+  <!-- Daftar Episode Section -->
+  <h2 class="mt-5">Daftar Episode</h2>
+  <table id="episodeTable" class="table table-striped table-bordered" style="width:100%">
+    <thead>
+      <tr>
+        <th>Judul Episode</th>
+        <th>Deskripsi</th>
+        <th>Durasi</th>
+        <th>Tanggal Rilis</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Pesan Dedi</td>
+        <td>Dengarkan pesan mendalam dari Dedi dalam episode terbaru kami! Dari pengalaman hidup hingga cerita inspiratif, Dedi berbagi insight yang tak terduga.</td>
+        <td>13 menit</td>
+        <td>2001-03-15</td>
+      </tr>
+      <tr>
+        <td>Dedi Vidi Ngobrol</td>
+        <td>Jelajahi percakapan menarik antara Dedi dan Vidi dalam episode podcast kami yang penuh energi ini! Temukan sudut pandang unik mereka tentang berbagai topik yang menarik.</td>
+        <td>12 menit</td>
+        <td>2001-03-16</td>
+      </tr>
+    </tbody>
+  </table>
+  <br>
+
+  <a href="#" class="btn btn-primary">Kembali</a>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+
+<script>
+  $(document).ready(function() {
+    // disable searching , entries, pagination, and text showing entries
+    $('#episodeTable').DataTable({
+        "searching": false,
+        "lengthChange": false,
+        "paging": false,
+        "info": false,
+        "order": [[3, 'asc']]
+    });
+    
+  });
+</script>
+
+{% endblock content %}

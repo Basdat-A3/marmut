@@ -1,0 +1,57 @@
+{% extends 'base_artist_songwriter.html' %}
+{% load static %}
+
+{% block meta %}
+<head>
+    <title>Create Songs</title>
+</head>
+{% endblock meta %}
+
+{% block content %}
+<h1>Create Lagu</h1>
+
+<div class="mb-3">
+  <h3 onclick="window.location.href='create_songs_artist.html';" style="cursor:pointer;">
+    Logged in as: Artist
+  </h3>
+</div>
+<form action="/add_song" method="post">
+  <div class="mb-3">
+    <label for="song-album" class="form-label">Album: Album1</label>
+  </div>
+
+  <div class="mb-3">
+    <label for="song-title" class="form-label">Judul Lagu:</label>
+    <input type="text" id="song-title" name="song_title" class="form-control" required />
+  </div>
+
+  <div class="mb-3">
+    <label for="song-artist" class="form-label">Artis: Artis 1</label>
+  </div>
+
+  <div class="mb-3">
+    <label for="song-writer" class="form-label">Songwriter:</label>
+    <select id="song-writer" name="song_writer" class="form-select" multiple required>
+      <option value="Songwriter1">Songwriter1</option>
+      <option value="Songwriter2">Songwriter2</option>
+      <option value="Songwriter3">Songwriter3</option>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label for="song-genre" class="form-label">Genre:</label>
+    <select id="song-genre" name="song_genre" class="form-select" multiple required>
+      <option value="Genre1">Pop</option>
+      <option value="Genre2">Rock</option>
+      <option value="Genre3">Classical</option>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label for="song-duration" class="form-label">Durasi (menit):</label>
+    <input type="text" id="song-duration" name="song_duration" class="form-control" required />
+  </div>
+
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endblock content%}

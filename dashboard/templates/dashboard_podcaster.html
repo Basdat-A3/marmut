@@ -1,0 +1,79 @@
+{% extends 'base_podcaster.html' %}
+
+{% block meta %}
+    <title>Dashboard</title>
+    <style>
+      .bg-yellow{
+        background-color: #c6c639;
+      }
+
+      .container{
+        min-height: 100vh;
+      }
+    </style>
+{% endblock meta %}
+
+{% block content %}
+<style></style>
+<div class="container border p-lg-5 text-white text-center">
+    <div class="bg-dark d-flex flex-column justify-content-center align-items-center rounded p-lg-5">
+      <h2 class="mb-5">User Dashboard</h2>
+      <div class="row bg-primary p-3 rounded w-50">
+        <div class="col">
+          <div class="d-flex flex-column align-items-start m-3">
+            Name
+            <b>Fathan Naufal Adhitama</b>
+          </div>
+          <div class="d-flex flex-column align-items-start m-3">
+            Email
+            <b>fathanrocker@gmail.com</b>
+          </div>
+          <div class="d-flex flex-column align-items-start m-3">
+            Kota Asal
+            <b>Manchester</b>
+          </div>
+          <div class="d-flex flex-column align-items-start m-3">
+            Gender
+            <b>Laki-laki</b>
+          </div>
+        </div>
+        <div class="col">
+            <div class="d-flex flex-column align-items-start m-3">
+                Tempat Lahir
+                <b>Padang</b>
+              </div>
+              <div class="d-flex flex-column align-items-start m-3">
+                Tanggal Lahir
+                <b>17 Agustus 1999</b>
+              </div>
+              <div class="d-flex flex-column align-items-start m-3">
+                Role
+                <b>Podcaster</b>
+              </div>
+        </div>
+      </div>
+      <section class="row py-5">
+        <h2 class="mb-5">Daftar Podcast</h2>
+        <div class="col-sm-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Podcast Box2Box</h5>
+              <p class="card-text">Debat kusir sepakbola bersama Coach JL</p>
+              <a href="#" class="btn btn-primary">View Podcast</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Podcast Malam Jumat</h5>
+              <p class="card-text">Kumpulan cerita horor setiap malam jumat</p>
+              <a href="#" class="btn btn-primary">View Podcast</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+{% endblock content %}

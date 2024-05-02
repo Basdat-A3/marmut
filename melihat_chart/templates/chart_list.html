@@ -1,0 +1,68 @@
+{% extends 'base_user.html' %}
+{% load static %}
+
+{% block meta %}
+
+<head>
+  <title>Chart List</title>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
+</head>
+
+{% endblock meta %}
+
+
+{% block content %}
+
+<div class="container mt-5">
+  <h2>Chart List</h2>
+  <table id="chartTable" class="table table-striped table-bordered" style="width:100%">
+    <thead>
+      <tr>
+        <th>Tipe</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Daily Top 20</td>
+        <td><a href="#" class="btn btn-primary btn-sm">Lihat Daftar Lagu</a></td>
+      </tr>
+      <tr> 
+        <td>Weekly Top 20</td>
+        <td><a href="#" class="btn btn-primary btn-sm">Lihat Daftar Lagu</a></td>
+      </tr>
+      <tr> 
+        <td>Monthly Top 20</td>
+        <td><a href="#" class="btn btn-primary btn-sm">Lihat Daftar Lagu</a></td>
+      </tr>
+      <tr> 
+        <td>Yearly Top 20</td>
+        <td><a href="#" class="btn btn-primary btn-sm">Lihat Daftar Lagu</a></td>
+      </tr>
+    </tbody>
+  </table>
+  <a href="#" class="btn btn-primary">Kembali</a>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+
+<script>
+  $(document).ready(function() {
+    $('#chartTable').DataTable({
+      "searching": false,
+      "lengthChange": false,
+      "paging": false,
+      "info": false
+    });
+  });
+</script>
+
+{% endblock content%}
+
+

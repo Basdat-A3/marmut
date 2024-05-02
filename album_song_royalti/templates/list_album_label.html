@@ -1,0 +1,46 @@
+{% extends 'base_label.html' %}
+{% load static %}
+
+{% block meta %}
+<head>
+    <title>List Album</title>
+</head>
+{% endblock meta %}
+
+{% block content %}
+<div class="container mt-5">
+  <h1>List Album</h1>
+  <div class="mb-3" onclick="window.location.href='list_album.html';">
+    <h3 class="cursor-pointer">Logged in as: Label</h3>
+  </div>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th colspan="5">Daftar Album</th>
+      </tr>
+      <tr>
+        <th>Judul</th>
+        <th>Label</th>
+        <th>Jumlah Lagu</th>
+        <th>Total Durasi</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Album1</td>
+        <td>LabelA</td>
+        <td>0</td>
+        <td>0 menit</td>
+        <td>
+          <button class="btn btn-primary btn-sm" onclick="window.location.href='list_songs.html';">Lihat Daftar Lagu</button>
+          <button class="btn btn-danger btn-sm">Hapus</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <button class="btn btn-info" onclick="window.location.href='../../../cek_royalti/templates/cek_royalti.html';">Lihat Royalti</button>
+</div>
+{% endblock content %}

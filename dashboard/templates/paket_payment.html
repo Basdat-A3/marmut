@@ -1,0 +1,56 @@
+{% extends 'base_user_premium.html' %}
+
+{% block meta %}
+    <title>Dashboard</title>
+    <style>
+      .bg-yellow{
+        background-color: #c6c639;
+      }
+      .bg-green{
+        background-color: #97b51d;
+      }
+
+      .container{
+        min-height: 100vh;
+      }
+
+      .text-white {
+        color: white;
+      }
+    </style>
+{% endblock meta %}
+
+{% block content %}
+<style></style>
+<div class="container border p-lg-5 text-white text-center">
+    <div class="bg-dark d-flex flex-column justify-content-center align-items-center rounded p-lg-5">
+      <h2 class="mb-5">Pembayaran Paket</h2>
+      <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header fs-5">
+                  1 Bulan
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">
+                    <span class="fs-4">Rp</span>
+                    <span class="fs-2">35</span><span class="fs-6">.000</span>
+                </h5>
+                  <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                </div>
+            </div>
+        </div>
+      </div>
+      <form>
+          <select class="form-select mb-3 mt-5" aria-label="example">
+            <option selected>Pilih metode pembayaran</option>
+            <option value="1">Transfer Bank</option>
+            <option value="2">OVO</option>
+            <option value="3">DANA</option>
+          </select>
+          <input class="btn btn-primary" type="button" name="submit" id="submit" value="Bayar">
+      </form>
+    </div>
+  </div>
+
+{% endblock content %}
