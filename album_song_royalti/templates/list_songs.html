@@ -1,0 +1,63 @@
+{% extends 'base_artist_songwriter.html' %}
+{% load static %}
+
+{% block meta %}
+<head>
+    <title>List Songs</title>
+</head>
+{% endblock meta %}
+
+{% block content %}
+<div class="container mt-5">
+  <h1>Daftar Lagu dalam Album</h1>
+
+  <!-- Dropdown untuk memilih album yang ingin dilihat daftar lagunya -->
+  <div class="mb-3">
+    <label for="select-album" class="form-label">Pilih Album:</label>
+    <select id="select-album" class="form-select" name="album" onchange="updateSongList()">
+      <option value="">Pilih Album</option>
+      <!-- Placeholder for album options -->
+      <option value="Album1">Album1</option>
+      <option value="Album2">Album2</option>
+    </select>
+  </div>
+
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th colspan="5">Daftar Lagu</th>
+      </tr>
+      <tr>
+        <th>Judul</th>
+        <th>Durasi</th>
+        <th>Total Play</th>
+        <th>Total Download</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody id="song-list">
+      <!-- Placeholder for songs list -->
+      <tr>
+        <td>Lagu1</td>
+        <td>3 menit</td>
+        <td>5</td>
+        <td>1</td>
+        <td>
+          <button class="btn btn-primary btn-sm">Lihat Detail</button>
+          <button class="btn btn-danger btn-sm">Hapus</button>
+        </td>
+      </tr>
+      <tr>
+        <td>Lagu2</td>
+        <td>4 menit</td>
+        <td>10</td>
+        <td>2</td>
+        <td>
+          <button class="btn btn-primary btn-sm">Lihat Detail</button>
+          <button class="btn btn-danger btn-sm">Hapus</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+{% endblock content %}
