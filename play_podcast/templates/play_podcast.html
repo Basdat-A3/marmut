@@ -2,29 +2,33 @@
 {% load static %}
 
 {% block meta %}
-
 <head>
   <title>Podcast Detail</title>
   <!-- DataTables CSS -->
   <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
 </head>
-
 {% endblock meta %}
 
 {% block content %}
-
-
 <div class="container mt-5">
   <!-- Podcast Detail Section -->
   <h2>Podcast Detail</h2>
   <div class="card mt-3">
     <div class="card-body">
-      <p><strong>Judul:</strong> Close The Mic</p>
-      <p><strong>Genre(s):</strong> Technology, Comedy</p>
-      <p><strong>Podcaster:</strong> Alexia Sasaki</p>
-      <p><strong>Total Durasi:</strong> 25 menit</p>
-      <p><strong>Tanggal Rilis:</strong> 15/03/2001</p>
-      <p><strong>Tahun:</strong> 2001</p>
+      <p><strong>Judul:</strong> {{ podcast_detail.judul }}</p>
+      <p><strong>Genre(s):</strong>
+        {% for genre in podcast_detail.genre %}
+          {{ genre }}{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+      </p>
+      <p><strong>Podcaster:</strong> {{ podcast_detail.podcaster }}</p>
+      <p><strong>Total Durasi:</strong>
+        {% if podcast_detail.total_durasi_hours %}
+          {{ podcast_detail.total_durasi_hours }} jam {% endif %}
+        {{ podcast_detail.total_durasi_minutes }} menit
+      </p>
+      <p><strong>Tanggal Rilis:</strong> {{ podcast_detail.tanggal_rilis }}</p>
+      <p><strong>Tahun:</strong> {{ podcast_detail.tahun }}</p>
     </div>
   </div>
 
@@ -40,18 +44,14 @@
       </tr>
     </thead>
     <tbody>
+      {% for episode in episodes %}
       <tr>
-        <td>Pesan Dedi</td>
-        <td>Dengarkan pesan mendalam dari Dedi dalam episode terbaru kami! Dari pengalaman hidup hingga cerita inspiratif, Dedi berbagi insight yang tak terduga.</td>
-        <td>13 menit</td>
-        <td>2001-03-15</td>
+        <td>{{ episode.judul }}</td>
+        <td>{{ episode.deskripsi }}</td>
+        <td>{{ episode.durasi }}</td>
+        <td>{{ episode.tanggal_rilis }}</td>
       </tr>
-      <tr>
-        <td>Dedi Vidi Ngobrol</td>
-        <td>Jelajahi percakapan menarik antara Dedi dan Vidi dalam episode podcast kami yang penuh energi ini! Temukan sudut pandang unik mereka tentang berbagai topik yang menarik.</td>
-        <td>12 menit</td>
-        <td>2001-03-16</td>
-      </tr>
+      {% endfor %}
     </tbody>
   </table>
   <br>
@@ -66,7 +66,7 @@
 
 <script>
   $(document).ready(function() {
-    // disable searching , entries, pagination, and text showing entries
+    // Initialize DataTable
     $('#episodeTable').DataTable({
         "searching": false,
         "lengthChange": false,
@@ -74,8 +74,6 @@
         "info": false,
         "order": [[3, 'asc']]
     });
-    
   });
 </script>
-
 {% endblock content %}
