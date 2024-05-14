@@ -39,8 +39,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'album_song_royalti',
+    'kelola_playlist',
+    'play_song',
     'authentication',
     'dashboard',
+    'kelola_podcast',
+    'melihat_chart',
+    'play_podcast',
 ]
 
 MIDDLEWARE = [
@@ -81,8 +86,12 @@ WSGI_APPLICATION = 'marmut.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': 'aws-0-ap-southeast-1.pooler.supabase.com',
+        'NAME': 'postgres',
+        'USER': 'postgres.yuwisqswkwkvtnjpwavj',
+        'PORT': '5432',
+        'PASSWORD': 'dbmarmut123',
     }
 }
 

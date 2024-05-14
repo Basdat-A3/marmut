@@ -1,16 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base_podcaster.html' %}
+{% load static %}
+
+{% block meta %}
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Create Podcast</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
-<body>
+{% endblock meta %}
+
+{% block content %}
+
 
 <div class="container mt-5">
   <h2 class="mb-4">Create Podcast</h2>
-  <form action="{% url 'submit_podcast' %}" method="post">
     <!-- {% csrf_token %} -->
     <div class="form-group">
       <label for="judul">Judul:</label>
@@ -47,14 +48,15 @@
       <label for="durasi">Durasi:</label>
       <input type="text" class="form-control" id="durasi" name="durasi" required>
     </div>
+    <!-- give spacing for button -->
+    <br>
     <button type="submit" class="btn btn-primary">Submit</button>
-  </form>
 </div>
+
 
 <!-- Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-</body>
-</html>
+{% endblock content%}
