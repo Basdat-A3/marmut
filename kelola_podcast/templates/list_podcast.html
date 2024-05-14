@@ -2,16 +2,13 @@
 {% load static %}
 
 {% block meta %}
-
 <head>
   <title>List Podcasts</title>
   <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
 </head>
-
 {% endblock meta %}
 
 {% block content %}
-
 <div class="container mt-5">
   <h2>List Podcasts</h2>
   <div class="text-end mb-3">
@@ -27,48 +24,19 @@
       </tr>
     </thead>
     <tbody>
+      {% for podcast in podcasts %}
       <tr>
-        <td>Close The Mic</td>
-        <td>2001-03-15</td>
-        <td>2001</td>
+        <td>{{ podcast.judul }}</td>
+        <td>{{ podcast.episode_count }}</td>
+        <td>{{ podcast.total_duration }} menit</td>
         <td>
           <a href="#" class="btn btn-primary btn-sm">Lihat Daftar Episode</a>
           <a href="#" class="btn btn-success btn-sm">Tambah Episode</a>
           <a href="#" class="btn btn-danger btn-sm">Hapus</a>
         </td>
       </tr>
-      <tr>
-        <td>Roe Jogan Podcast</td>
-        <td>2009-07-22</td>
-        <td>2009</td>
-        <td>
-          <a href="#" class="btn btn-primary btn-sm">Lihat Daftar Episode</a>
-          <a href="#" class="btn btn-success btn-sm">Tambah Episode</a>
-          <a href="#" class="btn btn-danger btn-sm">Hapus</a>
-        </td>
-      </tr>
-      <tr>
-        <td>Podcast Warung Teh</td>
-        <td>2005-11-10</td>
-        <td>2005</td>
-        <td>
-          <a href="#" class="btn btn-primary btn-sm">Lihat Daftar Episode</a>
-          <a href="#" class="btn btn-success btn-sm">Tambah Episode</a>
-          <a href="#" class="btn btn-danger btn-sm">Hapus</a>
-        </td>
-      </tr>
-      <tr>
-        <td>Kick Marlo</td>
-        <td>2018-05-03</td>
-        <td>2018</td>
-        <td>
-          <a href="#" class="btn btn-primary btn-sm">Lihat Daftar Episode</a>
-          <a href="#" class="btn btn-success btn-sm">Tambah Episode</a>
-          <a href="#" class="btn btn-danger btn-sm">Hapus</a>
-        </td>
-      </tr>
+      {% endfor %}
     </tbody>
-    
   </table>
 </div>
 
@@ -83,8 +51,8 @@
         "searching": false,
         "lengthChange": false,
         "paging": false,
-        "info": false});
+        "info": false
+    });
   });
 </script>
-
-{% endblock content%}
+{% endblock content %}
