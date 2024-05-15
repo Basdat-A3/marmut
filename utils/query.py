@@ -1,6 +1,6 @@
 import psycopg2
 from psycopg2 import Error
-from django.conf import settings\
+from django.conf import settings
 
 
 def get_database_cursor():
