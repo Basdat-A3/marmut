@@ -1,4 +1,7 @@
+import random
+import re
 from sqlite3 import Cursor
+import uuid
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
@@ -172,7 +175,67 @@ def register_user(request):
 
 
 def register_label(request):
-    return render(request, "register_label.html")
+    email = request.POST.get('email')
+    password = request.POST.get('password')
+    nama = request.POST.get('nama')
+    kontak = request.POST.get('kontak')
+    
+    print(f'{email}, {password}, {nama}, {kontak}')
+    # # check email is valid or not
+    # regex = re.compile(
+    #     r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
+
+    # if not re.fullmatch(regex, email):
+    #     context = {
+    #         'message': 'Email tidak valid',
+    #     }
+    #     return render(request, 'register_label.html', context)
+
+    # if data is not complete
+    if not email or not password or not nama or not kontak:
+        print('something')
+        context = {
+            'message': 'Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu',
+        }
+        return render(request, 'register_label.html', context)
+
+    # check email is already registered or not
+    print('complete data')
+    cursor.execute(f'select * from akun where email = \'{email}\'')
+    records = cursor.fetchmany()
+    if len(records) > 0:
+        context = {
+            'message': 'Email sudah terdaftar',
+        }
+        return render(request, 'register_label.html', context)
+
+    # insert data to database
+    print('touchdown')
+    try:
+        id_label = str(uuid.uuid4())
+        id_pemilik_hak_cipta = str(uuid.uuid4())
+        list_rate_royalti = [100,200,300,400,500,600,700,800,900,1000]
+        rate_royalti = random.choice(list_rate_royalti)
+        cursor.execute(
+            f'insert into pemilik_hak_cipta values (\'{id_pemilik_hak_cipta}\', \'{rate_royalti}\')')
+        cursor.execute(
+            f'insert into label values (\'{id_label}\', \'{nama}\', \'{email}\', \'{password}\', \'{kontak}\', \'{id_pemilik_hak_cipta}\')')
+
+        connection.commit()
+
+        return redirect('authentication:login')
+
+    except Exception as err:
+        connection.rollback()
+        print("Oops! An exception has occured:", err)
+        print("Exception TYPE:", type(err))
+        # err slice to get only error message
+        err = str(err).split('CONTEXT')[0]
+        context = {
+            'message': err,
+        }
+
+        return render(request, 'register_label.html', context)
 
 def logout(request):
     response = HttpResponseRedirect(reverse('authentication:login'))

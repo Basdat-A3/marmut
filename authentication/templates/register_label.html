@@ -8,22 +8,23 @@
 <div class="container">
     <div class="container d-flex flex-column align-items-center w-50 py-5">
         <h2>Register</h2>
-        <form>
+        <form method="POST">
+          {% csrf_token %}
             <div class="mb-3">
               <label for="exampleInputEmail1" class="form-label">Email address</label>
-              <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+              <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
             </div>
             <div class="mb-3">
               <label for="exampleInputPassword1" class="form-label">Password</label>
-              <input type="password" class="form-control" id="exampleInputPassword1">
+              <input type="password" name="password" class="form-control" id="exampleInputPassword1">
             </div>
             <div class="mb-3">
                 <label for="nama" class="form-label">Nama</label>
-                <input type="text" class="form-control" placeholder="" id="nama">
+                <input type="text" name="nama" class="form-control" placeholder="" id="nama">
             </div>
             <div class="mb-3">
                 <label for="kontak" class="form-label">Kontak</label>
-                <input type="text" class="form-control" placeholder="" id="kontak">
+                <input type="text" name="kontak" class="form-control" placeholder="" id="kontak">
             </div>
             <button type="submit" class="btn btn-primary">Register</button>
           </form>

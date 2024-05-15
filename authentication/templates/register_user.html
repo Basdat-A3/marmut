@@ -8,23 +8,24 @@
 <div class="container">
     <div class="container d-flex flex-column align-items-center w-75 py-5">
         <h2>Register</h2>
-        <form class="row">
+        <form class="row" method="POST">
+          {% csrf_token %}
             <div class="col">
                 <div class="mb-3">
                   <label for="exampleInputEmail1" class="form-label">Email address</label>
-                  <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                  <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
                 </div>
                 <div class="mb-3">
                   <label for="exampleInputPassword1" class="form-label">Password</label>
-                  <input type="password" class="form-control" id="exampleInputPassword1">
+                  <input type="password" name="password" class="form-control" id="exampleInputPassword1">
                 </div>
                 <div class="mb-3">
                   <label for="nama" class="form-label">Nama</label>
-                  <input type="text" class="form-control" placeholder="" id="nama">
+                  <input type="text" name="nama" class="form-control" placeholder="" id="nama">
                 </div>
                 <div class="mb-3">
                   <label for="nama" class="form-label">Gender</label>
-                  <select class="form-select " aria-label="example">
+                  <select class="form-select " name="gender" aria-label="example">
                     <option selected>Select your gender</option>
                     <option value="0">Perempuan</option>
                     <option value="1">Laki-laki</option>
@@ -34,15 +35,15 @@
             <div class="col">
                 <div class="mb-3">
                   <label for="TempatLahir" class="form-label">Tempat Lahir</label>
-                  <input type="text" class="form-control" placeholder="" id="TempatLahir">
+                  <input type="text" name="TempatLahir" class="form-control" placeholder="" id="TempatLahir">
                 </div>
                 <div class="mb-3">
                   <label for="date" class="form-label">Tanggal lahir</label>
-                  <input type="date" class="form-control" placeholder="" id="date">
+                  <input type="date" name="TTL" class="form-control" placeholder="" id="date">
                 </div>
                 <div class="mb-3">
                     <label for="KotaAsal" class="form-label">Kota Asal</label>
-                    <input type="text" class="form-control" placeholder="" id="KotaAsal">
+                    <input type="text" name="KotaAsal" class="form-control" placeholder="" id="KotaAsal">
                   </div>
                 <div class="mb-3">
                     <p>Role:</p>
