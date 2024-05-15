@@ -5,11 +5,13 @@ from django.conf import settings
 try:
     # Connect ke db
     connection = psycopg2.connect(
-        dbname='postgres',
-        user='postgres.yuwisqswkwkvtnjpwavj',
-        password='dbmarmut123',
-        host='aws-0-ap-southeast-1.pooler.supabase.com',
-        port='5432'
+        user = settings.DATABASES['default']['USER'],
+        password = settings.DATABASES['default']['PASSWORD'],
+        host = settings.DATABASES['default']['HOST'],
+        port = settings.DATABASES['default']['PORT'],
+        database = settings.DATABASES['default']['NAME'],
+        # make sure to set the statement_timeout to the same value as CONN_MAX_AGE
+        # options=f"-c statement_timeout={settings.CONN_MAX_AGE}"
     )
 
     # Buat cursor buat operasiin db
