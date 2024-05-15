@@ -1,5 +1,7 @@
 from sqlite3 import Cursor
-from django.shortcuts import render
+from django.http import HttpResponseRedirect
+from django.shortcuts import redirect, render
+from django.urls import reverse
 from utils.query import *
 
 # Create your views here.
@@ -171,3 +173,9 @@ def register_user(request):
 
 def register_label(request):
     return render(request, "register_label.html")
+
+def logout(request):
+    response = HttpResponseRedirect(reverse('authentication:login'))
+    for cookie in request.COOKIES:
+        response.delete_cookie(cookie)
+    return response
