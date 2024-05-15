@@ -10,8 +10,13 @@ try:
         host = settings.DATABASES['default']['HOST'],
         port = settings.DATABASES['default']['PORT'],
         database = settings.DATABASES['default']['NAME'],
-        # make sure to set the statement_timeout to the same value as CONN_MAX_AGE
-        # options=f"-c statement_timeout={settings.CONN_MAX_AGE}"
+        # conn max age
+        # connection pooling
+        # https://docs.djangoproject.com/en/3.0/ref/databases/#persistent-connections
+        # https://docs.djangoproject.com/en/3.0/ref/databases/#connection-pooling
+        # https://docs.djangoproject.com/en/3.0/ref/settings/#conn-max-age
+        
+
     )
 
     # Buat cursor buat operasiin db
