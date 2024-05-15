@@ -9,8 +9,19 @@
 
 {% block content %}
 <div class="container mt-4">
-  <h1 class="mb-4">List Royalti</h1>
-
+  <h1 class="mb-4">List Royalti
+    <small class="text-muted">
+      {% if request.COOKIES.isArtist == 'True' %}
+        Artist
+      {% endif %}
+      {% if request.COOKIES.isSongwriter == 'True' %}
+        {% if request.COOKIES.isArtist == 'True' %}, {% endif %}Songwriter
+      {% endif %}
+      {% if request.COOKIES.isPodcaster == 'True' %}
+        {% if request.COOKIES.isArtist == 'True' or request.COOKIES.isSongwriter == 'True' %}, {% endif %}Podcaster
+      {% endif %}
+    </small>
+  </h1>
   <table class="table table-striped table-bordered">
     <thead class="table-dark">
       <tr>
@@ -26,16 +37,16 @@
     </thead>
     <tbody>
       <!-- Placeholder for Royalti list -->
-      {% for record in records_royalti_label%}
+      {% for record in records_royalti %}
       <tr class="text-white">
-          <td class="py-3 px-4">{{record.6}}</td>
-          <td class="py-3 px-4">{{record.5}}</td>
-          <td class="py-3 px-4">{{record.3}}</td>
-          <td class="py-3 px-4">{{record.4}}</td>
-          <td class="py-3 px-4">Rp {{record.1}}</td>
+          <td class="py-3 px-4">{{ record.6 }}</td>
+          <td class="py-3 px-4">{{ record.5 }}</td>
+          <td class="py-3 px-4">{{ record.3 }}</td>
+          <td class="py-3 px-4">{{ record.4 }}</td>
+          <td class="py-3 px-4">Rp {{ record.7 }}</td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
 </div>
-{% endblock content%}
+{% endblock content %}

@@ -1,16 +1,24 @@
 from sqlite3 import Cursor
-from django.shortcuts import render
+from django.http import HttpResponseRedirect
+from django.shortcuts import redirect, render
+from django.urls import reverse
 from utils.query import *
+
 
 # Create your views here.
 
-def logout(request):
-    response = render(request, 'login.html')
-    for key in request.COOKIES.keys():
-        response.delete_cookie(key)
+
+def logout_user(request):
+    print("Cookie sini bos")
+
+    response = redirect('authentication:home')
+    for cookie in request.COOKIES:
+        response.delete_cookie(cookie)
     return response
 
+
 def login(request):
+    print("masuk sini bos")
     if request.method == "POST":
         email = request.POST.get('email')
         password = request.POST.get("password")
@@ -19,7 +27,6 @@ def login(request):
         cursor.execute(
             f'SELECT * FROM akun WHERE email = %s AND password = %s', [email, password])
         user = cursor.fetchone()
-        print(user)
 
         if user == None:
             cursor.execute(
@@ -44,7 +51,7 @@ def login(request):
                 response.set_cookie('role', 'label')
                 response.set_cookie('email', email)
                 response.set_cookie('id', id_label)
-                response.set_cookie('idPemilikCiptaLabel', label[5])
+                response.set_cookie('id_pemilik_hak_cipta', label[5])
                 return response
             else:
                 context = {
@@ -62,6 +69,7 @@ def login(request):
             isArtist = False
             isSongwriter = False
             isLabel = False
+            isPodcaster = False
             # artist
             cursor.execute(
                 f'SELECT * FROM artist WHERE email_akun = %s', [email])
@@ -89,7 +97,8 @@ def login(request):
             # podcaster
             cursor.execute(
                 f'select * from podcaster where email = %s', [email])
-            podcaster = cursor.fetchmany()
+            podcaster = cursor.fetchone()
+            print(podcaster)
             if podcaster != None:
                 isPodcaster = True
                 cursor.execute(
@@ -121,10 +130,6 @@ def login(request):
             context = {
                 'role': role_verif,
                 'status_langganan': status_langganan,
-                'list_songs_artist': list_songs_artist,
-                'list_songs_songwriter': list_songs_songwriter,
-                'list_episode': list_episode,
-                'records_user_playlist': records_user_playlist,
                 'isArtist': isArtist,
                 'isSongwriter': isSongwriter,
                 'isPodcaster': isPodcaster,

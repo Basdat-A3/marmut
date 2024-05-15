@@ -10,9 +10,9 @@
 {% block content %}
 <div class="container mt-5">
   <h1>List Album</h1>
-  <h3 class="mb-3 cursor-pointer" onclick="window.location.href='list_album_label.html';">Logged in as: Artist/Songwriter</h3>
+  <h3 class="mb-3 cursor-pointer" onclick="window.location.href='list_album_label.html';">Logged in as: Artist/Songwriter SSSSSSSSSSS</h3>
 
-  <button class="btn btn-success mb-3" onclick="window.location.href='create_album.html';">Tambah Album</button>
+  <button class="btn btn-success mb-3" onclick="location.href='{% url 'album_song_royalti:create_album' %}'">Tambah Album</button>
 
   <table class="table table-striped">
     <thead>
@@ -28,17 +28,19 @@
       </tr>
     </thead>
     <tbody>
+      {% for record in records_album %}
       <tr>
-        <td>Album1</td>
+        <td>{{record.1}}</td>
         <td>LabelA</td>
-        <td>0</td>
-        <td>0 menit</td>
+        <td>{{record.2}}</td>
+        <td>{{record.4}}</td>
         <td>
           <button class="btn btn-primary btn-sm" onclick="window.location.href='list_songs.html';">Lihat Daftar Lagu</button>
           <button class="btn btn-warning btn-sm" onclick="window.location.href='Create_songs.html';">Tambah Lagu</button>
           <button class="btn btn-danger btn-sm">Hapus</button>
         </td>
       </tr>
+      {% endfor %}
     </tbody>
   </table>
 

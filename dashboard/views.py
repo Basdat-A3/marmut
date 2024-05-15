@@ -4,27 +4,27 @@ from django.shortcuts import render
 
 
 def dashboard(request):
-    role_verif = request.COOKIES.get('role')
-    email = request.COOKIES.get('email')
-    id_user_artist = request.COOKIES.get('id_user_artist')
-    id_user_songwriter = request.COOKIES.get('id_user_songwriter')
-    id_pemilik_hak_cipta_artist = request.COOKIES.get('idPemilikCiptaArtist')
-    id_pemilik_hak_cipta_songwriter = request.COOKIES.get('idPemilikCiptaSongwriter')
-    status_langganan = request.COOKIES.get('status_langganan')
-    isArtist = request.COOKIES.get('isArtist')
-    isSongwriter = request.COOKIES.get('isSongwriter')
-    isPodcaster = request.COOKIES.get('isPodcaster')
+    # role_verif = request.COOKIES.get('role')
+    # email = request.COOKIES.get('email')
+    # id_user_artist = request.COOKIES.get('id_user_artist')
+    # id_user_songwriter = request.COOKIES.get('id_user_songwriter')
+    # id_pemilik_hak_cipta_artist = request.COOKIES.get('idPemilikCiptaArtist')
+    # id_pemilik_hak_cipta_songwriter = request.COOKIES.get('idPemilikCiptaSongwriter')
+    # status_langganan = request.COOKIES.get('status_langganan')
+    # isArtist = request.COOKIES.get('isArtist')
+    # isSongwriter = request.COOKIES.get('isSongwriter')
+    # isPodcaster = request.COOKIES.get('isPodcaster')
 
-    context = {
-        'role': role_verif,
-        'status_langganan': status_langganan,
-        'isArtist': isArtist,
-        'isSongwriter': isSongwriter,
-        'isPodcaster': isPodcaster,
-        'email': email,
-    }
+    # context = {
+    #     'role': role_verif,
+    #     'status_langganan': status_langganan,
+    #     'isArtist': isArtist,
+    #     'isSongwriter': isSongwriter,
+    #     'isPodcaster': isPodcaster,
+    #     'email': email,
+    # }
 
-    return render(request, "dashboard.html", context)
+    return render(request, "dashboard.html")
 
 
 def dashboard_label(request):
