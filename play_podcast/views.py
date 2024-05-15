@@ -9,6 +9,7 @@ from utils.query import *
 #
 #
 def play_podcast(request, podcast_id):
+    connection, cursor = get_database_cursor()
     cursor.execute("""
         SELECT K.judul AS "Judul",
             array_agg(G.genre) AS "Genre",
