@@ -26,13 +26,15 @@
     </thead>
     <tbody>
       <!-- Placeholder for Royalti list -->
-      <tr>
-        <td>Lagu 1</td>
-        <td>Album 1</td>
-        <td>3</td>
-        <td>0</td>
-        <td>Rp 460000</td>
+      {% for record in records_royalti_label%}
+      <tr class="text-white">
+          <td class="py-3 px-4">{{record.6}}</td>
+          <td class="py-3 px-4">{{record.5}}</td>
+          <td class="py-3 px-4">{{record.3}}</td>
+          <td class="py-3 px-4">{{record.4}}</td>
+          <td class="py-3 px-4">Rp {{record.1}}</td>
       </tr>
+      {% endfor %}
     </tbody>
   </table>
 </div>
