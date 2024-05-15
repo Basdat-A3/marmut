@@ -4,6 +4,11 @@ from utils.query import *
 
 # Create your views here.
 
+def logout(request):
+    response = render(request, 'login.html')
+    for key in request.COOKIES.keys():
+        response.delete_cookie(key)
+    return response
 
 def login(request):
     if request.method == "POST":
@@ -131,6 +136,7 @@ def login(request):
                 'kota_asal': user[7],
 
             }
+            print(role_verif)
 
             response = render(request, 'dashboard.html', context)
             response.set_cookie('role', role_verif)
