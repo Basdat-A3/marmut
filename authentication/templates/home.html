@@ -8,12 +8,12 @@
 <div class="container">
     <div class="container d-flex flex-column align-items-center gap-3 w-50 py-5">
         <h2>Marmut - A3</h2>
-        <a href="/auth/login">
+        <a href="{% url 'authentication:login' %}">
             <button type="button" class="btn btn-primary">
                 Login
             </button>
         </a>
-        <a href="/auth/register">
+        <a href="{% url 'authentication:register' %}">
             <button type="button" class="btn btn-outline-primary">
                 Register
             </button>
