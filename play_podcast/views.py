@@ -10,6 +10,8 @@ from utils.query import *
 #
 def play_podcast(request, podcast_id):
     connection, cursor = get_database_cursor()
+
+    
     cursor.execute("""
         SELECT K.judul AS "Judul",
             array_agg(G.genre) AS "Genre",
@@ -79,6 +81,11 @@ def play_podcast(request, podcast_id):
         },
         'episodes': episode_data
     }
+
+    # close connection
+    cursor.close()
+    connection.close()
+
 
     return render(request, 'play_podcast.html', context)
 #

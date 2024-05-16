@@ -44,6 +44,10 @@ def create_podcast(request):
     context = {
         'genres': ['Technology', 'Education', 'Sports', 'History', 'Comedy', 'Mystery']
     }
+
+    # close connection
+    cursor.close()
+    connection.close()
     
     return render(request, 'create_podcast.html', context)
 
@@ -51,7 +55,7 @@ def create_podcast(request):
 
 
 def list_podcast(request):
-    # belom difilter berdasarkan logged in podcaster
+    # belom filter berdasarkan podcaster logged in
     connection, cursor = get_database_cursor()
     cursor.execute("""
         SELECT K.judul AS "Judul",
@@ -79,6 +83,10 @@ def list_podcast(request):
     context = {
         'podcasts': podcast_data
     }
+
+    # close connection
+    cursor.close()
+    connection.close()
     
     return render(request, 'list_podcast.html', context)
 
@@ -116,6 +124,10 @@ def daftar_episode(request, podcast_id):
     context = {
         'episodes': episode_data
     }
+
+    # close connection
+    cursor.close()
+    connection.close()
     
     return render(request, 'daftar_episode.html', context)
 
@@ -151,9 +163,9 @@ def create_episode(request, podcast_id):
         )
 
         connection.commit()
-
-
-        
+        # close connection
+        cursor.close()
+        connection.close()        
         return HttpResponseRedirect('/daftar-episode/' + str(podcast_id) + '/')
     
     # Fetch podcast title for display purposes
@@ -172,5 +184,9 @@ def create_episode(request, podcast_id):
         'podcast_id': podcast_id,
         'podcast_title': podcast[0] if podcast else 'Unknown Podcast'
     }
+
+    # close connection
+    cursor.close()
+    connection.close()
     
     return render(request, 'create_episode.html', context)
