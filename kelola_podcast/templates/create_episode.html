@@ -12,15 +12,12 @@
 
 <div class="container mt-5">
   <h2>Create Episode</h2>
-  <form action="#" method="post">
+  <form action="" method="post">
+    {% csrf_token %}
     <div class="form-group">
       <label for="podcast">Podcast:</label>
-      <div class="custom-select">
-        <select class="form-control" id="podcast" name="podcast" required>
-          <option value="">Select Podcast</option>
-          <option value="Close The Mic">Close The Mic</option>
-          <option value="Podcast Warung Teh">Podcast Warung Teh</option>
-        </select>
+      <div>
+        <h2 class="mb-4">{{ podcast_title }}</h2>
       </div>
     </div>
     <div class="form-group">
@@ -32,14 +29,13 @@
       <textarea class="form-control" id="deskripsi" name="deskripsi" rows="3" required></textarea>
     </div>
     <div class="form-group">
-      <label for="durasi">Durasi:</label>
-      <input type="text" class="form-control" id="durasi" name="durasi" required>
+      <label for="durasi">Durasi (in minutes):</label>
+      <input type="number" class="form-control" id="durasi" name="durasi" required>
     </div>
     <br>
     <button type="submit" class="btn btn-primary">Submit</button>
   </form>
 </div>
-
 
 <!-- Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -71,6 +67,4 @@
   }
 </style>
 
-{% endblock content%}
-
-
+{% endblock content %}
