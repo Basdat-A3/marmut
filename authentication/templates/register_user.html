@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base_guest.html' %}
 
 {% block meta %}
     <title>Register</title>
@@ -8,23 +8,24 @@
 <div class="container">
     <div class="container d-flex flex-column align-items-center w-75 py-5">
         <h2>Register</h2>
-        <form class="row">
+        <form class="row" method="POST">
+          {% csrf_token %}
             <div class="col">
                 <div class="mb-3">
                   <label for="exampleInputEmail1" class="form-label">Email address</label>
-                  <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                  <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
                 </div>
                 <div class="mb-3">
                   <label for="exampleInputPassword1" class="form-label">Password</label>
-                  <input type="password" class="form-control" id="exampleInputPassword1">
+                  <input type="password" name="password" class="form-control" id="exampleInputPassword1">
                 </div>
                 <div class="mb-3">
                   <label for="nama" class="form-label">Nama</label>
-                  <input type="text" class="form-control" placeholder="" id="nama">
+                  <input type="text" name="nama" class="form-control" placeholder="" id="nama">
                 </div>
                 <div class="mb-3">
                   <label for="nama" class="form-label">Gender</label>
-                  <select class="form-select " aria-label="example">
+                  <select class="form-select " name="gender" aria-label="example">
                     <option selected>Select your gender</option>
                     <option value="0">Perempuan</option>
                     <option value="1">Laki-laki</option>
@@ -34,32 +35,32 @@
             <div class="col">
                 <div class="mb-3">
                   <label for="TempatLahir" class="form-label">Tempat Lahir</label>
-                  <input type="text" class="form-control" placeholder="" id="TempatLahir">
+                  <input type="text" name="tempat_lahir" class="form-control" placeholder="" id="TempatLahir">
                 </div>
                 <div class="mb-3">
                   <label for="date" class="form-label">Tanggal lahir</label>
-                  <input type="date" class="form-control" placeholder="" id="date">
+                  <input type="date" name="tanggal_lahir" class="form-control" placeholder="" id="date">
                 </div>
                 <div class="mb-3">
                     <label for="KotaAsal" class="form-label">Kota Asal</label>
-                    <input type="text" class="form-control" placeholder="" id="KotaAsal">
+                    <input type="text" name="kota_asal" class="form-control" placeholder="" id="KotaAsal">
                   </div>
                 <div class="mb-3">
                     <p>Role:</p>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                        <input class="form-check-input" name="podcaster" type="checkbox" value="podcaster" id="flexCheckDefault">
                         <label class="form-check-label" for="flexCheckDefault">
                           Podcaster
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
+                        <input class="form-check-input" name="artist" type="checkbox" value="artist" id="flexCheckChecked">
                         <label class="form-check-label" for="flexCheckChecked">
                           Artist
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
+                        <input class="form-check-input" name="songwriter" type="checkbox" value="songwriter" id="flexCheckChecked">
                         <label class="form-check-label" for="flexCheckChecked">
                           Songwriter
                         </label>
@@ -67,6 +68,7 @@
                 </div>
             </div>
             <button type="submit" class="btn btn-primary mt-5">Register</button>
+            {{ message }}
           </form>
           <p class="my-4">Already have an account? <a href="{% url 'authentication:login' %}">Login</a></p>
     </div>

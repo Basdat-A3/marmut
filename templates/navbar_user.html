@@ -7,39 +7,96 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-
+{% csrf_token %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
-    <a class="navbar-brand">Marmut</a>
+    <a class="navbar-brand" href="{% url 'dashboard:dashboard' %}">Marmut</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <form class="d-flex ms-auto"  method="get">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="q">
-        <button class="btn btn-outline-light" type="submit">Search</button>
+      <form class="d-flex ms-auto" method="get" id="search-form" style="display: none;">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="q">
+          <button class="btn btn-light" type="submit">Search</button>
       </form>
       <ul class="navbar-nav ms-3">
-        <li class="nav-item">
-          <a class="nav-link " aria-current="page">Chart</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link ">Manage Playlist</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" >Dashboard</a>
-        </li>
-        <li class="nav-item ">
-          <a class="nav-link" >Logout</a>
-        </li>
-        <li class="nav-item ">
-          <a class="btn btn-light" >Premium Plan</a>
-        </li>
+          <li class="nav-item" id="chart-item" style="display: none;">
+            <a class="btn btn-dark" href="{% url 'melihat_chart:list_chart' %}">Chart</a>
+          </li>
+          <li class="nav-item" id="manage-playlist-item" style="display: none;">
+            <a class="btn btn-dark" href="{% url 'kelola_playlist:playlist' %}">Manage Playlist</a>
+          </li>
+          <li class="nav-item" id="manage-song-album-item" style="display: none;">
+            <a class="btn btn-dark" href="{% url 'album_song_royalti:list_album' %}">Manage Song & Album</a>
+          </li>
+          <li class="nav-item" id="royalti-item" style="display: none;">
+            <a class="btn btn-dark" href="{% url 'album_song_royalti:cek_royalti' %}">Royalti</a>
+          </li>
+          <li class="nav-item" id="dashboard-item" style="display: none;">
+            <a class="btn btn-dark" href="{% url 'dashboard:dashboard' %}">Dashboard</a>
+          </li>
+          <li class="nav-item" id="logout-item" style="display: none;">
+            <a class="btn btn-dark" href="{% url 'authentication:logout' %}">Logout</a>
+          </li>
+          <li class="nav-item" id="downloaded-song-item" style="display: none;">
+            <a class="nav-link">Downloaded Song</a>
+          </li>
+          <li class="nav-item" id="premium-plan-item" style="display: none;">
+            <a class="btn btn-light" href="{% url 'dashboard:paket_payment' %}">Premium Plan</a>
+          </li>
       </ul>
-      
     </div>
   </div>
 </nav>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    function getCookie(name) {
+        let cookieArr = document.cookie.split(";");
+
+        for (let i = 0; i < cookieArr.length; i++) {
+            let cookiePair = cookieArr[i].split("=");
+
+            if (name == cookiePair[0].trim()) {
+                return decodeURIComponent(cookiePair[1]);
+            }
+        }
+
+        return null;
+    }
+
+    let isArtist = getCookie('isArtist') === 'True';
+    let isSongwriter = getCookie('isSongwriter') === 'True';
+    let isPodcaster = getCookie('isPodcaster') === 'True';
+    let statusLangganan = getCookie('statusLangganan');
+
+    if (isArtist || isSongwriter || isPodcaster) {
+        document.getElementById('search-form').style.display = 'block';
+        document.getElementById('chart-item').style.display = 'block';
+        document.getElementById('manage-playlist-item').style.display = 'block';
+        document.getElementById('dashboard-item').style.display = 'block';
+        document.getElementById('logout-item').style.display = 'block';
+
+        if (isArtist || isSongwriter) {
+            document.getElementById('manage-song-album-item').style.display = 'block';
+            document.getElementById('royalti-item').style.display = 'block';
+        }
+
+        if (statusLangganan === 'Premium') {
+            document.getElementById('downloaded-song-item').style.display = 'block';
+        } else {
+            document.getElementById('premium-plan-item').style.display = 'block';
+        }
+    } else {
+        let manageSongAlbumItem = document.getElementById('manage-song-album-item');
+        manageSongAlbumItem.querySelector('a').setAttribute('href', '{% url "album_song_royalti:list_album_label" %}');
+        manageSongAlbumItem.style.display = 'block';
+        document.getElementById('royalti-item').style.display = 'block';
+        document.getElementById('dashboard-item').style.display = 'block';
+        document.getElementById('logout-item').style.display = 'block';
+    }
+});
+</script>
 </body>
 </html>

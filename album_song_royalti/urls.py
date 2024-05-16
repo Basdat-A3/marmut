@@ -1,7 +1,7 @@
 from django.urls import path
 from album_song_royalti.views import *
 
-app_name = 'album-song-royalti'
+app_name = 'album_song_royalti'
 
 urlpatterns = [
     path('royalti/', cek_royalti, name='cek_royalti'),

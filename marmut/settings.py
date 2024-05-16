@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'kelola_podcast',
     'melihat_chart',
     'play_podcast',
+    'paket',
 ]
 
 MIDDLEWARE = [
