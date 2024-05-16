@@ -9,6 +9,7 @@ def create_podcast(request):
 
 def list_podcast(request):
     # belom difilter berdasarkan logged in podcaster
+    connection, cursor = get_database_cursor()
     cursor.execute("""
         SELECT K.judul AS "Judul",
                 COALESCE(COUNT(E.id_episode), 0) AS "Jumlah Episode",
@@ -39,6 +40,7 @@ def list_podcast(request):
     return render(request, 'list_podcast.html', context)
 
 def daftar_episode(request, podcast_id):
+    connection, cursor = get_database_cursor()
     cursor.execute("""
         SELECT E.id_episode,
                 E.judul AS "Judul Episode",
