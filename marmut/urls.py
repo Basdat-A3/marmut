@@ -26,4 +26,5 @@ urlpatterns = [
     path('', include('kelola_podcast.urls')),
     path('', include('melihat_chart.urls')),
     path('', include('play_podcast.urls')),
+    path('paket/', include('paket.urls')),
 ]
