@@ -1,7 +1,7 @@
 {% extends 'base_user_premium.html' %}
 
 {% block meta %}
-    <title>Dashboard</title>
+    <title>Paket</title>
     <style>
       .bg-yellow{
         background-color: #c6c639;
@@ -21,7 +21,6 @@
 {% endblock meta %}
 
 {% block content %}
-<style></style>
 <div class="container border p-lg-5 text-white text-center">
     <div class="bg-dark d-flex flex-column justify-content-center align-items-center rounded p-lg-5">
       <h2 class="mb-5">RIWAYAT TRANSAKSI PAKET</h2>
@@ -36,30 +35,18 @@
             </tr>
           </thead>
           <tbody>
+            {% for item in riwayat %}
             <tr>
-              <th scope="row">1 Bulan</th>
-              <td>8 April 2024 17.23</td>
-              <td>8 Mei 2024 17.23</td>
-              <td>OVO</td>
-              <td>Rp35.000</td>
+              <th scope="row">{{item.1}}</th>
+              <td>{{item.3}}</td>
+              <td>{{item.4}}</td>
+              <td>{{item.5}}</td>
+              <td>Rp{{item.6}}</td>
             </tr>
-            <tr>
-              <th scope="row">1 Bulan</th>
-              <td>8 Mei 2024 17.23</td>
-              <td>8 Juni 2024 17.23</td>
-              <td>DANA</td>
-              <td>Rp35.000</td>
-            </tr>
-            <tr>
-              <th scope="row">3 Bulan</th>
-              <td>8 Agustus 2024 17.23</td>
-              <td>8 November 2024 17.23</td>
-              <td>Transfer Bank</td>
-              <td>Rp99.000</td>
-            </tr>
+            {% endfor %}
           </tbody>
       </table>
-      <a href="{% url 'dashboard:paket' %}" class="btn btn-primary">Kembali</a>
+      <a href="{% url 'paket:paket' %}" class="btn btn-primary">Kembali</a>
     </div>
   </div>
 

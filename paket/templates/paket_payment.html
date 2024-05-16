@@ -1,0 +1,61 @@
+{% extends 'base_user_premium.html' %}
+
+{% block meta %}
+    <title>Paket</title>
+    <style>
+      .bg-yellow{
+        background-color: #c6c639;
+      }
+      .bg-green{
+        background-color: #97b51d;
+      }
+
+      .container{
+        min-height: 100vh;
+      }
+
+      .text-white {
+        color: white;
+      }
+    </style>
+{% endblock meta %}
+
+{% block content %}
+<style></style>
+<div class="container border p-lg-5 text-white text-center">
+    <div class="bg-dark d-flex flex-column justify-content-center align-items-center rounded p-lg-5">
+      <h2 class="mb-5">Pembayaran Paket</h2>
+      <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header fs-5">
+                  {{ paket.0 }}
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">
+                    <span class="fs-4">Rp</span>
+                    <span class="fs-2">{{paket.1}}</span>
+                </h5>
+                <ul class="card-text">
+                    <li>Bebas iklan dalam konten</li>
+                    <li>Akses Konten VIP</li>
+                    <li>Download lagu favoritmu</li>
+                </ul>
+                </div>
+            </div>
+        </div>
+      </div>
+      <form method="POST">
+        {% csrf_token %}
+          <select class="form-select mb-3 mt-5" name="metode" aria-label="example">
+            <option selected>Pilih metode pembayaran</option>
+            <option value="Transfer Bank">Transfer Bank</option>
+            <option value="OVO">OVO</option>
+            <option value="DANA">DANA</option>
+          </select>
+          <input class="btn btn-primary" type="submit" name="submit" id="submit" value="Bayar">
+      </form>
+    </div>
+  </div>
+
+{% endblock content %}
