@@ -69,9 +69,6 @@ def login(request):
                 id_user_artist = artist[0]
                 id_pemilik_hak_cipta_artist = artist[2]
                 isArtist = True
-                cursor.execute(
-                    f'SElect * from song where id_artist = %s', [id_user_artist])
-                list_songs_artist = cursor.fetchall()
 
             # songwriter
             cursor.execute(
@@ -81,9 +78,6 @@ def login(request):
                 id_user_songwriter = songwriter[0]
                 id_pemilik_hak_cipta_songwriter = songwriter[2]
                 isSongwriter = True
-                cursor.execute(
-                    f'SELECT id_song from  songwriter_write_song where id_songwriter= %s', [id_user_songwriter])
-                list_songs_songwriter = cursor.fetchall()
 
             # podcaster
             cursor.execute(
@@ -92,13 +86,6 @@ def login(request):
             print(podcaster)
             if podcaster != None:
                 isPodcaster = True
-                cursor.execute(
-                    f'Select * from podcast where email_podcaster = %s', [email])
-                list_episode = cursor.fetchall()
-
-            cursor.execute(
-                f'select * from user_playlist where email_pembuat = \'{email}\'')
-            records_user_playlist = cursor.fetchall()
 
             cursor.execute(
                 f'SELECT * FROM premium WHERE email = %s', [email])

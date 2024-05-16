@@ -3,15 +3,17 @@
 
 {% block meta %}
 <head>
-    <title>Create Album</title>
+    <title>Create Album and Song</title>
 </head>
 {% endblock meta %}
 
 {% block content %}
 <div class="container mt-4">
-  <h1 class="mb-4">Create Album</h1>
+  <h1 class="mb-4">Create Album and Song</h1>
   <form method="post" action="{% url 'album_song_royalti:create_album' %}">
     {% csrf_token %}
+    
+    <!-- Album Information -->
     <div class="mb-3">
       <label for="album-title" class="form-label">Album Title</label>
       <input type="text" class="form-control" id="album-title" name="album-title" required>
@@ -24,7 +26,59 @@
         {% endfor %}
       </select>
     </div>
-    <button type="submit" class="btn btn-success">Submit</button>
+    
+    <!-- Song Information -->
+    <div class="mb-3">
+      <label for="song-title" class="form-label">Judul Lagu:</label>
+      <input type="text" id="song-title" name="song-title" class="form-control" required />
+    </div>
+    {% if isArtist == "True" %}
+      <div class="mb-3">
+        <label for="song-artist" class="form-label">Artis: {{ artist_name.0 }}</label>
+      </div>
+    {% else %}
+      <div class="mb-3">
+        <label for="song-artist" class="form-label">Artis:</label>
+        <select id="song-artist" name="song_artist" class="form-select" required>
+          <option value="">Pilih Artis</option>
+          {% for record in records_artist %}
+          <option value="{{ record.0 }}">{{ record.3 }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    {% endif %}
+    
+    {% if isSongwriter == "True" %}
+    <div class="mb-3">
+      <label for="song-writer" class="form-label">Songwriter: {{ songwriter_name.0 }}</label>
+    </div>
+    {% else %}
+    <div class="mb-3">
+      <label for="song-writer" class="form-label">Songwriter:</label>
+      <select id="song-writer" name="song_writer[]" class="form-select" multiple required>
+        <option value="">Pilih Songwriter</option>
+        {% for record in records_songwriter %}
+        <option value="{{ record.0 }}">{{ record.3 }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    {% endif %}
+    
+    <div class="mb-3">
+      <label for="song-genre" class="form-label">Genre:</label>
+      <select id="song-genre" name="song_genre[]" class="form-select" multiple required>
+        {% for record in records_genre %}
+        <option value="{{ record.0 }}">{{ record.0 }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  
+    <div class="mb-3">
+      <label for="song-duration" class="form-label">Durasi (menit):</label>
+      <input type="text" id="song-duration" name="song-duration" class="form-control" required />
+    </div>
+  
+    <button type="submit" class="btn btn-primary">Submit</button>
   </form>
 </div>
 {% endblock content %}
