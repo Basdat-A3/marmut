@@ -42,8 +42,43 @@ def dashboard_podcaster(request):
     return render(request, "dashboard_podcaster.html")
 
 def search(request):
-    return render(request, "search.html")
+    keyword = request.GET.get('q', None)
+    connection, cursor = get_database_cursor()
+    if keyword:
+        query = f"""
+            SELECT 'Podcast' AS Tipe, k.judul AS Judul, a.nama AS Oleh, k.id as ID
+            FROM podcast p
+            JOIN konten k ON p.id_konten = k.id
+            JOIN akun a ON p.email_podcaster = a.email
+            WHERE LOWER(k.judul) LIKE LOWER('%{keyword}%')
 
+            UNION
+
+            SELECT 'Song' AS Tipe, k.judul AS Judul, a.nama AS Oleh, k.id as ID
+            FROM song s
+            JOIN konten k ON s.id_konten = k.id
+            JOIN artist art ON s.id_artist = art.id
+            JOIN akun a ON art.email_akun = a.email
+            WHERE LOWER(k.judul) LIKE LOWER('%{keyword}%')
+
+            UNION
+
+            SELECT 'User Playlist' AS Tipe, up.judul AS Judul, a.nama AS Oleh, up.id_user_playlist as ID
+            FROM user_playlist up
+            JOIN akun a ON up.email_pembuat = a.email
+            WHERE LOWER(up.judul) LIKE LOWER('%{keyword}%')
+            """
+        cursor.execute(query)
+        contents = cursor.fetchall()
+        print(contents)
+
+        context = {
+            "contents": contents,
+            "keyword" : keyword
+        }
+        # print(paket)
+        return render(request, "search.html", context)
+    return render(request, "search.html")
 
 def downloaded_songs(request):
     return render(request, "downloaded_songs.html")
