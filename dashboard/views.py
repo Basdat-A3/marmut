@@ -1,4 +1,7 @@
-from django.shortcuts import render
+import uuid
+from django.shortcuts import redirect, render
+from utils.query import get_database_cursor
+from datetime import datetime, timedelta
 
 # Create your views here.
 
@@ -37,19 +40,6 @@ def dashboard_artist(request):
 
 def dashboard_podcaster(request):
     return render(request, "dashboard_podcaster.html")
-
-
-def paket(request):
-    return render(request, "paket.html")
-
-
-def paket_payment(request):
-    return render(request, "paket_payment.html")
-
-
-def riwayat(request):
-    return render(request, "riwayat.html")
-
 
 def search(request):
     return render(request, "search.html")
