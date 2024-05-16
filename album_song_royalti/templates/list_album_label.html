@@ -33,8 +33,8 @@
         <td>{{record.2}}</td>
         <td>{{record.4}}</td>
         <td>
-          <button class="btn btn-primary btn-sm" onclick="window.location.href='list_songs.html';">Lihat Daftar Lagu</button>
-          <button class="btn btn-danger btn-sm">Hapus</button>
+          <button class="btn btn-primary btn-sm" onclick="window.location.href='{% url 'album_song_royalti:list_song' %}?id={{ record.0 }}'">Lihat Daftar Lagu</button>
+          <button class="btn btn-danger btn-sm" onclick="window.location.href='{% url 'album_song_royalti:delete_album_label' %}?id={{ record.0 }}'">Hapus</button>
         </td>
       </tr>
       {% endfor %}

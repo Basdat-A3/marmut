@@ -31,13 +31,13 @@
       {% for record in records_album %}
       <tr>
         <td>{{ record.1 }}</td>
-        <td>{{ record.6 }}</td>
+        <td>{{ record.5 }}</td>
         <td>{{ record.3 }}</td>
         <td>{{ record.4 }}</td>
         <td>
           <button class="btn btn-primary btn-sm" onclick="window.location.href='{% url 'album_song_royalti:list_song' %}?id={{ record.0 }}'">Lihat Daftar Lagu</button>
-          <button class="btn btn-warning btn-sm" onclick="window.location.href='{% url 'album_song_royalti:create_song' %}?album_id={{ record.0 }}'">Tambah Lagu</button>
-          <button class="btn btn-danger btn-sm">Hapus</button>
+          <button class="btn btn-warning btn-sm" onclick="window.location.href='{% url 'album_song_royalti:create_song' %}?id={{ record.0 }}'">Tambah Lagu</button>
+          <button class="btn btn-danger btn-sm" onclick="window.location.href='{% url 'album_song_royalti:delete_album_user' %}?id={{ record.0 }}'">Hapus</button>
         </td>
       </tr>
       {% endfor %}
