@@ -20,20 +20,20 @@ def playlist(request):
 
 def playlist_detail(request, idPlaylist):
     playlist = query_result(f"""
-    SELECT up.*, A.nama as pembuat_playlist
-    FROM marmut.user_playlist as UP
-    JOIN marmut.akun as A ON UP.email_pembuat = A.email
-    WHERE UP.id_playlist = '{idPlaylist}';
+    SELECT UP.*, A.nama AS pembuat_playlist
+    FROM marmut.user_playlist AS UP, marmut.akun AS A
+    WHERE UP.email_pembuat = A.email
+    AND UP.id_playlist = '{idPlaylist}';
     """)
 
     songs = query_result(f"""
-    SELECT K.judul, K.durasi, K.tanggal_rilis, A.nama as oleh
-    FROM marmut.playlist_song as PS
-    JOIN marmut.konten as K ON K.id = PS.id_song
-    JOIN marmut.song as S ON S.id_konten = K.id
-    JOIN marmut.artist as AT ON S.id_artist = AT.id
-    JOIN marmut.akun as A ON A.email = AT.email_akun
-    WHERE PS.id_playlist = '{idPlaylist}';
+    SELECT K.judul, K.durasi, K.tanggal_rilis, A.nama AS oleh
+    FROM marmut.playlist_song AS PS, marmut.konten AS K, marmut.song AS S, marmut.artist AS AT, marmut.akun AS A
+    WHERE K.id = PS.id_song
+    AND S.id_konten = K.id
+    AND AT.id = S.id_artist
+    AND A.email = AT.email_akun
+    AND PS.id_playlist = '{idPlaylist}';
     """)
 
     if not playlist:
