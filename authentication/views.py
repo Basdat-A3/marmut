@@ -7,9 +7,8 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from utils.query import *
 
+
 # Create your views here.
-
-
 def login(request):
     if request.method == "POST":
         email = request.POST.get('email')
@@ -19,7 +18,6 @@ def login(request):
         cursor.execute(
             f'SELECT * FROM akun WHERE email = %s AND password = %s', [email, password])
         user = cursor.fetchone()
-        print(user)
 
         if user == None:
             cursor.execute(
@@ -44,7 +42,7 @@ def login(request):
                 response.set_cookie('role', 'label')
                 response.set_cookie('email', email)
                 response.set_cookie('id', id_label)
-                response.set_cookie('idPemilikCiptaLabel', label[5])
+                response.set_cookie('id_pemilik_hak_cipta', label[5])
                 return response
             else:
                 context = {
@@ -62,6 +60,7 @@ def login(request):
             isArtist = False
             isSongwriter = False
             isLabel = False
+            isPodcaster = False
             # artist
             cursor.execute(
                 f'SELECT * FROM artist WHERE email_akun = %s', [email])
@@ -89,7 +88,8 @@ def login(request):
             # podcaster
             cursor.execute(
                 f'select * from podcaster where email = %s', [email])
-            podcaster = cursor.fetchmany()
+            podcaster = cursor.fetchone()
+            print(podcaster)
             if podcaster != None:
                 isPodcaster = True
                 cursor.execute(
@@ -121,10 +121,6 @@ def login(request):
             context = {
                 'role': role_verif,
                 'status_langganan': status_langganan,
-                'list_songs_artist': list_songs_artist,
-                'list_songs_songwriter': list_songs_songwriter,
-                'list_episode': list_episode,
-                'records_user_playlist': records_user_playlist,
                 'isArtist': isArtist,
                 'isSongwriter': isSongwriter,
                 'isPodcaster': isPodcaster,
@@ -136,6 +132,7 @@ def login(request):
                 'kota_asal': user[7],
 
             }
+            print(role_verif)
 
             response = render(request, 'dashboard.html', context)
             response.set_cookie('role', role_verif)
@@ -184,7 +181,7 @@ def register_user(request):
         artist = request.POST.get('artist')
         songwriter = request.POST.get('songwriter')
 
-        #check email is already registered or not
+        # check email is already registered or not
         cursor.execute(f'select * from akun where email = \'{email}\'')
         records = cursor.fetchmany()
         if len(records) > 0:
@@ -198,10 +195,10 @@ def register_user(request):
             is_verified = bool(podcaster or artist or songwriter)
             cursor.execute(
                 f'insert into akun values (\'{email}\',\'{password}\',\'{nama}\',{gender},\'{tempat_lahir}\',\'{tanggal_lahir}\',\'{is_verified}\',\'{kota_asal}\')'
-                )
+            )
             cursor.execute(
                 f'insert into nonpremium values (\'{email}\')'
-                )
+            )
 
             connection.commit()
 
@@ -254,7 +251,7 @@ def register_label(request):
             'message': 'Email sudah terdaftar',
         }
         return render(request, 'register_label.html', context)
-    
+
     cursor.execute(f'select * from label where email = \'{email}\'')
     records = cursor.fetchmany()
     if len(records) > 0:
@@ -267,7 +264,7 @@ def register_label(request):
     try:
         id_label = str(uuid.uuid4())
         id_pemilik_hak_cipta = str(uuid.uuid4())
-        list_rate_royalti = [100,200,300,400,500,600,700,800,900,1000]
+        list_rate_royalti = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
         rate_royalti = random.choice(list_rate_royalti)
         cursor.execute(
             f'insert into pemilik_hak_cipta values (\'{id_pemilik_hak_cipta}\', \'{rate_royalti}\')')
@@ -289,6 +286,7 @@ def register_label(request):
         }
 
         return render(request, 'register_label.html', context)
+
 
 def logout(request):
     response = HttpResponseRedirect(reverse('authentication:login'))
