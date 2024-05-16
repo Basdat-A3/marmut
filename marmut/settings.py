@@ -26,7 +26,9 @@ SECRET_KEY = 'django-insecure-a3bm#-k+&^m5fa1p$z=9&!&)dtthf0i(^x_c#6emwpt!c#4l9p
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['marmut-production-d70d.up.railway.app', '*']
+
+CSRF_TRUSTED_ORIGINS = ['https://marmut-production-d70d.up.railway.app']
 
 
 # Application definition
