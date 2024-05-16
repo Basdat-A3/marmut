@@ -171,16 +171,64 @@ def register(request):
 
 
 def register_user(request):
+    if request.method == "POST":
+        connection, cursor = get_database_cursor()
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        nama = request.POST.get('nama')
+        gender = request.POST.get('gender')
+        tempat_lahir = request.POST.get('tempat_lahir')
+        tanggal_lahir = request.POST.get('tanggal_lahir')
+        kota_asal = request.POST.get('kota_asal')
+        podcaster = request.POST.get('podcaster')
+        artist = request.POST.get('artist')
+        songwriter = request.POST.get('songwriter')
+
+        #check email is already registered or not
+        cursor.execute(f'select * from akun where email = \'{email}\'')
+        records = cursor.fetchmany()
+        if len(records) > 0:
+            context = {
+                'message': 'Email sudah terdaftar',
+            }
+            return render(request, 'register_user.html', context)
+
+        # insert data to database
+        try:
+            is_verified = bool(podcaster or artist or songwriter)
+            cursor.execute(
+                f'insert into akun values (\'{email}\',\'{password}\',\'{nama}\',{gender},\'{tempat_lahir}\',\'{tanggal_lahir}\',\'{is_verified}\',\'{kota_asal}\')'
+                )
+            cursor.execute(
+                f'insert into nonpremium values (\'{email}\')'
+                )
+
+            connection.commit()
+
+            return redirect('authentication:login')
+
+        except Exception as err:
+            connection.rollback()
+            print("Oops! An exception has occured:", err)
+            print("Exception TYPE:", type(err))
+            # err slice to get only error message
+            err = str(err).split('CONTEXT')[0]
+            context = {
+                'message': err,
+            }
+
+            return render(request, 'register_user.html', context)
+
     return render(request, "register_user.html")
 
 
 def register_label(request):
+    connection, cursor = get_database_cursor()
     email = request.POST.get('email')
     password = request.POST.get('password')
     nama = request.POST.get('nama')
     kontak = request.POST.get('kontak')
-    
-    print(f'{email}, {password}, {nama}, {kontak}')
+
     # # check email is valid or not
     # regex = re.compile(
     #     r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
@@ -193,15 +241,21 @@ def register_label(request):
 
     # if data is not complete
     if not email or not password or not nama or not kontak:
-        print('something')
         context = {
             'message': 'Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu',
         }
         return render(request, 'register_label.html', context)
 
     # check email is already registered or not
-    print('complete data')
     cursor.execute(f'select * from akun where email = \'{email}\'')
+    records = cursor.fetchmany()
+    if len(records) > 0:
+        context = {
+            'message': 'Email sudah terdaftar',
+        }
+        return render(request, 'register_label.html', context)
+    
+    cursor.execute(f'select * from label where email = \'{email}\'')
     records = cursor.fetchmany()
     if len(records) > 0:
         context = {
@@ -210,7 +264,6 @@ def register_label(request):
         return render(request, 'register_label.html', context)
 
     # insert data to database
-    print('touchdown')
     try:
         id_label = str(uuid.uuid4())
         id_pemilik_hak_cipta = str(uuid.uuid4())
