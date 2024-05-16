@@ -9,19 +9,7 @@ from utils.query import *
 
 
 # Create your views here.
-
-
-def logout_user(request):
-    print("Cookie sini bos")
-
-    response = redirect('authentication:home')
-    for cookie in request.COOKIES:
-        response.delete_cookie(cookie)
-    return response
-
-
 def login(request):
-    print("masuk sini bos")
     if request.method == "POST":
         email = request.POST.get('email')
         password = request.POST.get("password")
@@ -193,7 +181,7 @@ def register_user(request):
         artist = request.POST.get('artist')
         songwriter = request.POST.get('songwriter')
 
-        #check email is already registered or not
+        # check email is already registered or not
         cursor.execute(f'select * from akun where email = \'{email}\'')
         records = cursor.fetchmany()
         if len(records) > 0:
@@ -207,10 +195,10 @@ def register_user(request):
             is_verified = bool(podcaster or artist or songwriter)
             cursor.execute(
                 f'insert into akun values (\'{email}\',\'{password}\',\'{nama}\',{gender},\'{tempat_lahir}\',\'{tanggal_lahir}\',\'{is_verified}\',\'{kota_asal}\')'
-                )
+            )
             cursor.execute(
                 f'insert into nonpremium values (\'{email}\')'
-                )
+            )
 
             connection.commit()
 
@@ -263,7 +251,7 @@ def register_label(request):
             'message': 'Email sudah terdaftar',
         }
         return render(request, 'register_label.html', context)
-    
+
     cursor.execute(f'select * from label where email = \'{email}\'')
     records = cursor.fetchmany()
     if len(records) > 0:
@@ -276,7 +264,7 @@ def register_label(request):
     try:
         id_label = str(uuid.uuid4())
         id_pemilik_hak_cipta = str(uuid.uuid4())
-        list_rate_royalti = [100,200,300,400,500,600,700,800,900,1000]
+        list_rate_royalti = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
         rate_royalti = random.choice(list_rate_royalti)
         cursor.execute(
             f'insert into pemilik_hak_cipta values (\'{id_pemilik_hak_cipta}\', \'{rate_royalti}\')')
@@ -298,6 +286,7 @@ def register_label(request):
         }
 
         return render(request, 'register_label.html', context)
+
 
 def logout(request):
     response = HttpResponseRedirect(reverse('authentication:login'))

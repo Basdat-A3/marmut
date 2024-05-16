@@ -7,6 +7,7 @@ from django.http import HttpResponse
 
 
 def create_album(request):
+    connection, cursor = get_database_cursor()
     if request.method == 'POST' and not request.method == 'GET':
         judul = request.POST.get('album-title')
         label = request.POST.get('album-label')
@@ -26,14 +27,17 @@ def create_album(request):
 
 
 def create_song_artist(request):
+    connection, cursor = get_database_cursor()
     return render(request, 'create_songs_artist.html')
 
 
 def create_song(request):
+    connection, cursor = get_database_cursor()
     return render(request, 'create_songs.html')
 
 
 def list_album_label(request):
+    connection, cursor = get_database_cursor()
     email = request.COOKIES.get('email')
 
     cursor.execute(
@@ -67,6 +71,7 @@ def list_album_label(request):
 
 
 def list_album(request):
+    connection, cursor = get_database_cursor()
     isArtist = request.COOKIES.get('isArtist')
     isSongwriter = request.COOKIES.get('isSongwriter')
     records_album = []
@@ -132,15 +137,35 @@ def list_album(request):
         'songwriterHasAlbum': songwriterHasAlbum,
         'records_album': records_album,
     }
+    print(records_album)
     response = render(request, 'list_album.html', context)
     return response
 
 
 def list_song(request):
-    return render(request, 'list_songs.html')
+    print(request.GET, "INI REQUEST")
+    connection, cursor = get_database_cursor()
+    album_id = request.GET.get('id')
+    records_song = []
+
+    cursor.execute(
+        f'SELECT id_konten, total_play, total_download from song where id_album = \'{album_id}\'')
+    records_song = cursor.fetchall()
+    for i in range(len(records_song)):
+        cursor.execute(
+            f'SELECT judul, tanggal_rilis, tahun, durasi from konten where id = \'{records_song[i][0]}\'')
+        records_song[i] = records_song[i] + cursor.fetchone()
+
+    context = {
+        'status': 'success',
+        'records_song': records_song,
+    }
+    response = render(request, 'list_songs.html', context)
+    return response
 
 
 def fetch_royalty_data(cursor, id_pemilik_hak_cipta, id_song):
+    connection, cursor = get_database_cursor()
     cursor.execute('SELECT rate_royalti FROM pemilik_hak_cipta WHERE id = %s', [
                    id_pemilik_hak_cipta])
     rate_royalti = cursor.fetchone()
@@ -159,12 +184,14 @@ def fetch_royalty_data(cursor, id_pemilik_hak_cipta, id_song):
 
 
 def update_royalty(cursor, total_royalty, id_pemilik_hak_cipta, id_song):
+    connection, cursor = get_database_cursor()
     cursor.execute('UPDATE royalti SET jumlah = %s WHERE id_pemilik_hak_cipta = %s AND id_song = %s',
                    [total_royalty, id_pemilik_hak_cipta, id_song])
     cursor.connection.commit()
 
 
 def process_royalties(records_royalti, id_pemilik_hak_cipta):
+    connection, cursor = get_database_cursor()
     for i in range(len(records_royalti)):
         id_song = records_royalti[i][0]
         rate_royalti, song_data, album_title, song_title = fetch_royalty_data(
@@ -176,6 +203,7 @@ def process_royalties(records_royalti, id_pemilik_hak_cipta):
 
 
 def cek_royalti(request):
+    connection, cursor = get_database_cursor()
     role = request.COOKIES.get('role')
     isArtist = request.COOKIES.get('isArtist', "")
     isSongwriter = request.COOKIES.get('isSongwriter', "")
