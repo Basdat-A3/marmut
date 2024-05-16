@@ -6,11 +6,9 @@
   <title>Daftar Episode pada Podcast1</title>
   <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
 </head>
-
 {% endblock meta %}
 
 {% block content %}
-
 <div class="container mt-5">
   <h2>Daftar Episode pada Podcast Close The Mic</h2>
   <br>
@@ -24,22 +22,16 @@
         <th>Action</th>
       </tr>
     </thead>
-
     <tbody>
+      {% for episode in episodes %}
       <tr>
-        <td>Pesan Dedi</td>
-        <td>Dengarkan pesan mendalam dari Dedi dalam episode terbaru kami! Dari pengalaman hidup hingga cerita inspiratif, Dedi berbagi insight yang tak terduga.</td>
-        <td>13 menit</td>
-        <td>2001-03-15</td>
+        <td>{{ episode.judul_episode }}</td>
+        <td>{{ episode.deskripsi }}</td>
+        <td>{{ episode.durasi }}</td>
+        <td>{{ episode.tanggal_rilis }}</td>
         <td><a href="#" class="btn btn-danger btn-sm">Hapus</a></td>
       </tr>
-      <tr>
-        <td>Dedi Vidi Ngobrol</td>
-        <td>Jelajahi percakapan menarik antara Dedi dan Vidi dalam episode podcast kami yang penuh energi ini! Temukan sudut pandang unik mereka tentang berbagai topik yang menarik.</td>
-        <td>12 menit</td>
-        <td>2001-03-16</td>
-        <td><a href="#" class="btn btn-danger btn-sm">Hapus</a></td>
-      </tr>
+      {% endfor %}
     </tbody>
   </table>
 </div>
@@ -61,4 +53,3 @@
 </script>
 
 {% endblock content %}
-
