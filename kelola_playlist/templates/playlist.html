@@ -1,61 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base_user.html' %}
+{% load static %}
 
+{% block meta %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Playlist - Marmut</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .playlist-box {
-            padding: 20px;
-        }
-
-        .song-list table {
-            width: 100%;
-        }
-
-        .song-list table th,
-        .song-list table td {
-            padding: 8px;
-            text-align: center;
-        }
-    </style>
 </head>
+{% endblock meta %}
 
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-          <a class="navbar-brand">Marmut</a>
-          <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <form class="d-flex" method="get">
-              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="q">
-              <span style="margin-right: 10px;"></span>
-              <button class="btn btn-outline-light" type="submit">Search</button>
-            </form>
-            <ul class="navbar-nav ms-3">
-              <li class="nav-item">
-                <a class="nav-link " aria-current="page">Chart</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link ">Manage Playlist</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" >Dashboard</a>
-              </li>
-              <li class="nav-item ">
-                <a class="nav-link" >Logout</a>
-              </li>
-              <li class="nav-item ">
-                <a class="btn btn-light" >Premium Plan</a>
-              </li>
-            </ul>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-          </div>
-        </div>
-      </nav>
+{% block content %}
 
     <div class="container-fluid">
 
@@ -78,7 +33,7 @@
                             <td>0</td>
                             <td>0 menit</td>
                             <td>
-                                <a href="playlist_detail.html" class="btn btn-primary">Detail</a>
+                                <a href="#" class="btn btn-primary">Detail</a>
                                 <a href="#" class="btn btn-secondary">Ubah</a>
                                 <a href="#" class="btn btn-danger">Hapus</a>
                             </td>
@@ -105,6 +60,5 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
 
-</html>
+{% endblock content %}
