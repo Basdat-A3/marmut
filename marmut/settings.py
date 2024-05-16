@@ -92,6 +92,7 @@ DATABASES = {
         'USER': 'postgres.yuwisqswkwkvtnjpwavj',
         'PORT': '5432',
         'PASSWORD': 'dbmarmut123',
+        
     }
 }
 
