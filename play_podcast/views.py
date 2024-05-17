@@ -1,13 +1,7 @@
 from django.shortcuts import render
 from utils.query import *
-#
-#
-# durasi di episode belom diformat
-#
-# durasi episode belom diformat
-#
-#
-#
+
+
 def play_podcast(request, podcast_id):
     connection, cursor = get_database_cursor()
 
@@ -95,8 +89,3 @@ def play_podcast(request, podcast_id):
 
 
     return render(request, 'play_podcast.html', context)
-#
-# durasi episode belom diformat
-#
-# durasi episode belom diformat
-#
