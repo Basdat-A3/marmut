@@ -25,6 +25,9 @@
           <li class="nav-item" id="manage-playlist-item" style="display: none;">
             <a class="btn btn-dark" href="{% url 'kelola_playlist:playlist' %}">Manage Playlist</a>
           </li>
+          <li class="nav-item" id="podcast-item" style="display: none;">
+            <a class="btn btn-dark" href="{% url 'kelola_podcast:list_podcast' %}">Manage Podcast</a>
+          </li>
           <li class="nav-item" id="manage-song-album-item" style="display: none;">
             <a class="btn btn-dark" href="{% url 'album_song_royalti:list_album' %}">Manage Song & Album</a>
           </li>
@@ -61,7 +64,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 return decodeURIComponent(cookiePair[1]);
             }
         }
-
         return null;
     }
 
@@ -71,6 +73,9 @@ document.addEventListener("DOMContentLoaded", function() {
     let statusLangganan = getCookie('statusLangganan');
 
     if (isArtist || isSongwriter || isPodcaster) {
+        if (isPodcaster) {
+            document.getElementById('podcast-item').style.display = 'block';
+        }
         document.getElementById('search').style.display = 'block';
         document.getElementById('chart-item').style.display = 'block';
         document.getElementById('manage-playlist-item').style.display = 'block';
