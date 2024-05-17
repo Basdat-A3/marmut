@@ -17,6 +17,12 @@
       .text-white {
         color: white;
       }
+
+      .divider{
+        background-color: white;
+        height: 1px;
+        width: 100%;
+      }
     </style>
 {% endblock meta %}
 
@@ -24,6 +30,25 @@
 <style></style>
 <div class="container border p-lg-5 text-white text-center">
     <div class="bg-dark d-flex flex-column justify-content-center align-items-center rounded p-lg-5">
+      {% if role == 'label' %}
+      <h2 class="mb-5">Label Dashboard</h2>
+      <div class="row bg-primary p-3 rounded w-50">
+        <div class="col">
+          <div class="d-flex flex-column m-3">
+            Nama
+            <b>{{user.1}}</b>
+          </div>
+          <div class="d-flex flex-column m-3">
+            Email
+            <b>{{email}}</b>
+          </div>
+          <div class="d-flex flex-column m-3">
+            Kontak
+            <b>{{user.4}}</b>
+          </div>
+        </div>
+      </div>
+      {% else %}
       <h2 class="mb-5">User Dashboard</h2>
       <div class="row bg-primary p-3 rounded w-50">
         <div class="col">
@@ -63,6 +88,29 @@
               </div>
         </div>
       </div>
+      {% endif %}
+      <hr class="divider">
+      {% if role == 'label' %}
+      <section class="row py-5">
+        <h2 class="mb-5">Daftar Album</h2>
+        <div class="d-flex flex-wrap justify-content-center gap-5">
+          {% if not album %}
+          <p>Tidak memiliki album</p>
+          {% else %}
+            {% for item in album %}
+            <div class="card w-50">
+              <div class="card-body">
+                <h5 class="card-title">{{item.1}}</h5>
+                <p class="card-text">{{item.2}} songs</p>
+                <p class="card-text">{{item.4}} mins</p>
+                <a href="#" class="btn btn-primary">View Album</a>
+              </div>
+            </div>
+            {% endfor %}
+          {% endif %}
+        </div>
+      </section>
+      {% else %}
       <section class="row py-5">
         <h2 class="mb-5">Daftar Playlist</h2>
         <div class="d-flex flex-wrap justify-content-center gap-5">
@@ -70,7 +118,7 @@
           <p>Tidak memiliki playlist</p>
           {% else %}
             {% for item in playlist %}
-            <div class="card w-25">
+            <div class="card w-50">
               <div class="card-body">
                 <h5 class="card-title">{{item.3}}</h5>
                 <p class="card-text">{{item.5}}</p>
@@ -81,6 +129,7 @@
           {% endif %}
         </div>
       </section>
+      {% endif %}
       {% if isPodcaster %}
       <section class="row py-5">
         <h2 class="mb-5">Daftar Podcast </h2>

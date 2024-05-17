@@ -4,6 +4,13 @@ from utils.query import get_database_cursor
 from datetime import datetime, timedelta
 
 # Create your views here.
+def get_album(id):
+    connection, cursor = get_database_cursor()
+    query = f"select * from album where id_label='{id}'"
+    cursor.execute(query)
+    albums = cursor.fetchall()
+    return albums
+
 def get_playlist(email):
     connection, cursor = get_database_cursor()
     query = f"select * from user_playlist where email_pembuat='{email}'"
@@ -22,12 +29,19 @@ def get_podcast(email):
     podcasts = cursor.fetchall()
     return podcasts
 
-def get_song(id_artist):
+def get_song(id_artist, id_songwriter):
     connection, cursor = get_database_cursor()
     query = f"""
     select k.judul, k.id, k.tahun from song s
     join konten k on k.id = s.id_konten
-    where id_artist='{id_artist}'
+    where s.id_artist='{id_artist}'
+
+    union
+
+    select k.judul, k.id, k.tahun from song s
+    join konten k on k.id = s.id_konten
+    join songwriter_write_song sws on sws.id_song = k.id
+    where sws.id_songwriter='{id_songwriter}'
     """
     cursor.execute(query)
     songs = cursor.fetchall()
@@ -36,6 +50,7 @@ def get_song(id_artist):
 def dashboard(request):
     role = request.COOKIES.get('role')
     email = request.COOKIES.get('email')
+    id_label = request.COOKIES.get('id')
     id_user_artist = request.COOKIES.get('id_user_artist')
     id_user_songwriter = request.COOKIES.get('id_user_songwriter')
     id_pemilik_hak_cipta_artist = request.COOKIES.get('idPemilikCiptaArtist')
@@ -45,23 +60,27 @@ def dashboard(request):
     isSongwriter = request.COOKIES.get('isSongwriter')=='True'
     isPodcaster = request.COOKIES.get('isPodcaster')=='True'
     
-    song, podcast, playlist = [], [], []
+    song, podcast, playlist, album = [], [], [], []
     connection, cursor = get_database_cursor()
     
     playlist = get_playlist(email)
     if isArtist or isSongwriter:
-        song = get_song(id_user_artist)
+        song = get_song(id_user_artist, id_user_songwriter)
     if isPodcaster:
         podcast = get_podcast(email)
 
-
-
-    query = f"SELECT * FROM AKUN WHERE EMAIL='{email}'"
+    if role == 'label':
+        query = f"SELECT * FROM LABEL WHERE EMAIL='{email}'"
+        album = get_album(id_label)
+    else:
+        query = f"SELECT * FROM AKUN WHERE EMAIL='{email}'"
     cursor.execute(query)
     user = cursor.fetchone()
+    print(user)
     print(song)
     print(podcast)
     print(playlist)
+    print(album)
 
     context = {
         'role': role,
@@ -74,6 +93,7 @@ def dashboard(request):
         'song' : song,
         'podcast' : podcast,
         'playlist' : playlist,
+        'album' : album,
     }
 
     return render(request, "dashboard.html", context)
