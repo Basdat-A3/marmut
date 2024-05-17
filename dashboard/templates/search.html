@@ -48,7 +48,7 @@
                     {% if item.0 == 'Podcast' %}
                         <a href="{% url 'play_podcast:play_podcast' item.3 %}" class="btn btn-primary">Lihat</a>
                     {% elif item.0 == 'Song' %}
-                        <a href="#" class="btn btn-primary">Lihat</a>
+                        <a href="{% url 'play_song:song_detail_only' item.3 %}" class="btn btn-primary">Lihat</a>
                     {% else %}
                         <a href="{% url 'kelola_playlist:playlist_detail' item.3 %}" class="btn btn-primary">Lihat</a>
                     {% endif %}

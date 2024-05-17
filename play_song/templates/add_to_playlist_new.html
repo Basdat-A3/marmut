@@ -1,0 +1,73 @@
+{% extends 'base_user.html' %}
+{% load static %}
+
+{% block meta %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Song to Playlist</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            max-width: 700px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+
+        .navbar {
+            justify-content: flex-end;
+        }
+
+        .navbar-nav {
+            flex-direction: row;
+        }
+
+        .navbar-collapse {
+            justify-content: flex-end;
+        }
+    </style>
+</head>
+{% endblock meta %}
+
+{% block content %}
+   
+    <div class="container">
+        <h1>Add Song to User Playlist</h1>
+        <p>Judul: {{ song_title }}</p>
+        <p>Artist: {{ artist_name }}</p>
+        <form method="POST">
+            {% csrf_token %}
+            <select name="other_playlist_id" id="playlist">
+                <option value="">Pilih Playlist</option>
+                {% for playlist in playlists %}
+                    <option value="{{ playlist.0 }}">{{ playlist.1 }}</option>
+                {% endfor %}
+            </select>
+            <div class="actions">
+                <button type="submit" class="btn btn-primary">Tambah</button>
+                
+            </div>
+        </form>
+        {% if success_message %}
+            <div class="popup" id="popup">
+                <p>{{ success_message }}</p>
+                <form method="get" action="{% url 'kelola_playlist:playlist_detail' idPlaylist %}">
+                    <button type="submit" class="button">Ke Playlist</button>
+                </form>
+                <form method="get" action="{% url 'play_song:add_to_playlist_new' song_id %}">
+                    <button type="submit" class="button">Kembali</button>
+                </form>
+            </div>
+        {% endif %}
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+{% endblock content %}
