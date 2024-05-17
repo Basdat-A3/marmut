@@ -122,7 +122,7 @@ def login(request):
             }
             print(role_verif)
 
-            response = render(request, 'dashboard.html', context)
+            response = HttpResponseRedirect(reverse('dashboard:dashboard'))
             response.set_cookie('role', role_verif)
             response.set_cookie('email', email)
             response.set_cookie('id_user_artist', id_user_artist)

@@ -28,6 +28,7 @@
             <button class="btn btn-light" type="submit">Search</button>
         </form>
       <h2 class="mb-5">{{message}}</h2>
+      {% if contents %}
       <table class="table table-striped">
         <thead class="table-primary rounded">
             <tr>
@@ -56,6 +57,7 @@
             {% endfor %}
           </tbody>
       </table>
+      {% endif %}
     </div>
   </div>
 

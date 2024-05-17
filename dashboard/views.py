@@ -4,30 +4,79 @@ from utils.query import get_database_cursor
 from datetime import datetime, timedelta
 
 # Create your views here.
+def get_playlist(email):
+    connection, cursor = get_database_cursor()
+    query = f"select * from user_playlist where email_pembuat='{email}'"
+    cursor.execute(query)
+    playlists = cursor.fetchall()
+    return playlists
 
+def get_podcast(email):
+    connection, cursor = get_database_cursor()
+    query = f"""
+    select * from podcast p
+    join konten k on k.id = p.id_konten
+    where email_podcaster='{email}'
+    """
+    cursor.execute(query)
+    podcasts = cursor.fetchall()
+    return podcasts
+
+def get_song(id_artist):
+    connection, cursor = get_database_cursor()
+    query = f"""
+    select k.judul, k.id, k.tahun from song s
+    join konten k on k.id = s.id_konten
+    where id_artist='{id_artist}'
+    """
+    cursor.execute(query)
+    songs = cursor.fetchall()
+    return songs
 
 def dashboard(request):
-    # role_verif = request.COOKIES.get('role')
-    # email = request.COOKIES.get('email')
-    # id_user_artist = request.COOKIES.get('id_user_artist')
-    # id_user_songwriter = request.COOKIES.get('id_user_songwriter')
-    # id_pemilik_hak_cipta_artist = request.COOKIES.get('idPemilikCiptaArtist')
-    # id_pemilik_hak_cipta_songwriter = request.COOKIES.get('idPemilikCiptaSongwriter')
-    # status_langganan = request.COOKIES.get('status_langganan')
-    # isArtist = request.COOKIES.get('isArtist')
-    # isSongwriter = request.COOKIES.get('isSongwriter')
-    # isPodcaster = request.COOKIES.get('isPodcaster')
+    role = request.COOKIES.get('role')
+    email = request.COOKIES.get('email')
+    id_user_artist = request.COOKIES.get('id_user_artist')
+    id_user_songwriter = request.COOKIES.get('id_user_songwriter')
+    id_pemilik_hak_cipta_artist = request.COOKIES.get('idPemilikCiptaArtist')
+    id_pemilik_hak_cipta_songwriter = request.COOKIES.get('idPemilikCiptaSongwriter')
+    status_langganan = request.COOKIES.get('status_langganan')
+    isArtist = request.COOKIES.get('isArtist')=='True'
+    isSongwriter = request.COOKIES.get('isSongwriter')=='True'
+    isPodcaster = request.COOKIES.get('isPodcaster')=='True'
+    
+    song, podcast, playlist = [], [], []
+    connection, cursor = get_database_cursor()
+    
+    playlist = get_playlist(email)
+    if isArtist or isSongwriter:
+        song = get_song(id_user_artist)
+    if isPodcaster:
+        podcast = get_podcast(email)
 
-    # context = {
-    #     'role': role_verif,
-    #     'status_langganan': status_langganan,
-    #     'isArtist': isArtist,
-    #     'isSongwriter': isSongwriter,
-    #     'isPodcaster': isPodcaster,
-    #     'email': email,
-    # }
 
-    return render(request, "dashboard.html")
+
+    query = f"SELECT * FROM AKUN WHERE EMAIL='{email}'"
+    cursor.execute(query)
+    user = cursor.fetchone()
+    print(song)
+    print(podcast)
+    print(playlist)
+
+    context = {
+        'role': role,
+        'status_langganan': status_langganan,
+        'isArtist': isArtist,
+        'isSongwriter': isSongwriter,
+        'isPodcaster': isPodcaster,
+        'email': email,
+        'user' : user,
+        'song' : song,
+        'podcast' : podcast,
+        'playlist' : playlist,
+    }
+
+    return render(request, "dashboard.html", context)
 
 
 def dashboard_label(request):
