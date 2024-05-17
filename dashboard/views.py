@@ -1,4 +1,5 @@
 import uuid
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from utils.query import get_database_cursor
 from datetime import datetime, timedelta
@@ -76,12 +77,6 @@ def dashboard(request):
         query = f"SELECT * FROM AKUN WHERE EMAIL='{email}'"
     cursor.execute(query)
     user = cursor.fetchone()
-    print(user)
-    print(song)
-    print(podcast)
-    print(playlist)
-    print(album)
-
     context = {
         'role': role,
         'status_langganan': status_langganan,
@@ -97,18 +92,6 @@ def dashboard(request):
     }
 
     return render(request, "dashboard.html", context)
-
-
-def dashboard_label(request):
-    return render(request, "dashboard_label.html")
-
-
-def dashboard_artist(request):
-    return render(request, "dashboard_artist.html")
-
-
-def dashboard_podcaster(request):
-    return render(request, "dashboard_podcaster.html")
 
 def search(request):
     keyword = request.GET.get('q', None)
@@ -161,7 +144,7 @@ def downloaded_songs(request):
     email = request.COOKIES.get('email')
 
     cursor.execute(f"""
-        select k.judul, a.nama from downloaded_song d
+        select k.judul, a.nama, d.id_song from downloaded_song d
         JOIN konten k ON d.id_song = k.id
         JOIN song s ON d.id_song = s.id_konten
         JOIN artist art ON s.id_artist = art.id
@@ -179,3 +162,21 @@ def downloaded_songs(request):
     cursor.close()
     connection.close()
     return render(request, "downloaded_songs.html", context)
+
+def delete_downloaded_song(request):
+    connection, cursor = get_database_cursor()
+    email = request.COOKIES.get('email')
+    id_song = request.GET.get('id_song')
+
+    if not email:
+        return HttpResponse("Error: No email found in cookies.", status=400)
+    
+    cursor.execute(f"""
+        DELETE FROM DOWNLOADED_SONG
+        WHERE id_song = '{id_song}' AND email_downloader ='{email}'
+    """)
+    cursor.execute(
+            f"UPDATE SONG SET total_download = total_download - 1 WHERE id_konten = {id_song}"
+        )
+    connection.commit()
+    return JsonResponse({'message': 'Song deleted successfully', 'id_song': id_song})
