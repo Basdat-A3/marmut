@@ -175,5 +175,8 @@ def delete_downloaded_song(request):
         DELETE FROM DOWNLOADED_SONG
         WHERE id_song = '{id_song}' AND email_downloader ='{email}'
     """)
+    cursor.execute(
+            f"UPDATE SONG SET total_download = total_download - 1 WHERE id_konten = {id_song}"
+        )
     connection.commit()
     return JsonResponse({'message': 'Song deleted successfully', 'id_song': id_song})
