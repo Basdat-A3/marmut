@@ -2,9 +2,9 @@ from django.shortcuts import render
 from utils.query import *
 #
 #
-# durasi episode belom diformat
+# durasi di episode belom diformat
 #
-#durasi episode belom diformat
+# durasi episode belom diformat
 #
 #
 #
@@ -55,27 +55,34 @@ def play_podcast(request, podcast_id):
         durasi = episode[3]
         tanggal_rilis = episode[4]
         # durasi episode belom dibeenrin
+
+        episode_duration_hours = durasi // 60
+        episode_duration_minutes = durasi % 60
+
         episode_data.append({
             'id': episode_id,
             'judul': judul_episode,
             'deskripsi': deskripsi,
             'durasi': durasi,
+            'durasi_hours': episode_duration_hours,
+            'durasi_minutes': episode_duration_minutes,
             'tanggal_rilis': tanggal_rilis
         })
     
-    total_duration_minutes = podcast_detail[3]
-    total_hours = total_duration_minutes // 60
-    total_minutes = total_duration_minutes % 60
+    podcast_total_duration_minutes = podcast_detail[3]
+    podcast_total_hours = podcast_total_duration_minutes // 60
+    podcast_total_minutes = podcast_total_duration_minutes % 60
+    
 
-    print(total_duration_minutes)
+    print(podcast_total_duration_minutes)
 
     context = {
         'podcast_detail': {
             'judul': podcast_detail[0],
             'genre': podcast_detail[1],
             'podcaster': podcast_detail[2],
-            'total_durasi_hours': total_hours,
-            'total_durasi_minutes': total_minutes,
+            'total_durasi_hours': podcast_total_hours,
+            'total_durasi_minutes': podcast_total_minutes,
             'tanggal_rilis': podcast_detail[4],
             'tahun': podcast_detail[5],
         },
