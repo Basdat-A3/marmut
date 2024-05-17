@@ -120,7 +120,6 @@ def login(request):
                 'kota_asal': user[7],
 
             }
-            print(role_verif)
 
             response = render(request, 'dashboard.html', context)
             response.set_cookie('role', role_verif)
