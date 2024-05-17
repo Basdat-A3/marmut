@@ -19,19 +19,17 @@
       </tr>
       <tr>
         <th>Judul</th>
-        <th>Label</th>
         <th>Jumlah Lagu</th>
         <th>Total Durasi</th>
         <th>Aksi</th>
       </tr>
     </thead>
     <tbody>
-      {% for record in records_album %}
+      {% for record in list_albums %}
       <tr>
         <td>{{record.1}}</td>
-        <td>LabelA</td>
         <td>{{record.2}}</td>
-        <td>{{record.4}}</td>
+        <td>{{record.3}}</td>
         <td>
           <button class="btn btn-primary btn-sm" onclick="window.location.href='{% url 'album_song_royalti:list_song' %}?id={{ record.0 }}'">Lihat Daftar Lagu</button>
           <button class="btn btn-danger btn-sm" onclick="window.location.href='{% url 'album_song_royalti:delete_album_label' %}?id={{ record.0 }}'">Hapus</button>
