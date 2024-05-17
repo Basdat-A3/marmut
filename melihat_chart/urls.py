@@ -6,6 +6,8 @@ app_name = 'melihat_chart'
 
 urlpatterns = [
     path('chart-list/', chart_list, name='list_chart'),
-    path('chart-detail/', chart_detail, name='detail_chart'),
+    # path('chart-detail/', chart_detail, name='detail_chart1111'),
+    # tamabhakn tipe chart string
+    path('chart-detail/<uuid:id_chart>/', chart_detail, name='detail_chart'),
 ]
 

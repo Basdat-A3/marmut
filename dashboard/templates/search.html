@@ -23,7 +23,12 @@
 {% block content %}
 <div class="container border p-lg-5 text-white text-center">
     <div class="bg-dark d-flex flex-column justify-content-center align-items-center rounded p-lg-5">
-      <h2 class="mb-5">Hasil pencarian untuk "All"</h2>
+        <form class="d-flex justify-content-center w-75 mb-5" method="get" id="search-form" style="display: none;">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="q">
+            <button class="btn btn-light" type="submit">Search</button>
+        </form>
+      <h2 class="mb-5">{{message}}</h2>
+      {% if contents %}
       <table class="table table-striped">
         <thead class="table-primary rounded">
             <tr>
@@ -34,40 +39,25 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="row">Song</th>
-              <td>All I Ask</td>
-              <td>Adele</td>
-              <td>
-                <a href="#" class="btn btn-primary">Lihat</a>
-              </td>
-            </tr>
-            <tr>
-                <th scope="row">Song</th>
-                <td>All Of Me</td>
-                <td>John Legend</td>
+            {% for item in contents %}
+              <tr>
+                <th scope="row">{{item.0}}</th>
+                <td>{{item.1}}</td>
+                <td>{{item.2}}</td>
                 <td>
-                  <a href="#" class="btn btn-primary">Lihat</a>
+                    {% if item.0 == 'Podcast' %}
+                        <a href="{% url 'play_podcast:play_podcast' item.3 %}" class="btn btn-primary">Lihat</a>
+                    {% elif item.0 == 'Song' %}
+                        <a href="{% url 'play_song:song_detail_only' item.3 %}" class="btn btn-primary">Lihat</a>
+                    {% else %}
+                        <a href="{% url 'kelola_playlist:playlist_detail' item.3 %}" class="btn btn-primary">Lihat</a>
+                    {% endif %}
                 </td>
               </tr>
-            <tr>
-              <th scope="row">Podcast</th>
-              <td>All Around Bogor</td>
-              <td>Alexia Sasaki</td>
-              <td>
-                <a href="#" class="btn btn-primary">Lihat</a>
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">Playlist</th>
-              <td>Dangdut Academy All Star</td>
-              <td>Dadang Dudut</td>
-              <td>
-                <a href="#" class="btn btn-primary">Lihat</a>
-              </td>
-            </tr>
+            {% endfor %}
           </tbody>
       </table>
+      {% endif %}
     </div>
   </div>
 

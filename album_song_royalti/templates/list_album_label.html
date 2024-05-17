@@ -1,4 +1,4 @@
-{% extends 'base_label.html' %}
+{% extends 'base_user.html' %}
 {% load static %}
 
 {% block meta %}
@@ -10,10 +10,6 @@
 {% block content %}
 <div class="container mt-5">
   <h1>List Album</h1>
-  <div class="mb-3" onclick="window.location.href='list_album.html';">
-    <h3 class="cursor-pointer">Logged in as: Label</h3>
-  </div>
-
   <table class="table table-striped">
     <thead>
       <tr>
@@ -21,23 +17,23 @@
       </tr>
       <tr>
         <th>Judul</th>
-        <th>Label</th>
         <th>Jumlah Lagu</th>
         <th>Total Durasi</th>
         <th>Aksi</th>
       </tr>
     </thead>
     <tbody>
+      {% for record in list_albums %}
       <tr>
-        <td>Album1</td>
-        <td>LabelA</td>
-        <td>0</td>
-        <td>0 menit</td>
+        <td>{{record.1}}</td>
+        <td>{{record.2}}</td>
+        <td>{{record.3}} Menit</td>
         <td>
-          <button class="btn btn-primary btn-sm" onclick="window.location.href='list_songs.html';">Lihat Daftar Lagu</button>
-          <button class="btn btn-danger btn-sm">Hapus</button>
+          <button class="btn btn-primary btn-sm" onclick="window.location.href='{% url 'album_song_royalti:list_song' %}?id={{ record.0 }}'">Lihat Daftar Lagu</button>
+          <button class="btn btn-danger btn-sm" onclick="window.location.href='{% url 'album_song_royalti:delete_album_label' %}?id={{ record.0 }}'">Hapus</button>
         </td>
       </tr>
+      {% endfor %}
     </tbody>
   </table>
 

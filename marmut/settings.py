@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'kelola_podcast',
     'melihat_chart',
     'play_podcast',
+    'paket',
 ]
 
 MIDDLEWARE = [
@@ -92,6 +93,7 @@ DATABASES = {
         'USER': 'postgres.yuwisqswkwkvtnjpwavj',
         'PORT': '5432',
         'PASSWORD': 'dbmarmut123',
+        
     }
 }
 

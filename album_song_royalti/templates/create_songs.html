@@ -1,4 +1,4 @@
-{% extends 'base_artist_songwriter.html' %}
+{% extends 'base_user.html' %}
 {% load static %}
 
 {% block meta %}
@@ -11,47 +11,63 @@
 <h1>Create Lagu</h1>
 
 <div class="mb-3">
-  <h3 onclick="window.location.href='create_songs_artist.html';" style="cursor:pointer;">
-    Logged in as: Artist
-  </h3>
-</div>
-<form action="/add_song" method="post">
+  
+<form action="{% url 'album_song_royalti:create_song' %}" method="post">
+{% csrf_token %}
   <div class="mb-3">
-    <label for="song-album" class="form-label">Album: Album1</label>
+    <label for="song-album" class="form-label">Album: {{ judul_album.0 }}</label>
+    <input type="hidden" name="album_id" value="{{ album_id }}"> <!-- Hidden input for Album ID -->
   </div>
-
   <div class="mb-3">
     <label for="song-title" class="form-label">Judul Lagu:</label>
-    <input type="text" id="song-title" name="song_title" class="form-control" required />
+    <input type="text" id="song-title" name="song-title" class="form-control" required />
   </div>
-
+  {% if isArtist == "True" %}
+    <div class="mb-3">
+      <label for="song-artist" class="form-label">Artis: {{ artist_name.0 }}</label>
+    </div>
+  {% else %}
+    <div class="mb-3">
+      <label for="song-artist" class="form-label">Artis:</label>
+      <select id="song-artist" name="song_artist" class="form-select" required>
+        <option value="">Pilih Artis</option>
+        {% for record in records_artist %}
+        <option value="{{ record.0 }}">{{ record.3 }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  {% endif %}
+  
+  {% if isSongwriter == "True" %}
   <div class="mb-3">
-    <label for="song-artist" class="form-label">Artis: Artis 1</label>
+    <label for="song-writer" class="form-label">Songwriter: {{ songwriter_name.0 }}</label>
   </div>
-
+  {% else %}
   <div class="mb-3">
     <label for="song-writer" class="form-label">Songwriter:</label>
-    <select id="song-writer" name="song_writer" class="form-select" multiple required>
-      <option value="Songwriter1">Songwriter1</option>
-      <option value="Songwriter2">Songwriter2</option>
-      <option value="Songwriter3">Songwriter3</option>
+    <select id="song-writer" name="song_writer[]" class="form-select" multiple required>
+      <option value="">Pilih Songwriter</option>
+      {% for record in records_songwriter %}
+      <option value="{{ record.0 }}">{{ record.3 }}</option>
+      {% endfor %}
     </select>
   </div>
-
+  {% endif %}
+  
   <div class="mb-3">
     <label for="song-genre" class="form-label">Genre:</label>
-    <select id="song-genre" name="song_genre" class="form-select" multiple required>
-      <option value="Genre1">Pop</option>
-      <option value="Genre2">Rock</option>
-      <option value="Genre3">Classical</option>
+    <select id="song-genre" name="song_genre[]" class="form-select" multiple required>
+      {% for record in records_genre %}
+      <option value="{{ record.0 }}">{{ record.0 }}</option>
+      {% endfor %}
     </select>
   </div>
 
   <div class="mb-3">
     <label for="song-duration" class="form-label">Durasi (menit):</label>
-    <input type="text" id="song-duration" name="song_duration" class="form-control" required />
+    <input type="text" id="song-duration" name="song-duration" class="form-control" required />
   </div>
 
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
-{% endblock content%}
+{% endblock content %}

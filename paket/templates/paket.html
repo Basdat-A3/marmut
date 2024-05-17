@@ -1,7 +1,7 @@
-{% extends 'base_user_premium.html' %}
+{% extends 'base_user.html' %}
 
 {% block meta %}
-    <title>Dashboard</title>
+    <title>Paket</title>
     <style>
       .bg-yellow{
         background-color: #c6c639;
@@ -24,32 +24,31 @@
 <style></style>
 <div class="container border p-lg-5 text-white text-center">
     <div class="bg-dark d-flex flex-column justify-content-center align-items-center rounded p-lg-5">
-      <h2 class="mb-5">Pembayaran Paket</h2>
+      <h2>Mulai Berlangganan!</h2>
+      <a href="{% url 'paket:riwayat' %}" class="btn btn-primary my-5">Riwayat Transaksi</a>
       <div class="row">
-        <div class="col">
+        {% for item in paket %}
+        <div class="col-sm-3">
             <div class="card">
                 <div class="card-header fs-5">
-                  1 Bulan
+                  {{item.0}}
                 </div>
                 <div class="card-body">
                   <h5 class="card-title">
                     <span class="fs-4">Rp</span>
-                    <span class="fs-2">35</span><span class="fs-6">.000</span>
+                    <span class="fs-2">{{item.1}}</span>
                 </h5>
-                  <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                  <ul>
+                    <li>Bebas iklan dalam konten</li>
+                    <li>Akses Konten VIP</li>
+                    <li>Download lagu favoritmu</li>
+                  </ul>
+                  <a href="{% url 'paket:paket_payment' nama_paket=item.0 %}" class="btn btn-primary">Pilih Paket</a>
                 </div>
             </div>
         </div>
+        {% endfor %}
       </div>
-      <form>
-          <select class="form-select mb-3 mt-5" aria-label="example">
-            <option selected>Pilih metode pembayaran</option>
-            <option value="1">Transfer Bank</option>
-            <option value="2">OVO</option>
-            <option value="3">DANA</option>
-          </select>
-          <input class="btn btn-primary" type="button" name="submit" id="submit" value="Bayar">
-      </form>
     </div>
   </div>
 
