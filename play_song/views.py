@@ -133,65 +133,65 @@ def song_detail_only(request, song_id):
 
     return render(request, 'detail_song_only.html', context)
 
-def add_to_playlist(request, playlist_id, song_id):
-    success_message = None
-    playlist_name = None
-    song_title = None
-    artist_name = None
-    playlists = None
+# def add_to_playlist(request, playlist_id, song_id):
+#     success_message = None
+#     playlist_name = None
+#     song_title = None
+#     artist_name = None
+#     playlists = None
 
-    email_pengguna = request.COOKIES.get('email')
+#     email_pengguna = request.COOKIES.get('email')
 
-    connection, cursor = get_database_cursor()
+#     connection, cursor = get_database_cursor()
 
-    if request.method == 'POST':
-        other_playlist_id = request.POST.get('other_playlist_id')
+#     if request.method == 'POST':
+#         other_playlist_id = request.POST.get('other_playlist_id')
         
-        cursor.execute("""
-            SELECT k.judul, a.nama AS artist
-            FROM song s
-            JOIN konten k ON s.id_konten = k.id
-            JOIN artist ar ON s.id_artist = ar.id
-            JOIN akun a ON ar.email_akun = a.email
-            WHERE s.id_konten = %s;
-        """, [song_id])
-        song_data = cursor.fetchone()
-        if song_data:
-            song_title, artist_name = song_data
+#         cursor.execute("""
+#             SELECT k.judul, a.nama AS artist
+#             FROM song s
+#             JOIN konten k ON s.id_konten = k.id
+#             JOIN artist ar ON s.id_artist = ar.id
+#             JOIN akun a ON ar.email_akun = a.email
+#             WHERE s.id_konten = %s;
+#         """, [song_id])
+#         song_data = cursor.fetchone()
+#         if song_data:
+#             song_title, artist_name = song_data
 
-        cursor.execute("SELECT judul FROM user_playlist WHERE id_playlist = %s", [other_playlist_id])
-        playlist_name_query = cursor.fetchone()
-        if playlist_name_query:
-            playlist_name = playlist_name_query[0]
+#         cursor.execute("SELECT judul FROM user_playlist WHERE id_playlist = %s", [other_playlist_id])
+#         playlist_name_query = cursor.fetchone()
+#         if playlist_name_query:
+#             playlist_name = playlist_name_query[0]
         
-        cursor.execute("INSERT INTO playlist_song (id_playlist, id_song) VALUES (%s, %s);", 
-                        [other_playlist_id, song_id])
+#         cursor.execute("INSERT INTO playlist_song (id_playlist, id_song) VALUES (%s, %s);", 
+#                         [other_playlist_id, song_id])
             
-        success_message = f"Berhasil menambahkan Lagu dengan judul '{song_title}' oleh '{artist_name}' ke '{playlist_name}'!"
+#         success_message = f"Berhasil menambahkan Lagu dengan judul '{song_title}' oleh '{artist_name}' ke '{playlist_name}'!"
 
-    if not playlists:
-        cursor.execute("""
-            SELECT id_playlist, judul 
-            FROM user_playlist 
-            WHERE email_pembuat = %s;
-        """, [email_pengguna])
-        playlists = cursor.fetchall()
+#     if not playlists:
+#         cursor.execute("""
+#             SELECT id_playlist, judul 
+#             FROM user_playlist 
+#             WHERE email_pembuat = %s;
+#         """, [email_pengguna])
+#         playlists = cursor.fetchall()
 
 
-    context = {
-        'playlists': playlists,
-        'playlist_id': playlist_id,
-        'song_id': song_id,
-        'song_title': song_title,
-        'artist_name': artist_name,
-        'success_message': success_message,
-        'playlist_name': playlist_name
-    }
+#     context = {
+#         'playlists': playlists,
+#         'playlist_id': playlist_id,
+#         'song_id': song_id,
+#         'song_title': song_title,
+#         'artist_name': artist_name,
+#         'success_message': success_message,
+#         'playlist_name': playlist_name
+#     }
 
-    cursor.close()
-    connection.close()
+#     cursor.close()
+#     connection.close()
 
-    return render(request, 'add_to_playlist.html', context)
+#     return render(request, 'add_to_playlist.html', context)
 
 def add_to_playlist_new(request, song_id):
     success_message = None
