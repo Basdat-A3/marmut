@@ -15,11 +15,14 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <form class="d-flex ms-auto" method="get" id="search-form" style="display: none;">
+      <!-- <form class="d-flex ms-auto" method="get" id="search-form" style="display: none;">
           <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="q">
           <button class="btn btn-light" type="submit">Search</button>
-      </form>
-      <ul class="navbar-nav ms-3">
+      </form> -->
+      <ul class="navbar-nav ms-auto">
+          <li class="nav-item" id="search">
+            <a class="btn btn-dark" href="{% url 'dashboard:search' %}">Search</a>
+          </li>
           <li class="nav-item" id="chart-item" style="display: none;">
             <a class="btn btn-dark" href="{% url 'melihat_chart:list_chart' %}">Chart</a>
           </li>
@@ -42,7 +45,7 @@
             <a class="nav-link">Downloaded Song</a>
           </li>
           <li class="nav-item" id="premium-plan-item" style="display: none;">
-            <a class="btn btn-light" href="{% url 'dashboard:paket_payment' %}">Premium Plan</a>
+            <a class="btn btn-light" href="{% url 'paket:paket' %}">Premium Plan</a>
           </li>
       </ul>
     </div>
