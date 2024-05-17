@@ -27,4 +27,5 @@ urlpatterns = [
     path('', include('melihat_chart.urls')),
     path('', include('play_podcast.urls')),
     path('paket/', include('paket.urls')),
+    path('', include('play_song.urls')),
 ]
