@@ -86,6 +86,9 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById('podcast-item').style.display = 'block';
         }
         document.getElementById('search').style.display = 'block';
+        if (statusLangganan === 'Premium') {
+            document.getElementById('downloaded-song-item').style.display = 'block';
+        }
         document.getElementById('chart-item').style.display = 'block';
         document.getElementById('manage-playlist-item').style.display = 'block';
         document.getElementById('dashboard-item').style.display = 'block';
