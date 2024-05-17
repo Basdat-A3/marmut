@@ -15,9 +15,9 @@
         <div class="playlist-box">
             <h2>User Playlist Detail</h2>
             <p>Judul: {{playlist.judul}}</p>
-            <p>Pembuat: {{playlist.pembuat}}</p>
+            <p>Pembuat: {{playlist.pembuat_playlist}}</p>
             <p>Jumlah Lagu: {{playlist.jumlah_lagu}}</p>
-            <p>Total Durasi: {{playlist.total_durasi}} menit</p>
+            <p>Total Durasi: {{playlist.total_durasi_hours}} jam {{playlist.total_durasi_minutes}} menit</p>
             <p>Tanggal Dibuat: {{playlist.tanggal_dibuat}}</p>
             <p>Deskripsi: {{playlist.deskripsi}}</p>
             <button class="btn btn-primary">Shuffle Play</button>
@@ -39,7 +39,7 @@
                         <td>{{ song.oleh }}</td>
                         <td>{{ song.durasi }} menit</td>
                         <td>
-                            <a href="#" class="btn btn-info">Lihat</a>
+                            <a href="{% url 'play_song:song_detail' playlist.idPlaylist song.id %}" class="btn btn-primary">Lihat</a>
                             <a href="#" class="btn btn-success">Play</a>
                             <a href="#" class="btn btn-danger">Hapus</a>
                         </td>
@@ -47,7 +47,7 @@
                     {% endfor %}
     
                 </table>
-                <a href="{% url 'kelola_playlist:tambah_lagu' %}" class="btn btn-primary">Tambah Lagu</a>
+                <a href="{% url 'kelola_playlist:tambah_lagu' playlist.idPlaylist %}" class="btn btn-primary">Tambah Lagu</a>
             </div>
         </div>
     </div>
