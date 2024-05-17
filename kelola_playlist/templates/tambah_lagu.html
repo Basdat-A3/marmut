@@ -15,17 +15,20 @@
 
     <div class="container">
         <h1>Tambah Lagu</h1>
-            <form method="POST">
-                {% csrf_token %}
-                <label for="song">Lagu:</label>
-                    <select id="song" name="song_id">
-                        <option value="">Pilih Lagu</option>
-                        {% for song in songs %}
-                        <option value="{{ song.id_konten }}">{{song.judul}} - {{song.artist}}</option>
-                        {% endfor %}
-                    </select>
-                <input type="submit" value="Submit" class="btn btn-primary">
-            </form>
+        {% if error_message %}
+            <div class="alert alert-danger">{{ error_message }}</div>
+        {% endif %}
+        <form method="POST">
+            {% csrf_token %}
+            <label for="song">Lagu:</label>
+            <select id="song" name="song_id">
+                <option value="">Pilih Lagu</option>
+                {% for song in songs %}
+                    <option value="{{ song.0 }}">{{ song.1 }} - {{ song.2 }}</option>
+                {% endfor %}
+            </select>
+            <input type="submit" value="Submit" class="btn btn-primary">
+        </form>
     </div>
 
 <!-- Bootstrap JS -->
