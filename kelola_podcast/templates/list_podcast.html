@@ -30,7 +30,7 @@
         <td>{{ podcast.episode_count }}</td>
         <td>{{ podcast.total_duration }} menit</td>
         <td>
-          <a href="#" class="btn btn-primary btn-sm">Lihat Daftar Episode</a>
+          <a href="{% url 'kelola_podcast:daftar_episode' podcast_id=podcast.id_konten  %}" class="btn btn-primary btn-sm">Lihat Daftar Episode</a>
           <a href="#" class="btn btn-success btn-sm">Tambah Episode</a>
           <a href="#" class="btn btn-danger btn-sm">Hapus</a>
         </td>

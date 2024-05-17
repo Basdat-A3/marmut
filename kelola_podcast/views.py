@@ -9,12 +9,14 @@ from utils.query import *
 
 def create_podcast(request):
     connection, cursor = get_database_cursor()
-    if request.method == 'POST':
+    isPodcaster = request.COOKIES.get('isPodcaster')
+
+    if request.method == 'POST' and isPodcaster == 'True':
         judul = request.POST.get('judul')
         genre_list = request.POST.getlist('genre')
-        # email_podcaster = request.user.email  # Assuming you get the logged-in user's email like this
-        email_podcaster = 'william.martin@countermail.com'  # Temporary email for testing
-
+        email_podcaster = request.COOKIES.get('email')
+        # email_podcaster = 'william.martin@countermail.com'  # Temporary email for testing
+        print(email_podcaster)
 
         # Generate unique IDs
         id_konten = str(uuid.uuid4())
@@ -55,138 +57,156 @@ def create_podcast(request):
 
 
 def list_podcast(request):
-    # belom filter berdasarkan podcaster logged in
-    connection, cursor = get_database_cursor()
-    cursor.execute("""
-        SELECT K.judul AS "Judul",
-                COALESCE(COUNT(E.id_episode), 0) AS "Jumlah Episode",
-                COALESCE(SUM(E.durasi), 0) AS "Total Durasi"
+    email_podcaster = request.COOKIES.get('email')
+    isPodcaster = request.COOKIES.get('isPodcaster')
+
+    if isPodcaster == 'True':
+        connection, cursor = get_database_cursor()
+        
+
+        cursor.execute("""
+        SELECT P.id_konten,  -- Select id_konten
+               K.judul AS "Judul",
+               COALESCE(COUNT(E.id_episode), 0) AS "Jumlah Episode",
+               COALESCE(SUM(E.durasi), 0) AS "Total Durasi"
         FROM PODCAST P
         LEFT JOIN EPISODE E ON P.id_konten = E.id_konten_podcast
         LEFT JOIN KONTEN K ON P.id_konten = K.id
-        GROUP BY K.judul;
-    """)
-    podcasts = cursor.fetchall()
-    
-    podcast_data = []
-    for podcast in podcasts:
-        judul = podcast[0]
-        episode_count = podcast[1]
-        total_duration = podcast[2]
+        JOIN PODCASTER POD ON POD.email = P.email_podcaster
+        WHERE POD.email = %s
+        GROUP BY P.id_konten, K.judul;
+        """, [email_podcaster])
 
-        podcast_data.append({
-            'judul': judul,
-            'episode_count': episode_count,
-            'total_duration': total_duration
-        })
+        podcasts = cursor.fetchall()
+        
+        podcast_data = []
+        for podcast in podcasts:
+            id_konten = podcast[0]  # Get the id_konten
+            judul = podcast[1]
+            episode_count = podcast[2]
+            total_duration = podcast[3]
 
-    context = {
-        'podcasts': podcast_data
-    }
+            podcast_data.append({
+                'id_konten': id_konten,  # Add id_konten to the dictionary
+                'judul': judul,
+                'episode_count': episode_count,
+                'total_duration': total_duration
+            })
+            print(id_konten)  # Optional: print id_konten for debugging
 
-    # close connection
-    cursor.close()
-    connection.close()
+        context = {
+            'podcasts': podcast_data
+        }
+
+        # close connection
+        cursor.close()
+        connection.close()
     
     return render(request, 'list_podcast.html', context)
 
 def daftar_episode(request, podcast_id):
-    connection, cursor = get_database_cursor()
-    cursor.execute("""
-        SELECT E.id_episode,
-                E.judul AS "Judul Episode",
-                E.deskripsi AS "Deskripsi",
-                E.durasi AS "Durasi",
-                E.tanggal_rilis AS "Tanggal"
-        FROM EPISODE E
-        JOIN PODCAST P ON E.id_konten_podcast = P.id_konten
-        JOIN KONTEN K ON P.id_konten = K.id
-        WHERE K.id = %s;
-    """, [podcast_id])
-    episodes = cursor.fetchall()
-    
-    episode_data = []
-    for episode in episodes:
-        episode_id = episode[0]
-        judul_episode = episode[1]
-        deskripsi = episode[2]
-        durasi = episode[3]
-        tanggal_rilis = episode[4]
+    isPodcaster = request.COOKIES.get('isPodcaster')
 
-        episode_data.append({
-            'episode_id': episode_id,
-            'judul_episode': judul_episode,
-            'deskripsi': deskripsi,
-            'durasi': durasi,
-            'tanggal_rilis': tanggal_rilis
-        })
+    if isPodcaster == 'True':
+        connection, cursor = get_database_cursor()
+        cursor.execute("""
+            SELECT E.id_episode,
+                    E.judul AS "Judul Episode",
+                    E.deskripsi AS "Deskripsi",
+                    E.durasi AS "Durasi",
+                    E.tanggal_rilis AS "Tanggal"
+            FROM EPISODE E
+            JOIN PODCAST P ON E.id_konten_podcast = P.id_konten
+            JOIN KONTEN K ON P.id_konten = K.id
+            WHERE K.id = %s;
+        """, [podcast_id])
+        episodes = cursor.fetchall()
+        
+        episode_data = []
+        for episode in episodes:
+            episode_id = episode[0]
+            judul_episode = episode[1]
+            deskripsi = episode[2]
+            durasi = episode[3]
+            tanggal_rilis = episode[4]
 
-    context = {
-        'episodes': episode_data
-    }
+            episode_data.append({
+                'episode_id': episode_id,
+                'judul_episode': judul_episode,
+                'deskripsi': deskripsi,
+                'durasi': durasi,
+                'tanggal_rilis': tanggal_rilis
+            })
 
-    # close connection
-    cursor.close()
-    connection.close()
+        context = {
+            'episodes': episode_data
+        }
+
+        # close connection
+        cursor.close()
+        connection.close()
     
     return render(request, 'daftar_episode.html', context)
 
 
 
 def create_episode(request, podcast_id):
-    connection, cursor = get_database_cursor()
-    if request.method == 'POST':
-        judul = request.POST.get('judul')
-        deskripsi = request.POST.get('deskripsi')
-        durasi = int(request.POST.get('durasi'))
-        # tanggal_rilis = request.POST.get('tanggal_rilis')
+    isPodcaster = request.COOKIES.get('isPodcaster')
 
-        id_episode = str(uuid.uuid4())
+    if isPodcaster == 'True':
+        connection, cursor = get_database_cursor()
+        if request.method == 'POST':
+            judul = request.POST.get('judul')
+            deskripsi = request.POST.get('deskripsi')
+            durasi = int(request.POST.get('durasi'))
+            # tanggal_rilis = request.POST.get('tanggal_rilis')
 
-        # Insert into EPISODE table
-        cursor.execute(
-            """
-            INSERT INTO EPISODE (id_episode, id_konten_podcast, judul, deskripsi, durasi, tanggal_rilis)
-            VALUES (%s, %s, %s, %s, %s, CURRENT_TIMESTAMP)
-            """,
-            [id_episode, podcast_id, judul, deskripsi, durasi]
-        )
+            id_episode = str(uuid.uuid4())
+
+            # Insert into EPISODE table
+            cursor.execute(
+                """
+                INSERT INTO EPISODE (id_episode, id_konten_podcast, judul, deskripsi, durasi, tanggal_rilis)
+                VALUES (%s, %s, %s, %s, %s, CURRENT_TIMESTAMP)
+                """,
+                [id_episode, podcast_id, judul, deskripsi, durasi]
+            )
+            
+            # Update total duration in KONTEN table
+            cursor.execute(
+                """
+                UPDATE KONTEN
+                SET durasi = COALESCE(durasi, 0) + %s
+                WHERE id = %s
+                """,
+                [durasi, podcast_id]
+            )
+
+            connection.commit()
+            # close connection
+            cursor.close()
+            connection.close()        
+            return HttpResponseRedirect('/daftar-episode/' + str(podcast_id) + '/')
         
-        # Update total duration in KONTEN table
+        # Fetch podcast title for display purposes
         cursor.execute(
             """
-            UPDATE KONTEN
-            SET durasi = COALESCE(durasi, 0) + %s
-            WHERE id = %s
+            SELECT K.judul
+            FROM KONTEN K
+            JOIN PODCAST P ON K.id = P.id_konten
+            WHERE P.id_konten = %s
             """,
-            [durasi, podcast_id]
+            [podcast_id]
         )
+        podcast = cursor.fetchone()
+        
+        context = {
+            'podcast_id': podcast_id,
+            'podcast_title': podcast[0] if podcast else 'Unknown Podcast'
+        }
 
-        connection.commit()
         # close connection
         cursor.close()
-        connection.close()        
-        return HttpResponseRedirect('/daftar-episode/' + str(podcast_id) + '/')
-    
-    # Fetch podcast title for display purposes
-    cursor.execute(
-        """
-        SELECT K.judul
-        FROM KONTEN K
-        JOIN PODCAST P ON K.id = P.id_konten
-        WHERE P.id_konten = %s
-        """,
-        [podcast_id]
-    )
-    podcast = cursor.fetchone()
-    
-    context = {
-        'podcast_id': podcast_id,
-        'podcast_title': podcast[0] if podcast else 'Unknown Podcast'
-    }
-
-    # close connection
-    cursor.close()
-    connection.close()
+        connection.close()
     
     return render(request, 'create_episode.html', context)
