@@ -52,9 +52,11 @@
               </ul>
               <p><strong>Artist:</strong> {{ song.artist }}</p>
               <p><strong>Songwriter(s):</strong></p>
-              <ul>
-                  <li><strong>-</strong> {{ song.songwriter }}</li>
-              </ul>
+                <ul>
+                    {% for songwriter in song.songwriters %}
+                        <li>{{ songwriter }}</li>
+                    {% endfor %}
+                </ul>
               <p><strong>Durasi:</strong> {{ song.durasi }} menit</p>
               <p><strong>Tanggal Rilis:</strong> {{ song.tanggal_rilis }}</p>
               <p><strong>Tahun:</strong> {{ song.tahun }}</p>

@@ -76,19 +76,23 @@ def song_detail_only(request, song_id):
 
     # Retrieve song details
     cursor.execute("""
-    SELECT k.judul, g.genre, ak_artist.nama as artist, ak_songwriter.nama as songwriter, k.durasi, k.tanggal_rilis, k.tahun, s.total_play, s.total_download, al.judul as album, s.id_konten
-    FROM playlist_song ps
-    JOIN song s ON ps.id_song = s.id_konten
-    JOIN konten k ON s.id_konten = k.id
-    JOIN artist ar ON s.id_artist = ar.id
-    JOIN akun ak_artist ON ar.email_akun = ak_artist.email
-    JOIN album al ON s.id_album = al.id
-    JOIN genre g ON s.id_konten = g.id_konten
-    JOIN songwriter_write_song sws ON s.id_konten = sws.id_song
-    JOIN songwriter sw ON sws.id_songwriter = sw.id
-    JOIN akun ak_songwriter ON sw.email_akun = ak_songwriter.email
-    WHERE ps.id_song = %s;
-    """, ( [song_id] ))
+        SELECT k.judul, g.genre, ak_artist.nama as artist, 
+               STRING_AGG(ak_songwriter.nama, ', ') as songwriters, 
+               k.durasi, k.tanggal_rilis, k.tahun, 
+               s.total_play, s.total_download, al.judul as album, s.id_konten
+        FROM song s
+        JOIN konten k ON s.id_konten = k.id
+        JOIN artist ar ON s.id_artist = ar.id
+        JOIN akun ak_artist ON ar.email_akun = ak_artist.email
+        JOIN album al ON s.id_album = al.id
+        JOIN genre g ON s.id_konten = g.id_konten
+        JOIN songwriter_write_song sws ON s.id_konten = sws.id_song
+        JOIN songwriter sw ON sws.id_songwriter = sw.id
+        JOIN akun ak_songwriter ON sw.email_akun = ak_songwriter.email
+        WHERE s.id_konten = %s
+        GROUP BY k.judul, g.genre, ak_artist.nama, k.durasi, k.tanggal_rilis, 
+                 k.tahun, s.total_play, s.total_download, al.judul, s.id_konten;
+    """, [song_id])
     song_details = cursor.fetchall()
 
     # Check if song exists
@@ -101,13 +105,19 @@ def song_detail_only(request, song_id):
     # Format tanggal rilis
     tanggal_rilis = song[5].strftime("%m/%d/%y")
 
+    # print songwriter
+    print(song[3])
+
+    # make songwriters a list
+    songwriters = song[3].split(', ')
+
     context = {
         'song_id' : song_id,
         'song': {
             'judul': song[0],
             'genre': song[1], 
             'artist': song[2],
-            'songwriters': song[3], 
+            'songwriters': songwriters, 
             'durasi': song[4],
             'tanggal_rilis': tanggal_rilis,
             'tahun': song[6],
@@ -116,6 +126,7 @@ def song_detail_only(request, song_id):
             'album': song[9],
         }
     }
+
 
     cursor.close()
     connection.close()

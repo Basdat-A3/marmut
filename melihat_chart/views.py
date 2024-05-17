@@ -101,7 +101,7 @@ def chart_detail(request, id_chart):
                 INSERT INTO playlist_song
                 VALUES (%s, %s);
             """, [id_chart, id_konten])
-            print(f"Inserted song {id_konten} into chart {id_chart}")
+            # print(f"Inserted song {id_konten} into chart {id_chart}")
         except Exception as e:
             print(f"Error inserting song {id_konten} into chart {id_chart}: {e}")
 
