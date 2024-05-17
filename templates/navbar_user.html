@@ -28,8 +28,11 @@
           <li class="nav-item" id="podcast-item" style="display: none;">
             <a class="btn btn-dark" href="{% url 'kelola_podcast:list_podcast' %}">Manage Podcast</a>
           </li>
+          <li class="nav-item" id="manage-song-album" style="display: none;">
+            <a class="btn btn-dark" href="{% url 'album_song_royalti:list_album' %}">Manage Song</a>
+          </li>
           <li class="nav-item" id="manage-song-album-item" style="display: none;">
-            <a class="btn btn-dark" href="{% url 'album_song_royalti:list_album' %}">Manage Song & Album</a>
+            <a class="btn btn-dark" href="{% url 'album_song_royalti:list_album_label' %}">Manage Album</a>
           </li>
           <li class="nav-item" id="royalti-item" style="display: none;">
             <a class="btn btn-dark" href="{% url 'album_song_royalti:cek_royalti' %}">Royalti</a>
@@ -41,7 +44,7 @@
             <a class="btn btn-dark" href="{% url 'authentication:logout' %}">Logout</a>
           </li>
           <li class="nav-item" id="downloaded-song-item" style="display: none;">
-            <a class="nav-link">Downloaded Song</a>
+            <a class="btn btn-dark" href="">Downloaded Song</a>
           </li>
           <li class="nav-item" id="premium-plan-item" style="display: none;">
             <a class="btn btn-light" href="{% url 'paket:paket' %}">Premium Plan</a>
@@ -70,9 +73,15 @@ document.addEventListener("DOMContentLoaded", function() {
     let isArtist = getCookie('isArtist') === 'True';
     let isSongwriter = getCookie('isSongwriter') === 'True';
     let isPodcaster = getCookie('isPodcaster') === 'True'; // Remove if Podcaster is not needed
-    let statusLangganan = getCookie('statusLangganan');
+    let statusLangganan = getCookie('status_langganan');
+    let role = getCookie('role');
 
-    if (isArtist || isSongwriter || isPodcaster) {
+    if (role === 'label') {
+        document.getElementById('manage-song-album-item').style.display = 'block';
+        document.getElementById('royalti-item').style.display = 'block';
+        document.getElementById('dashboard-item').style.display = 'block';
+        document.getElementById('logout-item').style.display = 'block';
+    } else if (isArtist || isSongwriter || isPodcaster) {
         if (isPodcaster) {
             document.getElementById('podcast-item').style.display = 'block';
         }
@@ -83,28 +92,23 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('logout-item').style.display = 'block';
 
         if (isArtist || isSongwriter) {
-            document.getElementById('manage-song-album-item').style.display = 'block';
+            document.getElementById('manage-song-album').style.display = 'block';
             document.getElementById('royalti-item').style.display = 'block';
         }
 
-        if (statusLangganan === 'Premium') {
-            document.getElementById('downloaded-song-item').style.display = 'block';
-        } else {
-            document.getElementById('premium-plan-item').style.display = 'block';
-        }
+        document.getElementById('premium-plan-item').style.display = 'block';
     } else {
         // For regular users
         document.getElementById('search').style.display = 'block';
+        if (statusLangganan === 'Premium') {
+            document.getElementById('downloaded-song-item').style.display = 'block';
+        }
         document.getElementById('chart-item').style.display = 'block';
         document.getElementById('manage-playlist-item').style.display = 'block';
         document.getElementById('dashboard-item').style.display = 'block';
         document.getElementById('logout-item').style.display = 'block';
 
-        if (statusLangganan === 'Premium') {
-            document.getElementById('downloaded-song-item').style.display = 'block';
-        } else {
-            document.getElementById('premium-plan-item').style.display = 'block';
-        }
+        document.getElementById('premium-plan-item').style.display = 'block';
     }
 });
 </script>

@@ -274,7 +274,6 @@ def list_album_label(request):
     )
 
     results = cursor.fetchall()
-    print(results)
     if results:
         # Extract label details and album records
         label = results[0]
@@ -461,12 +460,13 @@ def list_song(request):
                 list_songs.append(song)
                 song_ids.add(song[0])
 
-
     update_album_details(album_id)
-
+    # playlkist_id = req()
     context = {
         'status': 'success',
         'list_songs': list_songs,
+        # 'playlist_id': playlist_id,  # Ensure this is added
+
     }
     cursor.close()
     connection.close()
@@ -475,7 +475,7 @@ def list_song(request):
 
 def delete_song(request):
     connection, cursor = get_database_cursor()
-    
+
     role = request.COOKIES.get('role')
     song_id = request.GET.get('song_id')
     cursor.execute('SELECT id_album FROM song WHERE id_konten = %s', [song_id])
@@ -726,3 +726,54 @@ def cek_royalti(request):
     cursor.close()
     connection.close()
     return render(request, 'cek_royalti.html', context)
+
+
+def song_detail(request):
+    connection, cursor = get_database_cursor()
+    song_id = request.GET.get('song_id')
+    # Retrieve song details
+    cursor.execute("""
+    SELECT k.judul, g.genre, ak_artist.nama as artist, ak_songwriter.nama as songwriter, k.durasi, k.tanggal_rilis, k.tahun, s.total_play, s.total_download, al.judul as album, s.id_konten
+    FROM song s
+    JOIN konten k ON s.id_konten = k.id
+    JOIN artist ar ON s.id_artist = ar.id
+    JOIN akun ak_artist ON ar.email_akun = ak_artist.email
+    JOIN album al ON s.id_album = al.id
+    JOIN genre g ON s.id_konten = g.id_konten
+    JOIN songwriter_write_song sws ON s.id_konten = sws.id_song
+    JOIN songwriter sw ON sws.id_songwriter = sw.id
+    JOIN akun ak_songwriter ON sw.email_akun = ak_songwriter.email
+    WHERE s.id_konten = %s;
+    """, (song_id,))
+    song_details = cursor.fetchall()
+
+    # Check if song exists
+    if not song_details:
+        return HttpResponse("Song not found", status=404)
+
+    # Get the song detail
+    song = song_details[0]
+
+    # Format tanggal rilis
+    tanggal_rilis = song[5].strftime("%m/%d/%y")
+
+    context = {
+        'song_id': song_id,
+        'song': {
+            'judul': song[0],
+            'genre': song[1],
+            'artist': song[2],
+            'songwriters': song[3],
+            'durasi': song[4],
+            'tanggal_rilis': tanggal_rilis,
+            'tahun': song[6],
+            'total_play': song[7],
+            'total_download': song[8],
+            'album': song[9],
+        }
+    }
+
+    cursor.close()
+    connection.close()
+
+    return render(request, 'detail_song.html', context)

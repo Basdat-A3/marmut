@@ -10,8 +10,6 @@
 {% block content %}
 <div class="container mt-5">
   <h1>List Album</h1>
-  <h3 class="mb-3 cursor-pointer" onclick="window.location.href='list_album_label.html';">Logged in as: Label</h3>
-
   <table class="table table-striped">
     <thead>
       <tr>
@@ -29,7 +27,7 @@
       <tr>
         <td>{{record.1}}</td>
         <td>{{record.2}}</td>
-        <td>{{record.3}}</td>
+        <td>{{record.3}} Menit</td>
         <td>
           <button class="btn btn-primary btn-sm" onclick="window.location.href='{% url 'album_song_royalti:list_song' %}?id={{ record.0 }}'">Lihat Daftar Lagu</button>
           <button class="btn btn-danger btn-sm" onclick="window.location.href='{% url 'album_song_royalti:delete_album_label' %}?id={{ record.0 }}'">Hapus</button>
