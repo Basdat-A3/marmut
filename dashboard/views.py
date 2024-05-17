@@ -63,22 +63,50 @@ def search(request):
 
             UNION
 
-            SELECT 'User Playlist' AS Tipe, up.judul AS Judul, a.nama AS Oleh, up.id_user_playlist as ID
+            SELECT 'User Playlist' AS Tipe, up.judul AS Judul, a.nama AS Oleh, up.id_playlist as ID
             FROM user_playlist up
             JOIN akun a ON up.email_pembuat = a.email
             WHERE LOWER(up.judul) LIKE LOWER('%{keyword}%')
             """
         cursor.execute(query)
         contents = cursor.fetchall()
+        message = f"Hasil pencarian untuk \"{keyword}\""
         print(contents)
+        if len(contents) == 0:
+            message = f"Maaf, pencarian untuk \"{keyword}\" tidak ditemukan"
 
         context = {
             "contents": contents,
-            "keyword" : keyword
+            "message" : message
         }
+
+        # close connection
+        cursor.close()
+        connection.close()
         # print(paket)
         return render(request, "search.html", context)
     return render(request, "search.html")
 
 def downloaded_songs(request):
-    return render(request, "downloaded_songs.html")
+    connection, cursor = get_database_cursor()
+    email = request.COOKIES.get('email')
+
+    cursor.execute(f"""
+        select k.judul, a.nama from downloaded_song d
+        JOIN konten k ON d.id_song = k.id
+        JOIN song s ON d.id_song = s.id_konten
+        JOIN artist art ON s.id_artist = art.id
+        JOIN akun a ON art.email_akun = a.email
+        WHERE d.email_downloader = '{email}'
+    """
+    )
+    songs = cursor.fetchall()
+    context = {
+        "songs": songs
+    }
+    print(songs)
+
+    # close connection
+    cursor.close()
+    connection.close()
+    return render(request, "downloaded_songs.html", context)

@@ -27,7 +27,7 @@
             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="q">
             <button class="btn btn-light" type="submit">Search</button>
         </form>
-      <h2 class="mb-5">Hasil pencarian untuk "{{keyword}}"</h2>
+      <h2 class="mb-5">{{message}}</h2>
       <table class="table table-striped">
         <thead class="table-primary rounded">
             <tr>
@@ -45,11 +45,11 @@
                 <td>{{item.2}}</td>
                 <td>
                     {% if item.0 == 'Podcast' %}
-                        <a href="{% url 'kelola_podcast:daftar_episode' item.3 %}" class="btn btn-primary">Lihat</a>
+                        <a href="{% url 'play_podcast:play_podcast' item.3 %}" class="btn btn-primary">Lihat</a>
                     {% elif item.0 == 'Song' %}
                         <a href="#" class="btn btn-primary">Lihat</a>
                     {% else %}
-                        <a href="#" class="btn btn-primary">Lihat</a>
+                        <a href="{% url 'kelola_playlist:playlist_detail' item.3 %}" class="btn btn-primary">Lihat</a>
                     {% endif %}
                 </td>
               </tr>
