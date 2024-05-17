@@ -28,6 +28,7 @@ def login(request):
                 cursor.execute(
                     f'SELECT * FROM label WHERE id = %s', [id_label])
                 label_album = cursor.fetchall()
+                print(label_album)
                 context = {
                     'role': 'label',
                     'label_album': label_album,
