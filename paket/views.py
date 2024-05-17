@@ -13,7 +13,10 @@ def paket(request):
     context = {
         "paket": paket
     }
-    print(paket)
+    
+    # close connection
+    cursor.close()
+    connection.close()
     return render(request, "paket.html", context)
 
 def paket_payment(request, nama_paket):
@@ -60,6 +63,10 @@ def paket_payment(request, nama_paket):
         cursor.execute(f"\
             INSERT INTO PREMIUM VALUES ('{email}')")
         connection.commit()
+
+        # close connection
+        cursor.close()
+        connection.close()
         return redirect('dashboard:riwayat')
 
 
@@ -75,5 +82,7 @@ def riwayat(request):
     context = {
         "riwayat": riwayat
     }
-    print(riwayat)
+    # close connection
+    cursor.close()
+    connection.close()
     return render(request, "riwayat.html", context)
