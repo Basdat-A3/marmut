@@ -17,6 +17,12 @@
       .text-white {
         color: white;
       }
+
+      .divider{
+        background-color: white;
+        height: 1px;
+        width: 100%;
+      }
     </style>
 {% endblock meta %}
 
@@ -24,62 +30,146 @@
 <style></style>
 <div class="container border p-lg-5 text-white text-center">
     <div class="bg-dark d-flex flex-column justify-content-center align-items-center rounded p-lg-5">
+      {% if role == 'label' %}
+      <h2 class="mb-5">Label Dashboard</h2>
+      <div class="row bg-primary p-3 rounded w-50">
+        <div class="col">
+          <div class="d-flex flex-column m-3">
+            Nama
+            <b>{{user.1}}</b>
+          </div>
+          <div class="d-flex flex-column m-3">
+            Email
+            <b>{{email}}</b>
+          </div>
+          <div class="d-flex flex-column m-3">
+            Kontak
+            <b>{{user.4}}</b>
+          </div>
+        </div>
+      </div>
+      {% else %}
       <h2 class="mb-5">User Dashboard</h2>
       <div class="row bg-primary p-3 rounded w-50">
         <div class="col">
           <div class="d-flex flex-column align-items-start m-3">
             Name
-            <b>Fathan Naufal Adhitama</b>
+            <b>{{user.2}}</b>
           </div>
           <div class="d-flex flex-column align-items-start m-3">
             Email
-            <b>fathanrocker@gmail.com</b>
+            <b>{{email}}</b>
           </div>
           <div class="d-flex flex-column align-items-start m-3">
             Kota Asal
-            <b>Manchester</b>
+            <b>{{user.7}}</b>
           </div>
           <div class="d-flex flex-column align-items-start m-3">
             Gender
+            {% if user.3 == 1%}
             <b>Laki-laki</b>
+            {% else %}
+            <b>Perempuan</b>
+            {% endif %}
           </div>
         </div>
         <div class="col">
             <div class="d-flex flex-column align-items-start m-3">
                 Tempat Lahir
-                <b>Padang</b>
+                <b>{{user.4}}</b>
               </div>
               <div class="d-flex flex-column align-items-start m-3">
                 Tanggal Lahir
-                <b>17 Agustus 1999</b>
+                <b>{{user.5}}</b>
               </div>
               <div class="d-flex flex-column align-items-start m-3">
                 Role
-                <b>Listener</b>
+                <b>{{role}}</b>
               </div>
         </div>
       </div>
+      {% endif %}
+      <hr class="divider">
+      {% if role == 'label' %}
       <section class="row py-5">
-        <h2 class="mb-5">Playlists</h2>
-        <div class="col-sm-6">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">galau brutal full english</h5>
-              <p class="card-text">lagu sedih tapi pake bahasa inggris</p>
-              <a href="#" class="btn btn-primary">View Playlist</a>
+        <h2 class="mb-5">Daftar Album</h2>
+        <div class="d-flex flex-wrap justify-content-center gap-5">
+          {% if not album %}
+          <p>Tidak memiliki album</p>
+          {% else %}
+            {% for item in album %}
+            <div class="card w-50">
+              <div class="card-body">
+                <h5 class="card-title">{{item.1}}</h5>
+                <p class="card-text">{{item.2}} songs</p>
+                <p class="card-text">{{item.4}} mins</p>
+                <a href="#" class="btn btn-primary">View Album</a>
+              </div>
             </div>
-          </div>
-        </div>
-        <div class="col-sm-6">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">WORKOUT PLAYLIST 2024 💪🔥</h5>
-              <p class="card-text">Running Songs - Gym Motivation </p>
-              <a href="#" class="btn btn-primary">View Playlist</a>
-            </div>
-          </div>
+            {% endfor %}
+          {% endif %}
         </div>
       </section>
+      {% else %}
+      <section class="row py-5">
+        <h2 class="mb-5">Daftar Playlist</h2>
+        <div class="d-flex flex-wrap justify-content-center gap-5">
+          {% if not playlist %}
+          <p>Tidak memiliki playlist</p>
+          {% else %}
+            {% for item in playlist %}
+            <div class="card w-50">
+              <div class="card-body">
+                <h5 class="card-title">{{item.3}}</h5>
+                <p class="card-text">{{item.5}}</p>
+                <a href="{% url 'kelola_playlist:playlist_detail' item.6%}" class="btn btn-primary">View Playlist</a>
+              </div>
+            </div>
+            {% endfor %}
+          {% endif %}
+        </div>
+      </section>
+      {% endif %}
+      {% if isPodcaster %}
+      <section class="row py-5">
+        <h2 class="mb-5">Daftar Podcast </h2>
+        <div class="d-flex flex-wrap justify-content-center gap-5">
+          {% if not podcast %}
+          <p>Tidak memiliki podcast</p>
+          {% else %}
+            {% for item in podcast %}
+            <div class="card w-25">
+              <div class="card-body">
+                <h5 class="card-title">{{item.3}}</h5>
+                <p class="card-text">{{item.5}}</p>
+                <a href="{% url 'play_podcast:play_podcast' item.0 %}" class="btn btn-primary">View Podcast</a>
+              </div>
+            </div>
+            {% endfor %}
+          {% endif %}
+        </div>
+      </section>
+      {% endif %}
+      {% if isArtist or isSongwriter %}
+      <section class="row py-5">
+        <h2 class="mb-5">Daftar Lagu </h2>
+        <div class="d-flex flex-wrap justify-content-center gap-5">
+          {% if not song %}
+          <p>Tidak memiliki lagu</p>
+          {% else %}
+            {% for item in song %}
+            <div class="card w-25">
+              <div class="card-body">
+                <h5 class="card-title">{{item.0}}</h5>
+                <p class="card-text">{{item.2}}</p>
+                <a href="#" class="btn btn-primary">View Song</a>
+              </div>
+            </div>
+            {% endfor %}
+          {% endif %}
+        </div>
+      </section>
+      {% endif %}
     </div>
   </div>
 

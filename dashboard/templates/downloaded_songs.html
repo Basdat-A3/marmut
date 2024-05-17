@@ -29,15 +29,14 @@
             <tr>
               <th scope="col">Judul</th>
               <th scope="col">Oleh</th>
-              <th scope="col">Tanggal Download</th>
               <th scope="col">Actions</th>
             </tr>
           </thead>
           <tbody>
+            {% for song in songs %}
             <tr>
-              <td>Aku Udah Bisa Goreng Nugget Sendiri</td>
-              <td>Refo Dan Fauna</td>
-              <td>1 Januari 2024</td>
+              <td>{{song.0}}</td>
+              <td>{{song.1}}</td>
               <td>
                 <a href="#" class="btn btn-primary">Lihat</a>
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -45,28 +44,7 @@
                 </button>
               </td>
             </tr>
-            <tr>
-              <td>Sama Sama Tahu</td>
-              <td>HIVI!</td>
-              <td>1 April 2024</td>
-              <td>
-                <a href="#" class="btn btn-primary">Lihat</a>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    Hapus
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td>Perempuan Yang Sedang Dalam Pelukan</td>
-              <td>Payung Teduh</td>
-              <td>1 Mei 2024</td>
-              <td>
-                <a href="#" class="btn btn-primary">Lihat</a>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    Hapus
-                </button>
-              </td>
-            </tr>
+            {% endfor %}
           </tbody>
       </table>
     </div>
