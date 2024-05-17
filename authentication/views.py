@@ -10,6 +10,7 @@ from utils.query import *
 
 # Create your views here.
 def login(request):
+    connection, cursor = get_database_cursor()
     if request.method == "POST":
         email = request.POST.get('email')
         password = request.POST.get("password")
@@ -134,7 +135,8 @@ def login(request):
             response.set_cookie('isArtist', isArtist)
             response.set_cookie('isSongwriter', isSongwriter)
             response.set_cookie('isPodcaster', isPodcaster)
-
+            cursor.close()
+            connection.close()
             return response
 
         # Uncomment and adjust the following based on your logic
@@ -142,7 +144,8 @@ def login(request):
         #     return render(request, "home.html")
         # else:
         #     return render(request, "login.html")
-
+    cursor.close()
+    connection.close()
     return render(request, "login.html")
 
 
@@ -155,6 +158,7 @@ def register(request):
 
 
 def register_user(request):
+
     if request.method == "POST":
         connection, cursor = get_database_cursor()
         email = request.POST.get('email')
@@ -200,9 +204,10 @@ def register_user(request):
             context = {
                 'message': err,
             }
-
+            cursor.close()
+            connection.close()
             return render(request, 'register_user.html', context)
-
+        
     return render(request, "register_user.html")
 
 
@@ -228,6 +233,9 @@ def register_label(request):
         context = {
             'message': 'Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu',
         }
+
+        cursor.close()
+        connection.close()
         return render(request, 'register_label.html', context)
 
     # check email is already registered or not
@@ -237,6 +245,9 @@ def register_label(request):
         context = {
             'message': 'Email sudah terdaftar',
         }
+
+        cursor.close()
+        connection.close()
         return render(request, 'register_label.html', context)
 
     cursor.execute(f'select * from label where email = \'{email}\'')
@@ -245,6 +256,9 @@ def register_label(request):
         context = {
             'message': 'Email sudah terdaftar',
         }
+        
+        cursor.close()
+        connection.close()
         return render(request, 'register_label.html', context)
 
     # insert data to database
@@ -260,6 +274,8 @@ def register_label(request):
 
         connection.commit()
 
+        cursor.close()
+        connection.close()
         return redirect('authentication:login')
 
     except Exception as err:
@@ -271,7 +287,8 @@ def register_label(request):
         context = {
             'message': err,
         }
-
+        cursor.close()
+        connection.close()  
         return render(request, 'register_label.html', context)
 
 
