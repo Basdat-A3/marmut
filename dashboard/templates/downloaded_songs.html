@@ -17,6 +17,27 @@
       .text-white {
         color: white;
       }
+
+      .modal {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed; 
+            z-index: 1; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgb(0,0,0); 
+            background-color: rgba(0,0,0,0.4); 
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            max-width: 25%;
+            padding: 1rem;
+        }
     </style>
 {% endblock meta %}
 
@@ -29,59 +50,82 @@
             <tr>
               <th scope="col">Judul</th>
               <th scope="col">Oleh</th>
-              <th scope="col">Tanggal Download</th>
               <th scope="col">Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Aku Udah Bisa Goreng Nugget Sendiri</td>
-              <td>Refo Dan Fauna</td>
-              <td>1 Januari 2024</td>
+            {% for song in songs %}
+            <tr data-id="{{ song.2 }}">
+              <td>{{song.0}}</td>
+              <td>{{song.1}}</td>
               <td>
-                <a href="#" class="btn btn-primary">Lihat</a>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <a href="{% url 'play_song:song_detail_only' song.2 %}" class="btn btn-primary">Lihat</a>
+                <button type="button" data-title="{{song.0}}" class="btn btn-danger openModalBtn">
                     Hapus
                 </button>
               </td>
             </tr>
-            <tr>
-              <td>Sama Sama Tahu</td>
-              <td>HIVI!</td>
-              <td>1 April 2024</td>
-              <td>
-                <a href="#" class="btn btn-primary">Lihat</a>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    Hapus
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td>Perempuan Yang Sedang Dalam Pelukan</td>
-              <td>Payung Teduh</td>
-              <td>1 Mei 2024</td>
-              <td>
-                <a href="#" class="btn btn-primary">Lihat</a>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    Hapus
-                </button>
-              </td>
-            </tr>
+            {% endfor %}
           </tbody>
       </table>
     </div>
   </div>
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-        <div class="modal-body">
-        Berhasil menghapus Lagu dengan judul ‘Sama Sama Tahu’ dari daftar unduhan!
-        </div>
-        <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kembali</button>
-        </div>
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <p class="text-center mb-4" id="modalText">Some text in the Modal..</p>
+    <div class="d-flex justify-content-end">
+      <span class="close btn btn-secondary">Kembali</span>
     </div>
-    </div>
+  </div>
+
 </div>
+
+<script>
+  // Get the modal
+  var modal = document.getElementById("myModal");
+
+// Get all buttons that open the modal
+var btns = document.querySelectorAll(".openModalBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// Loop through all buttons and attach the click event to each
+btns.forEach(function(btn) {
+    btn.onclick = async function() {
+        var songId = btn.closest('tr').getAttribute('data-id');
+        var songTitle = btn.getAttribute('data-title');
+        await fetch(`{% url 'dashboard:delete' %}?id_song=${songId}`, {
+                    method: 'GET',
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.message === 'Song deleted successfully') {
+                        document.getElementById('modalText').innerText = `
+                        Berhasil menghapus Lagu dengan judul '${songTitle}' dari daftar unduhan!`;
+                        // Optionally remove the row from the table
+                        this.closest('tr').remove();
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        // alert(songTitle)
+        modal.style.display = "flex";
+    }
+});
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+    modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+</script>
 {% endblock content %}

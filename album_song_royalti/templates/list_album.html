@@ -28,7 +28,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for record in records_album %}
+      {% for record in list_albums %}
       <tr>
         <td>{{ record.1 }}</td>
         <td>{{ record.5 }}</td>
@@ -43,7 +43,5 @@
       {% endfor %}
     </tbody>
   </table>
-
-  <button class="btn btn-info" onclick="window.location.href='{% url 'album_song_royalti:cek_royalti' %}'">Lihat Royalti</button>
 </div>
 {% endblock content %}

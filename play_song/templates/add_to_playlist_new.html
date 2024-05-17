@@ -45,7 +45,7 @@
             <select name="other_playlist_id" id="playlist">
                 <option value="">Pilih Playlist</option>
                 {% for playlist in playlists %}
-                    <option value="{{ playlist.id_playlist }}">{{ playlist.judul }}</option>
+                    <option value="{{ playlist.0 }}">{{ playlist.1 }}</option>
                 {% endfor %}
             </select>
             <div class="actions">
@@ -59,7 +59,7 @@
                 <form method="get" action="{% url 'kelola_playlist:playlist_detail' idPlaylist %}">
                     <button type="submit" class="button">Ke Playlist</button>
                 </form>
-                <form method="get" action="{% url 'play_song:add_to_playlist' playlist_id song_id %}">
+                <form method="get" action="{% url 'play_song:add_to_playlist_new' song_id %}">
                     <button type="submit" class="button">Kembali</button>
                 </form>
             </div>

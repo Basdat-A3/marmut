@@ -10,6 +10,7 @@ from utils.query import *
 
 # Create your views here.
 def login(request):
+    connection, cursor = get_database_cursor()
     if request.method == "POST":
         email = request.POST.get('email')
         password = request.POST.get("password")
@@ -28,6 +29,7 @@ def login(request):
                 cursor.execute(
                     f'SELECT * FROM label WHERE id = %s', [id_label])
                 label_album = cursor.fetchall()
+                print(label_album)
                 context = {
                     'role': 'label',
                     'label_album': label_album,
@@ -38,7 +40,7 @@ def login(request):
                     'phone_number': label[4],
                     'id_pemilik_hak_cipta': label[5]
                 }
-                response = render(request, 'dashboard_label.html', context)
+                response = HttpResponseRedirect(reverse('dashboard:dashboard'))
                 response.set_cookie('role', 'label')
                 response.set_cookie('email', email)
                 response.set_cookie('id', id_label)
@@ -119,9 +121,8 @@ def login(request):
                 'kota_asal': user[7],
 
             }
-            print(role_verif)
 
-            response = render(request, 'dashboard.html', context)
+            response = HttpResponseRedirect(reverse('dashboard:dashboard'))
             response.set_cookie('role', role_verif)
             response.set_cookie('email', email)
             response.set_cookie('id_user_artist', id_user_artist)
@@ -134,7 +135,8 @@ def login(request):
             response.set_cookie('isArtist', isArtist)
             response.set_cookie('isSongwriter', isSongwriter)
             response.set_cookie('isPodcaster', isPodcaster)
-
+            cursor.close()
+            connection.close()
             return response
 
         # Uncomment and adjust the following based on your logic
@@ -142,7 +144,8 @@ def login(request):
         #     return render(request, "home.html")
         # else:
         #     return render(request, "login.html")
-
+    cursor.close()
+    connection.close()
     return render(request, "login.html")
 
 
@@ -155,6 +158,7 @@ def register(request):
 
 
 def register_user(request):
+
     if request.method == "POST":
         connection, cursor = get_database_cursor()
         email = request.POST.get('email')
@@ -180,12 +184,34 @@ def register_user(request):
         # insert data to database
         try:
             is_verified = bool(podcaster or artist or songwriter)
+            id_artist = str(uuid.uuid4())
+            id_songwriter = str(uuid.uuid4())
+            id_hak_cipta = str(uuid.uuid4())
+            list_rate_royalti = [100, 200, 300, 400, 500]
+            rate_royalti = random.choice(list_rate_royalti)
+
             cursor.execute(
                 f'insert into akun values (\'{email}\',\'{password}\',\'{nama}\',{gender},\'{tempat_lahir}\',\'{tanggal_lahir}\',\'{is_verified}\',\'{kota_asal}\')'
             )
             cursor.execute(
                 f'insert into nonpremium values (\'{email}\')'
             )
+            if artist or songwriter:
+                cursor.execute(
+                    f'insert into pemilik_hak_cipta values (\'{id_hak_cipta}\',\'{rate_royalti}\')'
+                )
+            if podcaster:
+                cursor.execute(
+                    f'insert into podcaster values (\'{email}\')'
+                )
+            if artist:
+                cursor.execute(
+                    f'insert into artist values (\'{id_artist}\',\'{email}\',\'{id_hak_cipta}\')'
+                )
+            if songwriter:
+                cursor.execute(
+                    f'insert into songwriter values (\'{id_songwriter}\',\'{email}\',\'{id_hak_cipta}\')'
+                )
 
             connection.commit()
 
@@ -200,9 +226,10 @@ def register_user(request):
             context = {
                 'message': err,
             }
-
+            cursor.close()
+            connection.close()
             return render(request, 'register_user.html', context)
-
+        
     return render(request, "register_user.html")
 
 
@@ -228,6 +255,9 @@ def register_label(request):
         context = {
             'message': 'Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu',
         }
+
+        cursor.close()
+        connection.close()
         return render(request, 'register_label.html', context)
 
     # check email is already registered or not
@@ -237,6 +267,9 @@ def register_label(request):
         context = {
             'message': 'Email sudah terdaftar',
         }
+
+        cursor.close()
+        connection.close()
         return render(request, 'register_label.html', context)
 
     cursor.execute(f'select * from label where email = \'{email}\'')
@@ -245,6 +278,9 @@ def register_label(request):
         context = {
             'message': 'Email sudah terdaftar',
         }
+        
+        cursor.close()
+        connection.close()
         return render(request, 'register_label.html', context)
 
     # insert data to database
@@ -260,6 +296,8 @@ def register_label(request):
 
         connection.commit()
 
+        cursor.close()
+        connection.close()
         return redirect('authentication:login')
 
     except Exception as err:
@@ -271,7 +309,8 @@ def register_label(request):
         context = {
             'message': err,
         }
-
+        cursor.close()
+        connection.close()  
         return render(request, 'register_label.html', context)
 
 

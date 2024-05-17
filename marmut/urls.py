@@ -16,9 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.views.generic import RedirectView
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', RedirectView.as_view(url='/auth/', permanent=False)),
     path('', include('album_song_royalti.urls')),
     path('', include('kelola_playlist.urls')),
     path('auth/', include('authentication.urls')),
@@ -27,4 +30,5 @@ urlpatterns = [
     path('', include('melihat_chart.urls')),
     path('', include('play_podcast.urls')),
     path('paket/', include('paket.urls')),
+    path('', include('play_song.urls')),
 ]

@@ -32,7 +32,7 @@
         <td>{{record.1}}</td>
         <td>{{record.2}}</td>
         <td>
-          <button class="btn btn-primary btn-sm">Lihat Detail</button>
+          <button class="btn btn-primary btn-sm" onclick="window.location.href='{% url 'album_song_royalti:song_detail' %}?song_id={{ record.0 }}'">Lihat Detail</button>
           <button class="btn btn-danger btn-sm" onclick="window.location.href='{% url 'album_song_royalti:delete_song' %}?song_id={{ record.0 }}'">Hapus</button>
         </td>
       </tr>
