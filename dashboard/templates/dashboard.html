@@ -103,7 +103,7 @@
                 <h5 class="card-title">{{item.1}}</h5>
                 <p class="card-text">{{item.2}} songs</p>
                 <p class="card-text">{{item.4}} mins</p>
-                <a href="#" class="btn btn-primary">View Album</a>
+                <a href="{% url 'album_song_royalti:list_song' %}?id={{item.0}}" class="btn btn-primary">View Album</a>
               </div>
             </div>
             {% endfor %}
