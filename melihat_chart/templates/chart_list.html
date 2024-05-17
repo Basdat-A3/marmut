@@ -25,29 +25,29 @@
     <tbody>
       <tr>
         <td>Daily Top 20</td>
-        <td><a href="#" class="btn btn-primary btn-sm">Lihat Daftar Lagu</a></td>
+        <td><a href="{% url 'melihat_chart:detail_chart' id_chart='123e4567-e89b-12d3-a456-426614174012' %}" class="btn btn-primary btn-sm">Lihat Daftar Lagu</a></td>
       </tr>
       <tr> 
         <td>Weekly Top 20</td>
-        <td><a href="#" class="btn btn-primary btn-sm">Lihat Daftar Lagu</a></td>
+        <td><a href="{% url 'melihat_chart:detail_chart' id_chart='123e4567-e89b-12d3-a456-426614174013' %}" class="btn btn-primary btn-sm">Lihat Daftar Lagu</a></td>
       </tr>
       <tr> 
         <td>Monthly Top 20</td>
-        <td><a href="#" class="btn btn-primary btn-sm">Lihat Daftar Lagu</a></td>
+        <td><a href="{% url 'melihat_chart:detail_chart' id_chart='123e4567-e89b-12d3-a456-426614174014' %}" class="btn btn-primary btn-sm">Lihat Daftar Lagu</a></td>
       </tr>
       <tr> 
         <td>Yearly Top 20</td>
-        <td><a href="#" class="btn btn-primary btn-sm">Lihat Daftar Lagu</a></td>
+        <td><a href="{% url 'melihat_chart:detail_chart' id_chart='123e4567-e89b-12d3-a456-426614174015' %}" class="btn btn-primary btn-sm">Lihat Daftar Lagu</a></td>
       </tr>
     </tbody>
   </table>
-  <a href="#" class="btn btn-primary">Kembali</a>
+  <button class="btn btn-primary" onclick="goBack()">Kembali</button>
 </div>
 
 <!-- Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> 
 <!-- DataTables JS -->
 <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
@@ -61,6 +61,10 @@
       "info": false
     });
   });
+
+  function goBack() {
+    window.history.back();
+  }
 </script>
 
 {% endblock content%}
