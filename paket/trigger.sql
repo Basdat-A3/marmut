@@ -6,7 +6,6 @@ BEGIN
         SELECT 1
         FROM transaction
         WHERE email = NEW.email
-          AND timestamp_dimulai <= NOW()
           AND timestamp_berakhir >= NOW()
     ) THEN
         RAISE EXCEPTION 'User already has an active subscription';
@@ -14,6 +13,9 @@ BEGIN
         INSERT INTO premium (email)
         VALUES (NEW.email)
         ON CONFLICT (email) DO NOTHING;
+
+        -- Hapus email dari tabel nonpremium setelah insert ke tabel premium
+        DELETE FROM nonpremium WHERE email = NEW.email;
     END IF;
     RETURN NEW;
 END;
