@@ -64,19 +64,18 @@ def list_podcast(request):
     if isPodcaster == 'True':
         connection, cursor = get_database_cursor()
         
-
         cursor.execute("""
-        SELECT P.id_konten,  -- Select id_konten
-               K.judul AS "Judul",
-               COALESCE(COUNT(E.id_episode), 0) AS "Jumlah Episode",
-               COALESCE(SUM(E.durasi), 0) AS "Total Durasi"
-        FROM PODCAST P
-        LEFT JOIN EPISODE E ON P.id_konten = E.id_konten_podcast
-        LEFT JOIN KONTEN K ON P.id_konten = K.id
-        JOIN PODCASTER POD ON POD.email = P.email_podcaster
-        WHERE POD.email = %s
-        GROUP BY P.id_konten, K.judul;
-        """, [email_podcaster])
+            SELECT P.id_konten,
+                K.judul AS "Judul",
+                COALESCE(COUNT(E.id_episode), 0) AS "Jumlah Episode",
+                K.durasi AS "Total Durasi"
+            FROM PODCAST P
+            LEFT JOIN EPISODE E ON P.id_konten = E.id_konten_podcast
+            LEFT JOIN KONTEN K ON P.id_konten = K.id
+            JOIN PODCASTER POD ON POD.email = P.email_podcaster
+            WHERE POD.email = %s
+            GROUP BY P.id_konten, K.judul, K.durasi;
+            """, [email_podcaster])
 
         podcasts = cursor.fetchall()
         
@@ -202,16 +201,6 @@ def create_episode(request, podcast_id):
                 [id_episode, podcast_id, judul, deskripsi, durasi]
             )
             
-            # Update total duration in KONTEN table
-            cursor.execute(
-                """
-                UPDATE KONTEN
-                SET durasi = COALESCE(durasi, 0) + %s
-                WHERE id = %s
-                """,
-                [durasi, podcast_id]
-            )
-
             connection.commit()
             # close connection
             cursor.close()
