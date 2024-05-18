@@ -12,7 +12,6 @@ urlpatterns = [
     path('delete_playlist/<uuid:idPlaylist>/', delete_playlist, name='delete_playlist'),
     path('edit_playlist/<uuid:idPlaylist>/', edit_playlist, name='edit_playlist'),
     path('delete_song/<uuid:playlist_id>/<uuid:song_id>/', delete_song, name='delete_song'),
-    #path('song_detail/<uuid:idKonten>/', song_detail, name='song_detail'),
-    #path('tambah_lagu/<uuid:idPlaylist>/<uuid:song_id>/', tambah_lagu, name='tambah_lagu'),
+   
 ]
 

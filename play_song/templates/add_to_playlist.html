@@ -35,7 +35,6 @@
 {% endblock meta %}
 
 {% block content %}
-   
     <div class="container">
         <h1>Add Song to User Playlist</h1>
         <p>Judul: {{ song_title }}</p>
@@ -45,7 +44,7 @@
             <select name="other_playlist_id" id="playlist">
                 <option value="">Pilih Playlist</option>
                 {% for playlist in playlists %}
-                    <option value="{{ playlist.id_playlist }}">{{ playlist.judul }}</option>
+                    <option value="{{ playlist.0 }}">{{ playlist.1 }}</option>
                 {% endfor %}
             </select>
             <div class="actions">
@@ -56,14 +55,14 @@
         {% if success_message %}
             <div class="popup" id="popup">
                 <p>{{ success_message }}</p>
-                <form method="get" action="{% url 'kelola_playlist:playlist_detail' idPlaylist %}">
-                    <button type="submit" class="button">Ke Playlist</button>
-                </form>
-                <form method="get" action="{% url 'play_song:add_to_playlist' playlist_id song_id %}">
-                    <button type="submit" class="button">Kembali</button>
+                <form method="get" action="{% url 'kelola_playlist:playlist_detail' other_playlist %}">
+                    <button type="submit" class="btn btn-primary">Ke Playlist</button>
                 </form>
             </div>
-        {% endif %}
+            {% endif %}
+            <form method="get" action="{% url 'play_song:song_detail' playlist_id song_id %}">
+                <button type="submit" class="btn btn-secondary">Kembali</button>
+            </form>
     </div>
     
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
