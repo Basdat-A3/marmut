@@ -20,9 +20,34 @@ def song_detail(request, playlist_id, song_id):
     """, (playlist_id,))
     playlist = cursor.fetchall()
 
-    # Check if playlist exists
-    if not playlist:
-        return HTTPResponse("Playlist not found", status=404)
+    if request.method == 'POST':
+        email_pemain = request.COOKIES.get('email') 
+        waktu = datetime.datetime.now()
+
+        # Insert into AKUN_PLAY_SONG
+        if 'Play' in request.POST:
+            cursor.execute("""
+                INSERT INTO akun_play_song (email_pemain, id_song, waktu)
+                VALUES (%s, %s, %s);
+            """, (email_pemain, song_id, waktu))
+            connection.commit()
+        if 'Download' in request.POST:
+            cursor.execute(
+                f'select total_download from song where id_konten = \'{song_id}\'')
+            total = cursor.fetchall()
+            total_download = total[0][0] + 1
+
+            sudah = []
+            cursor.execute(
+                f'select id_song from downloaded_song where id_song = \'{song_id}\' AND email_downloader = \'{email_pemain}\'')
+            sudah = cursor.fetchall()
+
+            cursor.execute(
+                f'insert into downloaded_song values( \'{song_id}\', \'{email_pemain}\' )'
+            )
+
+            connection.commit()
+            success_message = f"Berhasil mengunduh lagu dengan judul '{song[0]}'!"
 
     # Retrieve song details
     cursor.execute("""
@@ -48,6 +73,10 @@ def song_detail(request, playlist_id, song_id):
     # Check if song exists
     if not song_details:
         return HTTPResponse("Song not found", status=404)
+    
+    # Check if playlist exists
+    if not playlist:
+        return HTTPResponse("Playlist not found", status=404)
 
     # Get the song detail
     song = song_details[0]
@@ -58,16 +87,6 @@ def song_detail(request, playlist_id, song_id):
     songwriters = song[3].split(', ')
     status_langganan = request.COOKIES.get('status_langganan')
 
-    if request.method == 'POST':
-        email_pemain = request.COOKIES.get('email')  # Assumes email is stored in cookies
-        waktu = datetime.datetime.now()
-
-        # Insert into AKUN_PLAY_SONG
-        cursor.execute("""
-            INSERT INTO akun_play_song (email_pemain, id_song, waktu)
-            VALUES (%s, %s, %s);
-        """, (email_pemain, song_id, waktu))
-        connection.commit()
 
     context = {
         'playlist': playlist[0],
@@ -98,6 +117,36 @@ def song_detail(request, playlist_id, song_id):
 def song_detail_only(request, song_id):
     connection, cursor = get_database_cursor()
     success_message = None
+
+    if request.method == 'POST':
+        email_pemain = request.COOKIES.get('email') 
+        waktu = datetime.datetime.now()
+
+        # Insert into AKUN_PLAY_SONG
+        if 'Play' in request.POST:
+            cursor.execute("""
+                INSERT INTO akun_play_song (email_pemain, id_song, waktu)
+                VALUES (%s, %s, %s);
+            """, (email_pemain, song_id, waktu))
+            connection.commit()
+
+        # Insert into DOWNLOADED_SONG
+        if 'Download' in request.POST:
+            cursor.execute(
+                f'select total_download from song where id_konten = \'{song_id}\'')
+            total = cursor.fetchall()
+            total_download = total[0][0] + 1
+
+            sudah = []
+            cursor.execute(
+                f'select id_song from downloaded_song where id_song = \'{song_id}\' AND email_downloader = \'{email_pemain}\'')
+            sudah = cursor.fetchall()
+
+            cursor.execute(
+                f'insert into downloaded_song values( \'{song_id}\', \'{email_pemain}\' )'
+            )
+
+            connection.commit()
 
     # Retrieve song details
     cursor.execute("""
@@ -136,15 +185,6 @@ def song_detail_only(request, song_id):
     # make songwriters a list
     songwriters = song[3].split(', ')
     status_langganan = request.COOKIES.get('status_langganan')
-    if request.method == 'POST':
-        email_pemain = request.COOKIES.get('email')  # Assumes email is stored in cookies
-        waktu = datetime.datetime.now()
-        
-        cursor.execute("""
-            INSERT INTO akun_play_song (email_pemain, id_song, waktu)
-            VALUES (%s, %s, %s);
-        """, (email_pemain, song_id, waktu))
-        connection.commit()
 
     context = {
         'song_id' : song_id,
