@@ -38,13 +38,13 @@
         <td>{{ song.artist_name }}</td>
         <td>{{ song.tanggal_rilis }}</td>
         <td>{{ song.play_count }}</td>
-        <td><a href="#" class="btn btn-primary btn-sm">Lihat</a></td>
+        <td><a href="{% url 'play_song:song_detail_only' song.id %}" class="btn btn-primary btn-sm">Lihat</a></td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
   <br>
-  <a href="#" class="btn btn-primary">Kembali</a>
+  <button class="btn btn-primary" onclick="goBack()">Kembali</button>
 </div>
 
 <!-- Bootstrap JS -->

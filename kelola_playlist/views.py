@@ -1,4 +1,5 @@
 from http.client import HTTPResponse
+from pyexpat.errors import messages
 from utils.query import *
 from django.db import connection
 from function.general import query_result
@@ -10,6 +11,7 @@ from django.db import connection
 import datetime
 import uuid
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponseNotAllowed, HttpResponseForbidden
 
 
 def playlist(request):
@@ -96,51 +98,76 @@ def playlist_detail(request, idPlaylist):
 def delete_playlist(request, idPlaylist):
     connection, cursor = get_database_cursor()
 
-    # Delete records from referencing table (akun_play_user_playlist)
-    cursor.execute("DELETE FROM akun_play_user_playlist WHERE id_user_playlist = %s;", [idPlaylist])
-        
-    # Delete user playlist based on id_playlist
-    cursor.execute("DELETE FROM user_playlist WHERE id_playlist = %s;", [idPlaylist])
-        
-    # Delete playlist based on id_playlist
-    cursor.execute("DELETE FROM playlist WHERE id = %s;", [idPlaylist])
-    #playlist = cursor.fetchone()
+    try:
+        # Check if the playlist exists
+        cursor.execute("""
+            SELECT id_playlist 
+            FROM user_playlist 
+            WHERE id_playlist = %s;
+        """, [idPlaylist])
 
-    cursor.close()
-    connection.close()
-    # # Redirect to the show_user_playlist page after successful deletion
+        playlist = cursor.fetchone()
+
+        if playlist:
+            # Fetch songs associated with the playlist
+            cursor.execute("""
+                SELECT id_song 
+                FROM playlist_song 
+                WHERE id_playlist = %s;
+            """, [idPlaylist])
+
+            songs = cursor.fetchall()
+
+            # Delete each song associated with the playlist
+            for song in songs:
+                song_id = song[0]
+                cursor.execute("""
+                    DELETE FROM playlist_song 
+                    WHERE id_playlist = %s AND id_song = %s;
+                """, [idPlaylist, song_id])
+
+            # Now delete the playlist
+            cursor.execute("""
+                DELETE FROM user_playlist 
+                WHERE id_playlist = %s;
+            """, [idPlaylist])
+
+            connection.commit()
+        else:
+            return HttpResponseForbidden("The playlist does not exist.")
+    finally:
+        cursor.close()
+        connection.close()
+
+    # Redirect to the list_playlist page after successful deletion
     return redirect('kelola_playlist:playlist')
 
 def edit_playlist(request, idPlaylist):
-    connection, cursor = get_database_cursor()
-    cursor.execute("SELECT * FROM user_playlist WHERE id_playlist = %s;", [idPlaylist])
-    playlist = cursor.fetchone()
-
-    if not playlist:
+    with connection.cursor() as cursor:
+        cursor.execute(f"SELECT * FROM marmut.user_playlist WHERE id_playlist = '{idPlaylist}';")
+        playlist = cursor.fetchone()
+        
+        if not playlist:
             return HTTPResponse("Playlist not found", status=404)
 
-    if request.method == 'POST':
+        if request.method == 'POST':
             form = EditUserPlaylistForm(request.POST)
             if form.is_valid():
                 judul = form.cleaned_data['judul']
                 deskripsi = form.cleaned_data['deskripsi']
                 
                 cursor.execute("""
-                UPDATE user_playlist
+                UPDATE marmut.user_playlist
                 SET judul = %s, deskripsi = %s
                 WHERE id_playlist = %s;
                 """, [judul, deskripsi, idPlaylist])
                 
                 return redirect('kelola_playlist:playlist')
-    else:
+        else:
             form = EditUserPlaylistForm(initial={'judul': playlist[2], 'deskripsi': playlist[3]})
-        
-    context = {'form': form, 'playlist_id': idPlaylist}
     
-    cursor.close()
-    connection.close()
+    context = {'form': form, 'playlist_id': idPlaylist}
     return render(request, 'edit_playlist.html', context)
-
 
 def tambah_playlist(request):
     if request.method == 'POST':
@@ -188,29 +215,42 @@ def tambah_lagu(request, idPlaylist):
     if request.method == 'POST':
         song_id = request.POST.get('song_id')
 
-        # Check if the song is already in the playlist
-        # existing_song = query_result(f"""
-        #     SELECT s.* FROM marmut.user_playlist up
-        #     JOIN marmut.playlist_song ps ON ps.id_playlist = up.id_playlist
-        #     JOIN marmut.song s ON ps.id_song = s.id_konten
-        #     WHERE up.id_playlist = '{playlist_id}' AND s.id_konten = '{song_id}';
-        # """)
-        # if existing_song:
-        #     return HttpResponse("Lagu sudah ada di dalam playlist", status=400)
+        # Pastikan song_id tidak kosong atau None
+        if song_id:
+            # Dapatkan koneksi dan kursor sebelum melakukan operasi database
+            connection, cursor = get_database_cursor()
+            cursor.execute("INSERT INTO playlist_song (id_playlist, id_song) VALUES (%s, %s);", [idPlaylist, song_id])
+            connection.commit()
+            cursor.close()
+            connection.close()
 
-        with connection.cursor() as cursor:
-            cursor.execute("INSERT INTO marmut.playlist_song (id_playlist, id_song) VALUES (%s, %s);", 
-                           [idPlaylist, song_id])
+            return redirect(reverse('kelola_playlist:playlist_detail', args=[idPlaylist]))
+        else:
+            # Berikan pesan kesalahan jika song_id kosong
+            error_message = "Silakan pilih lagu sebelum menambahkan."
 
-        return redirect(reverse('kelola_playlist:playlist_detail', args=[idPlaylist]))
+    else:
+        error_message = None
 
-    # Get the list of all songs for the dropdown
-    songs = query_result(f"""
+    # Dapatkan koneksi dan kursor sebelum melakukan operasi database
+    connection, cursor = get_database_cursor()
+    cursor.execute("""
         SELECT s.id_konten, k.judul, a.nama as artist
-        FROM marmut.song s
-        JOIN marmut.konten k ON s.id_konten = k.id 
-        JOIN marmut.artist ar ON s.id_artist = ar.id
-        JOIN marmut.akun a ON ar.email_akun = a.email;
+        FROM song s
+        JOIN konten k ON s.id_konten = k.id 
+        JOIN artist ar ON s.id_artist = ar.id
+        JOIN akun a ON ar.email_akun = a.email;
     """)
+    songs = cursor.fetchall()
+    cursor.close()
+    connection.close()
 
-    return render(request, 'tambah_lagu.html', {'songs': songs, 'playlist_id': idPlaylist})
+    return render(request, 'tambah_lagu.html', {'songs': songs, 'playlist_id': idPlaylist, 'error_message': error_message})
+
+def delete_song(request, playlist_id, song_id):
+    with connection.cursor() as cursor:
+        cursor.execute("DELETE FROM marmut.playlist_song WHERE id_playlist = %s AND id_song = %s;", 
+                        [playlist_id, song_id])
+
+    return redirect(reverse('kelola_playlist:playlist_detail', args=[playlist_id]))
+

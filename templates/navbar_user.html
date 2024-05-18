@@ -44,7 +44,7 @@
             <a class="btn btn-dark" href="{% url 'authentication:logout' %}">Logout</a>
           </li>
           <li class="nav-item" id="downloaded-song-item" style="display: none;">
-            <a class="btn btn-dark" href="">Downloaded Song</a>
+            <a class="btn btn-dark" href="{% url 'dashboard:downloaded_songs' %}">Downloaded Song</a>
           </li>
           <li class="nav-item" id="premium-plan-item" style="display: none;">
             <a class="btn btn-light" href="{% url 'paket:paket' %}">Premium Plan</a>
@@ -88,7 +88,10 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('search').style.display = 'block';
         if (statusLangganan === 'Premium') {
             document.getElementById('downloaded-song-item').style.display = 'block';
-        }
+            document.getElementById('premium-plan-item').style.display = 'none';
+          }else{
+            document.getElementById('premium-plan-item').style.display = 'block';
+          }
         document.getElementById('chart-item').style.display = 'block';
         document.getElementById('manage-playlist-item').style.display = 'block';
         document.getElementById('dashboard-item').style.display = 'block';
@@ -99,12 +102,15 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById('royalti-item').style.display = 'block';
         }
 
-        document.getElementById('premium-plan-item').style.display = 'block';
-    } else {
+      } else {
         // For regular users
         document.getElementById('search').style.display = 'block';
         if (statusLangganan === 'Premium') {
-            document.getElementById('downloaded-song-item').style.display = 'block';
+          document.getElementById('downloaded-song-item').style.display = 'block';
+          document.getElementById('premium-plan-item').style.display = 'none';
+        }else{
+          document.getElementById('premium-plan-item').style.display = 'block';
+
         }
         document.getElementById('chart-item').style.display = 'block';
         document.getElementById('manage-playlist-item').style.display = 'block';
