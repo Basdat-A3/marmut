@@ -65,10 +65,22 @@
               <p><strong>Album:</strong> {{ song.album }}</p>
               <div class="divider"></div>
               <div class="actions">
-                  <a href="#"><button class="btn btn-primary">Play</button></a>
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Play</button>
+                </form>
+                {% if success_message %}
+                    <div class="alert alert-success mt-3" role="alert">
+                        {{ success_message }}
+                    </div>
+                {% endif %}
+                  
                   <a href="{% url 'play_song:add_to_playlist_new' song_id%}" class="btn btn-primary">Add to Playlist</a>
+                  {% if status_langganan == 'Premium' %}
+                    <a href="#" class="btn btn-success">Download</a>
+                  {% endif %}
                 
-                  <a href="#" class="btn btn-secondary">Kembali</a>
+                  <a href="{% url 'dashboard:dashboard' %}" class="btn btn-secondary">Kembali</a>
               </div>
           </div>
 

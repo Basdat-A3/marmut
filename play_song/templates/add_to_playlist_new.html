@@ -52,18 +52,19 @@
                 <button type="submit" class="btn btn-primary">Tambah</button>
                 
             </div>
+
         </form>
         {% if success_message %}
             <div class="popup" id="popup">
                 <p>{{ success_message }}</p>
-                <form method="get" action="#">
+                <form method="get" action="{% url 'kelola_playlist:playlist_detail' other_playlist %}">
                     <button type="submit" class="btn btn-primary">Ke Playlist</button>
                 </form>
-                <form method="get" action="{% url 'play_song:add_to_playlist_new' song_id %}">
-                    <button type="submit" class=" btn btn-secondary">Kembali</button>
-                </form>
             </div>
-        {% endif %}
+            {% endif %}
+            <form method="get" action="{% url 'play_song:song_detail_only' song_id %}">
+                <button type="submit" class=" btn btn-secondary">Kembali</button>
+            </form>
     </div>
     
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

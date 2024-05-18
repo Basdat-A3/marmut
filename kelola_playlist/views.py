@@ -12,20 +12,16 @@ import datetime
 import uuid
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseNotAllowed, HttpResponseForbidden
+from django.views.decorators.csrf import csrf_protect
 
 
 def playlist(request):
     connection, cursor = get_database_cursor()
-    cursor.execute("""
-            SELECT * FROM user_playlist;
+    email = request.COOKIES.get('email')
+    cursor.execute(f"""
+            SELECT * FROM user_playlist where email_pembuat = '{email}';
         """)
     playlists = cursor.fetchall()
-
-    column_names = [col[0] for col in cursor.description]
-    playlists = [
-        dict(zip(column_names, row))
-        for row in playlists
-    ]
 
     context = {'playlists': playlists}
     cursor.close()
@@ -41,10 +37,11 @@ def playlist_detail(request, idPlaylist):
     connection, cursor = get_database_cursor()
     cursor.execute("""
             SELECT UP.judul, UP.deskripsi, UP.tanggal_dibuat, A.nama AS pembuat_playlist, 
-                   COUNT(PS.id_song) AS jumlah_lagu, UP.total_durasi
+                   COUNT(PS.id_song) AS jumlah_lagu, COALESCE(SUM(K.durasi), 0) AS total_durasi
             FROM marmut.user_playlist AS UP
             JOIN marmut.akun AS A ON UP.email_pembuat = A.email
             LEFT JOIN marmut.playlist_song AS PS ON UP.id_playlist = PS.id_playlist
+            LEFT JOIN marmut.konten AS K ON PS.id_song = K.id
             WHERE UP.id_playlist = %s
             GROUP BY UP.judul, UP.deskripsi, UP.tanggal_dibuat, A.nama, UP.total_durasi;
         """, [idPlaylist])

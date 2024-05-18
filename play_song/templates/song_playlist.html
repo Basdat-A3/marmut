@@ -48,12 +48,14 @@
               <p><strong>Judul:</strong> {{ song.judul }}</p>
               <p><strong>Genre(s):</strong></p>
               <ul>
-                  <li><strong>-</strong> {{ song.genre }}</li>
+                  <li><strong></strong> {{ song.genre }}</li>
               </ul>
               <p><strong>Artist:</strong> {{ song.artist }}</p>
               <p><strong>Songwriter(s):</strong></p>
               <ul>
-                  <li><strong>-</strong> {{ song.songwriter }}</li>
+                  {% for songwriter in song.songwriters %}
+                  <li>{{ songwriter }}</li>
+                  {% endfor %}
               </ul>
               <p><strong>Durasi:</strong> {{ song.durasi }} menit</p>
               <p><strong>Tanggal Rilis:</strong> {{ song.tanggal_rilis }}</p>
@@ -63,10 +65,20 @@
               <p><strong>Album:</strong> {{ song.album }}</p>
               <div class="divider"></div>
               <div class="actions">
-                  <a href="#"><button class="btn btn-primary">Play</button></a>
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Play</button>
+                </form>
+                {% if success_message %}
+                    <div class="alert alert-success mt-3" role="alert">
+                        {{ success_message }}
+                    </div>
+                {% endif %}
                   <a href="{% url 'play_song:add_to_playlist' playlist_id song_id %}" class="btn btn-primary">Add to Playlist</a>
-                
-                  <a href="#" class="btn btn-secondary">Kembali</a>
+                {% if status_langganan == 'Premium' %}
+                    <a href="#" class="btn btn-success">Download</a>
+                {% endif %}
+                  <a href="{% url 'kelola_playlist:playlist_detail' playlist_id %}" class="btn btn-secondary">Kembali</a>
               </div>
           </div>
 
