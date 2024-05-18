@@ -89,16 +89,28 @@ def login(request):
             if podcaster != None:
                 isPodcaster = True
 
+            # cursor.execute(
+            #     f'SELECT * FROM premium WHERE email = %s', [email])
+            # premium = cursor.fetchone()
+            # if premium != None:
+            #     status_langganan = "Premium"
+            #     cursor.execute("SELECT cek_dan_pindahkan_email(%s)", [email])
+            #     result = cursor.fetchone()
+            #     print(type(result[0]))
+            #     print(result[0])
+            #     if result==True:
+            #         status_langganan = "NonPremium"
+
             cursor.execute(
-                f'SELECT * FROM premium WHERE email = %s', [email])
+                'SELECT * FROM premium WHERE email = %s', [email])
             premium = cursor.fetchone()
-            if premium != None:
+            if premium is not None:
                 status_langganan = "Premium"
-                cursor.execute("SELECT cek_dan_pindahkan_email(%s)", [email])
-                result = cursor.fetchone()
-                print(type(result[0]))
-                print(result[0])
-                if result==True:
+                cursor.execute("CALL check_and_update_subscription_status(%s)", [email])
+                connection.commit()
+                cursor.execute('SELECT * FROM nonpremium WHERE email = %s', [email])
+                nonpremium = cursor.fetchone()
+                if nonpremium is not None:
                     status_langganan = "NonPremium"
 
             verified_role = []

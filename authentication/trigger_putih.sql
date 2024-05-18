@@ -73,6 +73,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+
 -- Membuat Trigger untuk AKUN
 CREATE TRIGGER setelah_insert_akun
 AFTER INSERT ON AKUN
@@ -105,4 +107,34 @@ BEGIN
     RETURN email_should_be_moved;
 END;
 $$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE PROCEDURE check_and_update_subscription_status(user_email VARCHAR)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    -- Check if the user is in the PREMIUM table
+    IF EXISTS (SELECT 1 FROM PREMIUM WHERE email = user_email) THEN
+        -- Check the latest transaction's timestamp_berakhir for the user
+        IF EXISTS (
+            SELECT 1 
+            FROM TRANSACTION
+            WHERE email = user_email
+            AND timestamp_berakhir < CURRENT_DATE
+            ORDER BY timestamp_berakhir DESC
+            LIMIT 1
+        ) THEN
+            -- Remove user from PREMIUM table
+            DELETE FROM PREMIUM WHERE email = user_email;
+
+            -- Check if the email already exists in the NONPREMIUM table before inserting
+            IF NOT EXISTS (SELECT 1 FROM NONPREMIUM WHERE email = user_email) THEN
+                -- Add user to NONPREMIUM table
+                INSERT INTO NONPREMIUM (email) VALUES (user_email);
+            END IF;
+        END IF;
+    END IF;
+END;
+$$;
+
 
