@@ -89,11 +89,29 @@ def login(request):
             if podcaster != None:
                 isPodcaster = True
 
+            # cursor.execute(
+            #     f'SELECT * FROM premium WHERE email = %s', [email])
+            # premium = cursor.fetchone()
+            # if premium != None:
+            #     status_langganan = "Premium"
+            #     cursor.execute("SELECT cek_dan_pindahkan_email(%s)", [email])
+            #     result = cursor.fetchone()
+            #     print(type(result[0]))
+            #     print(result[0])
+            #     if result==True:
+            #         status_langganan = "NonPremium"
+
             cursor.execute(
-                f'SELECT * FROM premium WHERE email = %s', [email])
+                'SELECT * FROM premium WHERE email = %s', [email])
             premium = cursor.fetchone()
-            if premium != None:
+            if premium is not None:
                 status_langganan = "Premium"
+                cursor.execute("CALL check_and_update_subscription_status(%s)", [email])
+                connection.commit()
+                cursor.execute('SELECT * FROM nonpremium WHERE email = %s', [email])
+                nonpremium = cursor.fetchone()
+                if nonpremium is not None:
+                    status_langganan = "NonPremium"
 
             verified_role = []
             if isArtist:
@@ -172,16 +190,6 @@ def register_user(request):
         artist = request.POST.get('artist')
         songwriter = request.POST.get('songwriter')
 
-        # check email is already registered or not
-        cursor.execute(f'select * from akun where email = \'{email}\'')
-        records = cursor.fetchmany()
-        if len(records) > 0:
-            context = {
-                'message': 'Email sudah terdaftar',
-            }
-            return render(request, 'register_user.html', context)
-
-        # insert data to database
         try:
             is_verified = bool(podcaster or artist or songwriter)
             id_artist = str(uuid.uuid4())
@@ -192,9 +200,6 @@ def register_user(request):
 
             cursor.execute(
                 f'insert into akun values (\'{email}\',\'{password}\',\'{nama}\',{gender},\'{tempat_lahir}\',\'{tanggal_lahir}\',\'{is_verified}\',\'{kota_asal}\')'
-            )
-            cursor.execute(
-                f'insert into nonpremium values (\'{email}\')'
             )
             if artist or songwriter:
                 cursor.execute(
@@ -240,45 +245,12 @@ def register_label(request):
     nama = request.POST.get('nama')
     kontak = request.POST.get('kontak')
 
-    # # check email is valid or not
-    # regex = re.compile(
-    #     r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
-
-    # if not re.fullmatch(regex, email):
-    #     context = {
-    #         'message': 'Email tidak valid',
-    #     }
-    #     return render(request, 'register_label.html', context)
-
     # if data is not complete
     if not email or not password or not nama or not kontak:
         context = {
             'message': 'Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu',
         }
 
-        cursor.close()
-        connection.close()
-        return render(request, 'register_label.html', context)
-
-    # check email is already registered or not
-    cursor.execute(f'select * from akun where email = \'{email}\'')
-    records = cursor.fetchmany()
-    if len(records) > 0:
-        context = {
-            'message': 'Email sudah terdaftar',
-        }
-
-        cursor.close()
-        connection.close()
-        return render(request, 'register_label.html', context)
-
-    cursor.execute(f'select * from label where email = \'{email}\'')
-    records = cursor.fetchmany()
-    if len(records) > 0:
-        context = {
-            'message': 'Email sudah terdaftar',
-        }
-        
         cursor.close()
         connection.close()
         return render(request, 'register_label.html', context)
@@ -290,9 +262,9 @@ def register_label(request):
         list_rate_royalti = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
         rate_royalti = random.choice(list_rate_royalti)
         cursor.execute(
-            f'insert into pemilik_hak_cipta values (\'{id_pemilik_hak_cipta}\', \'{rate_royalti}\')')
-        cursor.execute(
             f'insert into label values (\'{id_label}\', \'{nama}\', \'{email}\', \'{password}\', \'{kontak}\', \'{id_pemilik_hak_cipta}\')')
+        cursor.execute(
+            f'insert into pemilik_hak_cipta values (\'{id_pemilik_hak_cipta}\', \'{rate_royalti}\')')
 
         connection.commit()
 

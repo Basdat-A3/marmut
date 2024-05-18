@@ -39,7 +39,7 @@
   </table>
   <br>
 
-  <button class="btn btn-primary" onclick="goBack()">Kembali</button>
+  <a href="{% url 'kelola_podcast:list_podcast' %}" class="btn btn-primary btn-sm">Kembali</a>
 </div>
 
 <!-- Bootstrap JS -->
@@ -57,9 +57,7 @@
     });
   });
 
-  function goBack() {
-    window.history.back();
-  }
+
 </script>
 
 {% endblock content %}

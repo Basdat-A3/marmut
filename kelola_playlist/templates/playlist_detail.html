@@ -40,8 +40,8 @@
                         <td>{{ song.durasi }} menit</td>
                         <td>
                             <a href="{% url 'play_song:song_detail' playlist.idPlaylist song.id %}" class="btn btn-primary">Lihat</a>
-                            <a href="#" class="btn btn-success">Play</a>
-                            <a href="#" class="btn btn-danger">Hapus</button></a>
+                            <a href="{% url 'play_song:song_detail' playlist.idPlaylist song.id %}" class="btn btn-success">Play</a>
+                            <a href="{% url 'kelola_playlist:delete_song' playlist.idPlaylist song.id %}" class="btn btn-danger">Hapus</button></a>
                         </td>
                     </tr>
                     {% endfor %}
