@@ -264,9 +264,9 @@ def register_label(request):
         list_rate_royalti = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
         rate_royalti = random.choice(list_rate_royalti)
         cursor.execute(
-            f'insert into label values (\'{id_label}\', \'{nama}\', \'{email}\', \'{password}\', \'{kontak}\', \'{id_pemilik_hak_cipta}\')')
-        cursor.execute(
             f'insert into pemilik_hak_cipta values (\'{id_pemilik_hak_cipta}\', \'{rate_royalti}\')')
+        cursor.execute(
+            f'insert into label values (\'{id_label}\', \'{nama}\', \'{email}\', \'{password}\', \'{kontak}\', \'{id_pemilik_hak_cipta}\')')
 
         connection.commit()
 
