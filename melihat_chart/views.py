@@ -2,7 +2,7 @@ import datetime
 from django.shortcuts import render
 from utils.query import *
 
-def chart_list(request):
+def chart_list(request): # just for routing purposes
     connection, cursor = get_database_cursor()
     
     # close connection
