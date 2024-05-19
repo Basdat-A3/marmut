@@ -45,46 +45,47 @@
         <div class="song-detail">
             <h2 class="text-center">SONG DETAILS</h2>
             <div class="container">
-              <p><strong>Judul:</strong> {{ song.judul }}</p>
-              <p><strong>Genre(s):</strong></p>
-              <ul>
-                  <li><strong>-</strong> {{ song.genre }}</li>
-              </ul>
-              <p><strong>Artist:</strong> {{ song.artist }}</p>
-              <p><strong>Songwriter(s):</strong></p>
+                <p><strong>Judul:</strong> {{ song.judul }}</p>
+                <p><strong>Genre(s):</strong></p>
+                <ul>
+                    <li><strong></strong> {{ song.genre }}</li>
+                </ul>
+                <p><strong>Artist:</strong> {{ song.artist }}</p>
+                <p><strong>Songwriter(s):</strong></p>
                 <ul>
                     {% for songwriter in song.songwriters %}
                         <li>{{ songwriter }}</li>
                     {% endfor %}
                 </ul>
-              <p><strong>Durasi:</strong> {{ song.durasi }} menit</p>
-              <p><strong>Tanggal Rilis:</strong> {{ song.tanggal_rilis }}</p>
-              <p><strong>Tahun:</strong> {{ song.tahun }}</p>
-              <p><strong>Total Play:</strong> {{ song.total_play }}</p>
-              <p><strong>Total Downloads:</strong> {{ song.total_download }}</p>
-              <p><strong>Album:</strong> {{ song.album }}</p>
-              <div class="divider"></div>
-              <div class="actions">
-                <form method="post">
-                    {% csrf_token %}
-                    <!-- Add Slider Here -->
-                    <input type="range" class="slider" min="0" max="100" value="50" id="songSlider">
-                    
-                    <button type="submit" class="btn btn-primary" name="Play">Play</button>
-                    {% if status_langganan == 'Premium' %}
-                        <button type="submit" class="btn btn-success" name="Download">Download</button>
-                    {% endif %}
-                </form>
-                {% if success_message %}
+                <p><strong>Durasi:</strong> {{ song.durasi }} menit</p>
+                <p><strong>Tanggal Rilis:</strong> {{ song.tanggal_rilis }}</p>
+                <p><strong>Tahun:</strong> {{ song.tahun }}</p>
+                <p><strong>Total Play:</strong> {{ song.total_play }}</p>
+                <p><strong>Total Downloads:</strong> {{ song.total_download }}</p>
+                <p><strong>Album:</strong> {{ song.album }}</p>
+                <div class="divider"></div>
+                <div class="actions">
+                    <form method="post">
+                        {% csrf_token %}
+                        <!-- Slider for song control -->
+                        <input type="range" class="slider" min="0" max="100" value="50" id="songSlider">
+                        
+                        <button type="submit" class="btn btn-primary" name="Play">Play</button>
+                        {% if status_langganan == 'Premium' %}
+                            <button type="submit" class="btn btn-success" name="Download">Download</button>
+                        {% endif %}
+                    </form>
+                    {% if success_message %}
                         <div class="popup" id="popup">
                             <p>{{ success_message }}</p>
                             
                         </div>
-                {% endif %}
-                <a href="{% url 'play_song:add_to_playlist_new' song_id%}" class="btn btn-primary">Add to Playlist</a>
-                <a href="{% url 'dashboard:dashboard' %}" class="btn btn-secondary">Kembali</a>
-              </div>
-          </div>
+                    {% endif %}
+                    <a href="{% url 'play_song:add_to_playlist' playlist_id song_id %}" class="btn btn-primary">Add to Playlist</a>
+                    <a href="{% url 'kelola_playlist:playlist_detail' playlist_id %}" class="btn btn-secondary">Kembali</a>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

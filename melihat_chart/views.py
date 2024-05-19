@@ -2,7 +2,7 @@ import datetime
 from django.shortcuts import render
 from utils.query import *
 
-def chart_list(request):
+def chart_list(request): # just for routing purposes
     connection, cursor = get_database_cursor()
     
     # close connection
@@ -41,10 +41,12 @@ def chart_detail(request, id_chart):
         return render(request, 'chart_detail.html', {'error': 'Invalid chart type'})
     
     # Clear existing songs from the chart
-    # cursor.execute("""
-    #     DELETE FROM PLAYLIST_SONG
-    #     WHERE id_playlist = %s;
-    # """, [id_chart])
+    cursor.execute("""
+        DELETE FROM PLAYLIST_SONG
+        WHERE id_playlist = %s;
+    """, [id_chart])
+
+    connection.commit()
 
     # Query to get the top 20 songs and their artists based on play count within the specified time range
     cursor.execute("""
@@ -101,7 +103,7 @@ def chart_detail(request, id_chart):
                 INSERT INTO playlist_song
                 VALUES (%s, %s);
             """, [id_chart, id_konten])
-            # print(f"Inserted song {id_konten} into chart {id_chart}")
+            connection.commit()
         except Exception as e:
             print(f"Error inserting song {id_konten} into chart {id_chart}: {e}")
 

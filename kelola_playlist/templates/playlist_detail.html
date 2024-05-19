@@ -20,7 +20,10 @@
             <p>Total Durasi: {{playlist.total_durasi_hours}} jam {{playlist.total_durasi_minutes}} menit</p>
             <p>Tanggal Dibuat: {{playlist.tanggal_dibuat}}</p>
             <p>Deskripsi: {{playlist.deskripsi}}</p>
-            <button class="btn btn-primary">Shuffle Play</button>
+            <form method="post">
+              {% csrf_token %}
+              <button type="submit" name="shuffle_play" class="btn btn-primary">Shuffle Play</button>
+            </form>
             <a href="{% url 'kelola_playlist:playlist' %}" class="btn btn-secondary">Kembali</a>
 
             <div class="song-list" style="margin-top: 30px;">
@@ -39,9 +42,13 @@
                         <td>{{ song.oleh }}</td>
                         <td>{{ song.durasi }} menit</td>
                         <td>
-                            <a href="{% url 'play_song:song_detail' playlist.idPlaylist song.id %}" class="btn btn-primary">Lihat</a>
-                            <a href="#" class="btn btn-success">Play</a>
-                            <a href="#" class="btn btn-danger">Hapus</button></a>
+                          <a href="{% url 'play_song:song_detail' playlist.idPlaylist song.id %}" class="btn btn-primary">Lihat</a>
+                          <!-- <form method="post" style="display:inline;">
+                              {% csrf_token %}
+                              <button type="submit" name="play_song_{{ song.id }}" class="btn btn-success">Play</button>
+                          </form> -->
+                          <a href="{% url 'play_song:song_detail' playlist.idPlaylist song.id %}" class="btn btn-success">Play</a>
+                            <a href="{% url 'kelola_playlist:delete_song' playlist.idPlaylist song.id %}" class="btn btn-danger">Hapus</a>
                         </td>
                     </tr>
                     {% endfor %}

@@ -12,20 +12,16 @@ import datetime
 import uuid
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseNotAllowed, HttpResponseForbidden
+from django.views.decorators.csrf import csrf_protect
 
 
 def playlist(request):
     connection, cursor = get_database_cursor()
-    cursor.execute("""
-            SELECT * FROM user_playlist;
+    email = request.COOKIES.get('email')
+    cursor.execute(f"""
+            SELECT * FROM user_playlist where email_pembuat = '{email}';
         """)
     playlists = cursor.fetchall()
-
-    column_names = [col[0] for col in cursor.description]
-    playlists = [
-        dict(zip(column_names, row))
-        for row in playlists
-    ]
 
     context = {'playlists': playlists}
     cursor.close()
@@ -39,33 +35,93 @@ def convert_to_hours_minutes(total_minutes):
 
 def playlist_detail(request, idPlaylist):
     connection, cursor = get_database_cursor()
-    cursor.execute("""
-            SELECT UP.judul, UP.deskripsi, UP.tanggal_dibuat, A.nama AS pembuat_playlist, 
-                   COUNT(PS.id_song) AS jumlah_lagu, UP.total_durasi
-            FROM marmut.user_playlist AS UP
-            JOIN marmut.akun AS A ON UP.email_pembuat = A.email
-            LEFT JOIN marmut.playlist_song AS PS ON UP.id_playlist = PS.id_playlist
-            WHERE UP.id_playlist = %s
-            GROUP BY UP.judul, UP.deskripsi, UP.tanggal_dibuat, A.nama, UP.total_durasi;
-        """, [idPlaylist])
-    playlist = cursor.fetchone()
+    success_message = None
+    
+    # Fetch email of the current user
+    email = request.COOKIES.get('email')
 
+    # Retrieve playlist details
     cursor.execute("""
-            SELECT K.judul, K.durasi, K.tanggal_rilis, A.nama AS oleh, K.id
-            FROM marmut.playlist_song AS PS
-            JOIN marmut.konten AS K ON K.id = PS.id_song
-            JOIN marmut.song AS S ON S.id_konten = K.id
-            JOIN marmut.artist AS AT ON AT.id = S.id_artist
-            JOIN marmut.akun AS A ON A.email = AT.email_akun
-            WHERE PS.id_playlist = %s;
-        """, [idPlaylist])
-    songs = cursor.fetchall()
+        SELECT UP.judul, UP.deskripsi, UP.tanggal_dibuat, A.nama AS pembuat_playlist, 
+               COUNT(PS.id_song) AS jumlah_lagu, COALESCE(SUM(K.durasi), 0) AS total_durasi,
+               UP.email_pembuat
+        FROM marmut.user_playlist AS UP
+        JOIN marmut.akun AS A ON UP.email_pembuat = A.email
+        LEFT JOIN marmut.playlist_song AS PS ON UP.id_playlist = PS.id_playlist
+        LEFT JOIN marmut.konten AS K ON PS.id_song = K.id
+        WHERE UP.id_playlist = %s
+        GROUP BY UP.judul, UP.deskripsi, UP.tanggal_dibuat, A.nama, UP.email_pembuat;
+    """, [idPlaylist])
+    playlist = cursor.fetchone()
 
     if not playlist:
         return HTTPResponse("Playlist not found", status=404)
 
+    email_pembuat = playlist[6]  # Fetch the email_pembuat from the playlist details
+
+    # Check if the user_playlist exists before attempting to insert into akun_play_user_playlist
+    cursor.execute("SELECT COUNT(*) FROM marmut.user_playlist WHERE id_playlist = %s AND email_pembuat = %s", [idPlaylist, email_pembuat])
+    user_playlist_count = cursor.fetchone()[0]
+
+    if user_playlist_count == 0:
+        return HTTPResponse("User Playlist not found", status=404)
+
+    # Retrieve song details
+    cursor.execute("""
+        SELECT K.judul, K.durasi, K.tanggal_rilis, A.nama AS oleh, K.id
+        FROM marmut.playlist_song AS PS
+        JOIN marmut.konten AS K ON K.id = PS.id_song
+        JOIN marmut.song AS S ON S.id_konten = K.id
+        JOIN marmut.artist AS AT ON AT.id = S.id_artist
+        JOIN marmut.akun AS A ON A.email = AT.email_akun
+        WHERE PS.id_playlist = %s;
+    """, [idPlaylist])
+    songs = cursor.fetchall()
+
     total_minutes = playlist[5]
     hours, minutes = convert_to_hours_minutes(total_minutes)
+
+    if request.method == 'POST':
+        if 'shuffle_play' in request.POST:
+            current_timestamp = datetime.datetime.now()
+
+            # Insert ke tabel AKUN_PLAY_PLAYLIST 
+            cursor.execute("""
+                INSERT INTO marmut.akun_play_user_playlist (email_pemain, id_user_playlist, email_pembuat, waktu)
+                VALUES (%s, %s, %s, %s)
+            """, (email, idPlaylist, email_pembuat, current_timestamp))
+
+            connection.commit()
+
+            # Insert ke tabel AKUN_PLAY_SONG untuk setiap lagu dalam playlist 
+            for song in songs:
+                song_id = song[4]
+                current_timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                cursor.execute("""
+                    INSERT INTO marmut.akun_play_song (email_pemain, id_song, waktu)
+                    VALUES (%s, %s, %s)
+                """, (email, song_id, current_timestamp))
+
+            connection.commit()
+            
+            return redirect(reverse("playlist_player:play_user_playlist") + f'?playlist_id={idPlaylist}')
+        
+        else:
+            for song in songs:
+                song_id = song[4]
+                if f'play_song_{song_id}' in request.POST:
+                    current_timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                    cursor.execute("SELECT total_play FROM marmut.song WHERE id_konten = %s", [song_id])
+                    total = cursor.fetchone()
+                    total_play = total[0] + 1
+
+                    cursor.execute("UPDATE marmut.song SET total_play = %s WHERE id_konten = %s", [total_play, song_id])
+                    cursor.execute("""
+                        INSERT INTO marmut.akun_play_song (email_pemain, id_song, waktu)
+                        VALUES (%s, %s, %s)
+                    """, (email, song_id, current_timestamp))
+
+                    connection.commit()
 
     context = {
         'playlist': {
@@ -76,15 +132,14 @@ def playlist_detail(request, idPlaylist):
             'jumlah_lagu': playlist[4],
             'total_durasi_hours': hours,
             'total_durasi_minutes': minutes,
-            'idPlaylist' : idPlaylist,
-
+            'idPlaylist': idPlaylist,
         },
         'songs': [
             {
                 'judul': song[0],
                 'oleh': song[3],
                 'durasi': song[1],
-                'id' : song[4]
+                'id': song[4]
             }
             for song in songs
         ],
@@ -92,8 +147,9 @@ def playlist_detail(request, idPlaylist):
 
     cursor.close()
     connection.close()
-    
+
     return render(request, 'playlist_detail.html', context)
+
 
 def delete_playlist(request, idPlaylist):
     connection, cursor = get_database_cursor()

@@ -10,34 +10,40 @@ from django.http import HttpResponse
 
 
 def create_album(request):
-    connection, cursor = get_database_cursor()
     isArtist = request.COOKIES.get('isArtist')
     isSongwriter = request.COOKIES.get('isSongwriter')
     id_user_artist = request.COOKIES.get('id_user_artist')
     id_user_songwriter = request.COOKIES.get('id_user_songwriter')
 
-    nama_artist = ""
-    nama_songwriter = ""
-
     if isArtist == "True":
-        cursor.execute("SELECT nama FROM akun JOIN artist ON akun.email = artist.email_akun WHERE artist.id = %s", [
-                       id_user_artist])
+        print(1)
+        cursor.execute(
+            f"SELECT email_akun FROM artist WHERE id = %s", [id_user_artist])
+        email_artist = cursor.fetchone()
+        cursor.execute(
+            f"SELECT nama FROM akun WHERE email = %s", [email_artist[0]])
         nama_artist = cursor.fetchone()
 
+    # Get songwriter name if the user is a songwriter
     if isSongwriter == "True":
-        cursor.execute("SELECT nama FROM akun JOIN songwriter ON akun.email = songwriter.email_akun WHERE songwriter.id = %s", [
-                       id_user_songwriter])
+        cursor.execute(
+            f"SELECT email_akun FROM songwriter WHERE id = %s", [id_user_songwriter])
+        email_songwriter = cursor.fetchone()
+        cursor.execute(
+            f"SELECT nama FROM akun WHERE email = %s", [email_songwriter[0]])
         nama_songwriter = cursor.fetchone()
 
     if request.method == 'POST':
+        # Album creation part
         judul_album = request.POST.get('album-title')
         label = request.POST.get('album-label')
         id_album = str(uuid.uuid4())
 
-        cursor.execute("INSERT INTO album (id, judul, jumlah_lagu, id_label, total_durasi) VALUES (%s, %s, 0, %s, 0)",
-                       (id_album, judul_album, label))
+        cursor.execute(
+            'INSERT INTO album VALUES (%s, %s, 0, %s, 0)', (id_album, judul_album, label))
         connection.commit()
 
+        # Check if song details are provided
         if 'song-title' in request.POST:
             judul_song = request.POST.get('song-title')
             durasi = request.POST.get('song-duration')
@@ -46,58 +52,106 @@ def create_album(request):
             id_song = str(uuid.uuid4())
             current_datetime = datetime.now()
             date_now = current_datetime.strftime('%Y-%m-%d')
-            year_now = current_datetime.year
+            year_now = '{:04d}'.format(current_datetime.year)
 
+            # Handle artist information
             if isArtist == "True":
                 id_pemilik_hak_cipta_artist = request.COOKIES.get(
                     'idPemilikCiptaArtist')
             else:
                 id_user_artist = request.POST.get('song_artist')
-                cursor.execute("SELECT id_pemilik_hak_cipta FROM artist WHERE id = %s", [
-                               id_user_artist])
+                cursor.execute(
+                    "SELECT id_pemilik_hak_cipta FROM artist WHERE id = %s", [id_user_artist])
                 id_pemilik_hak_cipta_artist = cursor.fetchone()[0]
 
-            cursor.execute("INSERT INTO konten (id, judul, tanggal_rilis, tahun, durasi) VALUES (%s, %s, %s, %s, %s)",
-                           (id_song, judul_song, date_now, year_now, durasi))
-            cursor.execute("INSERT INTO song (id_konten, id_artist, id_album, total_play, total_download) VALUES (%s, %s, %s, 0, 0)",
-                           (id_song, id_user_artist, id_album))
+            # Insert into 'konten' table
+            cursor.execute(
+                "INSERT INTO konten VALUES (%s, %s, %s, %s, %s)",
+                (id_song, judul_song, date_now, year_now, durasi)
+            )
 
+            # Insert into 'song' table
+            cursor.execute(
+                "INSERT INTO song VALUES (%s, %s, %s, 0, 0)",
+                (id_song, id_user_artist, id_album)
+            )
+
+            # Insert into 'songwriter_write_song' and 'royalti' tables
             for songwriter in songwriters:
                 cursor.execute(
-                    "INSERT INTO songwriter_write_song (id_songwriter, id_song) VALUES (%s, %s)", (songwriter, id_song))
+                    "SELECT id_pemilik_hak_cipta FROM songwriter WHERE id = %s", [songwriter])
+                id_pemilik_hak_cipta_songwriter = cursor.fetchone()[0]
                 cursor.execute(
-                    "INSERT INTO royalti (id_pemilik_hak_cipta, id_song, jumlah) SELECT id_pemilik_hak_cipta, %s, 0 FROM songwriter WHERE id = %s", (id_song, songwriter))
+                    "INSERT INTO royalti VALUES (%s, %s, 0)",
+                    (id_pemilik_hak_cipta_songwriter, id_song)
+                )
+                cursor.execute(
+                    "INSERT INTO songwriter_write_song VALUES (%s, %s)",
+                    (songwriter, id_song)
+                )
 
+            # Insert into 'genre' table
             for genre in genres:
                 cursor.execute(
-                    "INSERT INTO genre (id_konten, genre) VALUES (%s, %s)", (id_song, genre))
+                    "INSERT INTO genre VALUES (%s, %s)",
+                    (id_song, genre)
+                )
 
-            cursor.execute("INSERT INTO royalti (id_pemilik_hak_cipta, id_song, jumlah) VALUES (%s, %s, 0)",
-                           (id_pemilik_hak_cipta_artist, id_song))
+            # Insert into 'royalti' table for artist
+            cursor.execute(
+                "INSERT INTO royalti VALUES (%s, %s, 0)",
+                (id_pemilik_hak_cipta_artist, id_song)
+            )
 
+            # Insert into 'royalti' table for label
             cursor.execute(
                 "SELECT id_label FROM album WHERE id = %s", [id_album])
             id_label = cursor.fetchone()
             if id_label:
+                id_label = id_label[0]
                 cursor.execute(
-                    "INSERT INTO royalti (id_pemilik_hak_cipta, id_song, jumlah) SELECT id_pemilik_hak_cipta, %s, 0 FROM label WHERE id = %s", (id_song, id_label[0]))
+                    "SELECT id_pemilik_hak_cipta FROM label WHERE id = %s", [id_label])
+                id_pemilik_hak_cipta_label = cursor.fetchone()
+                if id_pemilik_hak_cipta_label:
+                    id_pemilik_hak_cipta_label = id_pemilik_hak_cipta_label[0]
+                    cursor.execute(
+                        "INSERT INTO royalti VALUES (%s, %s, 0)",
+                        (id_pemilik_hak_cipta_label, id_song)
+                    )
 
+            # Update album information
+            cursor.execute(
+                "SELECT jumlah_lagu, total_durasi FROM album WHERE id = %s", [id_album])
+            album_saat_ini = cursor.fetchone()
+            new_total_durasi = int(album_saat_ini[1]) + int(durasi)
+            new_jumlah_lagu = int(album_saat_ini[0]) + 1
+            cursor.execute(
+                "UPDATE album SET jumlah_lagu = %s, total_durasi = %s WHERE id = %s",
+                (new_jumlah_lagu, new_total_durasi, id_album)
+            )
+
+            # Commit changes to the database
             connection.commit()
             update_album_details(id_album)
-            cursor.close()
-
-            connection.close()
             return redirect('album_song_royalti:list_album')
 
     cursor.execute('SELECT id, nama FROM label')
     list_label = cursor.fetchall()
 
-    cursor.execute(
-        "SELECT artist.id, artist.email_akun, artist.id_pemilik_hak_cipta, akun.nama FROM artist JOIN akun ON artist.email_akun = akun.email")
+    cursor.execute("SELECT id, email_akun, id_pemilik_hak_cipta FROM artist")
     records_artist = cursor.fetchall()
+    for i in range(len(records_artist)):
+        cursor.execute("SELECT nama FROM akun WHERE email = %s",
+                       [records_artist[i][1]])
+        records_artist[i] = records_artist[i] + cursor.fetchone()
 
-    cursor.execute("SELECT songwriter.id, songwriter.email_akun, songwriter.id_pemilik_hak_cipta, akun.nama FROM songwriter JOIN akun ON songwriter.email_akun = akun.email")
+    cursor.execute(
+        "SELECT id, email_akun, id_pemilik_hak_cipta FROM songwriter")
     records_songwriter = cursor.fetchall()
+    for i in range(len(records_songwriter)):
+        cursor.execute("SELECT nama FROM akun WHERE email = %s",
+                       [records_songwriter[i][1]])
+        records_songwriter[i] = records_songwriter[i] + cursor.fetchone()
 
     cursor.execute("SELECT DISTINCT genre FROM genre")
     records_genre = cursor.fetchall()
@@ -114,8 +168,7 @@ def create_album(request):
         'artist_name': nama_artist,
         'songwriter_name': nama_songwriter,
     }
-    cursor.close()
-    connection.close()
+
     return render(request, 'create_album.html', context)
 
 
@@ -372,6 +425,7 @@ def list_album(request):
 
 
 def update_album_details(album_id):
+    connection, cursor = get_database_cursor()
     # Calculate the number of songs and the total duration of the songs in the album
     cursor.execute(
         '''
@@ -392,6 +446,8 @@ def update_album_details(album_id):
         ''', [jumlah_lagu, total_durasi, album_id]
     )
     connection.commit()
+    cursor.close()
+    connection.close()
 
 
 def list_song(request):
@@ -601,77 +657,6 @@ def delete_album_user(request):
     return redirect('album_song_royalti:list_album')
 
 
-def fetch_royalty_data(cursor, id_pemilik_hak_cipta, id_song):
-    cursor.execute('SELECT rate_royalti FROM pemilik_hak_cipta WHERE id = %s', [
-                   id_pemilik_hak_cipta])
-    rate_royalti = cursor.fetchone()
-
-    cursor.execute(
-        '''
-        SELECT song.id_album, song.total_play, song.total_download, album.judul, konten.judul
-        FROM song
-        JOIN album ON song.id_album = album.id
-        JOIN konten ON song.id_konten = konten.id
-        WHERE song.id_konten = %s
-        ''', [id_song]
-    )
-    song_data = cursor.fetchone()
-
-    if not rate_royalti or not song_data:
-        return None, None, None, None
-
-    album_title = song_data[3]
-    song_title = song_data[4]
-    return rate_royalti, song_data, album_title, song_title
-
-
-def update_royalty(cursor, total_royalty, id_pemilik_hak_cipta, id_song):
-    cursor.execute(
-        '''
-        UPDATE royalti 
-        SET jumlah = %s 
-        WHERE id_pemilik_hak_cipta = %s AND id_song = %s
-        ''', [total_royalty, id_pemilik_hak_cipta, id_song]
-    )
-    cursor.connection.commit()
-
-
-def process_royalties(cursor, all_royalti, id_pemilik_hak_cipta):
-    detailed_records = []
-    for record in all_royalti:
-        id_song = record[0]
-        rate_royalti, song_data, album_title, song_title = fetch_royalty_data(
-            cursor, id_pemilik_hak_cipta, id_song)
-        if rate_royalti and song_data:
-            total_royalty = rate_royalti[0] * song_data[1]
-            update_royalty(cursor, total_royalty,
-                           id_pemilik_hak_cipta, id_song)
-            detailed_record = (
-                id_song, song_title, album_title, song_data[1], song_data[2], total_royalty
-            )
-            detailed_records.append(detailed_record)
-    return detailed_records
-
-
-def fetch_records(cursor, id_pemilik_hak_cipta):
-    cursor.execute('SELECT id_song FROM royalti WHERE id_pemilik_hak_cipta = %s', [
-                   id_pemilik_hak_cipta])
-    return cursor.fetchall()
-
-
-def fetch_records_for_label(cursor, id_label):
-    cursor.execute(
-        '''
-        SELECT song.id_konten, song.id_album, song.total_play, song.total_download, konten.judul, album.judul
-        FROM song
-        JOIN konten ON song.id_konten = konten.id
-        JOIN album ON song.id_album = album.id
-        WHERE album.id_label = %s
-        ''', [id_label]
-    )
-    return cursor.fetchall()
-
-
 def cek_royalti(request):
     connection, cursor = get_database_cursor()
     role = request.COOKIES.get('role')
@@ -679,11 +664,69 @@ def cek_royalti(request):
     isSongwriter = request.COOKIES.get('isSongwriter', "")
     all_royalti = []
 
+    def fetch_royalty_data(id_pemilik_hak_cipta, id_song):
+        cursor.execute('SELECT rate_royalti FROM pemilik_hak_cipta WHERE id = %s', [
+                       id_pemilik_hak_cipta])
+        rate_royalti = cursor.fetchone()
+
+        cursor.execute(
+            '''
+            SELECT song.id_album, song.total_play, song.total_download, album.judul, konten.judul
+            FROM song
+            JOIN album ON song.id_album = album.id
+            JOIN konten ON song.id_konten = konten.id
+            WHERE song.id_konten = %s
+            ''', [id_song]
+        )
+        song_data = cursor.fetchone()
+
+        if not rate_royalti or not song_data:
+            return None, None, None, None
+
+        album_title = song_data[3]
+        song_title = song_data[4]
+        return rate_royalti, song_data, album_title, song_title
+
+    def update_royalty(total_royalty, id_pemilik_hak_cipta, id_song):
+        cursor.execute(
+            '''
+            UPDATE royalti 
+            SET jumlah = %s 
+            WHERE id_pemilik_hak_cipta = %s AND id_song = %s
+            ''', [total_royalty, id_pemilik_hak_cipta, id_song]
+        )
+        cursor.connection.commit()
+
+    def process_royalties(records, id_pemilik_hak_cipta):
+        detailed_records = []
+        for record in records:
+            id_song = record[0]
+            rate_royalti, song_data, album_title, song_title = fetch_royalty_data(
+                id_pemilik_hak_cipta, id_song)
+            if rate_royalti and song_data:
+                total_royalty = rate_royalti[0] * song_data[1]
+                update_royalty(total_royalty,
+                               id_pemilik_hak_cipta, id_song)
+                detailed_record = (
+                    id_song, song_title, album_title, song_data[1], song_data[2], total_royalty
+                )
+                detailed_records.append(detailed_record)
+        return detailed_records
+
     id_pemilik_hak_cipta_set = set()
 
     if role == "label":
         id_label = request.COOKIES.get('id')
-        label_records = fetch_records_for_label(cursor, id_label)
+        cursor.execute(
+            '''
+            SELECT song.id_konten, song.id_album, song.total_play, song.total_download, konten.judul, album.judul
+            FROM song
+            JOIN konten ON song.id_konten = konten.id
+            JOIN album ON song.id_album = album.id
+            WHERE album.id_label = %s
+            ''', [id_label]
+        )
+        label_records = cursor.fetchall()
         for record in label_records:
             song_id = record[0]
             cursor.execute(
@@ -711,10 +754,12 @@ def cek_royalti(request):
 
         for id_pemilik_hak_cipta in id_pemilik_hak_cipta_set:
             if id_pemilik_hak_cipta:
-                records = fetch_records(cursor, id_pemilik_hak_cipta)
+                cursor.execute('SELECT id_song FROM royalti WHERE id_pemilik_hak_cipta = %s', [
+                               id_pemilik_hak_cipta])
+                records = cursor.fetchall()
                 if records:
                     all_royalti.extend(process_royalties(
-                        cursor, records, id_pemilik_hak_cipta))
+                        records, id_pemilik_hak_cipta))
 
     context = {
         'status': 'success',
@@ -728,9 +773,11 @@ def cek_royalti(request):
     return render(request, 'cek_royalti.html', context)
 
 
+
 def song_detail(request):
     connection, cursor = get_database_cursor()
     song_id = request.GET.get('song_id')
+    print(song_id)
     # Retrieve song details
     cursor.execute("""
     SELECT k.judul, g.genre, ak_artist.nama as artist, ak_songwriter.nama as songwriter, k.durasi, k.tanggal_rilis, k.tahun, s.total_play, s.total_download, al.judul as album, s.id_konten
@@ -746,7 +793,7 @@ def song_detail(request):
     WHERE s.id_konten = %s;
     """, (song_id,))
     song_details = cursor.fetchall()
-
+    print(song_details)
     # Check if song exists
     if not song_details:
         return HttpResponse("Song not found", status=404)

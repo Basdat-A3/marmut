@@ -1,5 +1,6 @@
--- Sudah dijalankan pada database
+SET search_path to marmut;
 
+-- Sudah dijalankan pada database
 
 -- asumsi trigger pada fitur biru seharusnya memperbarui total_play saat lagu di play (ada data baru di tabel AKUN_PLAY_SONG)
 CREATE OR REPLACE FUNCTION increment_total_play()
