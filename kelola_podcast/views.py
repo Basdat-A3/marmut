@@ -18,7 +18,7 @@ def create_podcast(request):
             judul = request.POST.get('judul')
             genre_list = request.POST.getlist('genre')
             email_podcaster = request.COOKIES.get('email')
-            # email_podcaster = 'william.martin@countermail.com'  # Temporary email for testing
+    
             print(email_podcaster)
 
             # Generate unique IDs
@@ -268,10 +268,23 @@ def delete_podcast(request, podcast_id):
                     WHERE id_episode = %s;
                 """, [episode_id])
 
+            # delete from GENRE table
+            cursor.execute("""
+                DELETE FROM GENRE 
+                WHERE id_konten = %s;
+            """, [podcast_id])
+
             # Now delete the podcast
             cursor.execute("""
                 DELETE FROM PODCAST 
                 WHERE id_konten = %s;
+            """, [podcast_id])
+
+
+            # delete from KONTEN table
+            cursor.execute("""
+                DELETE FROM KONTEN
+                WHERE id = %s;
             """, [podcast_id])
 
             connection.commit()
