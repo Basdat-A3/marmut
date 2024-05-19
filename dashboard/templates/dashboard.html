@@ -120,8 +120,9 @@
             {% for item in playlist %}
             <div class="card w-50">
               <div class="card-body">
-                <h5 class="card-title">{{item.3}}</h5>
-                <p class="card-text">{{item.5}}</p>
+                <h5 class="card-title">{{item.2}}</h5>
+                <p class="card-text">{{item.3}}</p>
+                <p class="card-text">{{item.7}} mins</p>
                 <a href="{% url 'kelola_playlist:playlist_detail' item.6%}" class="btn btn-primary">View Playlist</a>
               </div>
             </div>
@@ -162,7 +163,7 @@
               <div class="card-body">
                 <h5 class="card-title">{{item.0}}</h5>
                 <p class="card-text">{{item.2}}</p>
-                <a href="#" class="btn btn-primary">View Song</a>
+                <a href="{% url 'play_song:song_detail_only' item.1 %}" class="btn btn-primary">View Song</a>
               </div>
             </div>
             {% endfor %}

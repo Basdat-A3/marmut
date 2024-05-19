@@ -32,18 +32,32 @@ def get_podcast(email):
 
 def get_song(id_artist, id_songwriter):
     connection, cursor = get_database_cursor()
-    query = f"""
-    select k.judul, k.id, k.tahun from song s
-    join konten k on k.id = s.id_konten
-    where s.id_artist='{id_artist}'
+    if id_artist and id_songwriter:
+        query = f"""
+        select k.judul, k.id, k.tahun from song s
+        join konten k on k.id = s.id_konten
+        where s.id_artist='{id_artist}'
 
-    union
+        union
 
-    select k.judul, k.id, k.tahun from song s
-    join konten k on k.id = s.id_konten
-    join songwriter_write_song sws on sws.id_song = k.id
-    where sws.id_songwriter='{id_songwriter}'
-    """
+        select k.judul, k.id, k.tahun from song s
+        join konten k on k.id = s.id_konten
+        join songwriter_write_song sws on sws.id_song = k.id
+        where sws.id_songwriter='{id_songwriter}'
+        """
+    elif id_artist:
+        query = f"""
+        select k.judul, k.id, k.tahun from song s
+        join konten k on k.id = s.id_konten
+        where s.id_artist='{id_artist}'
+        """
+    else:
+        query = f"""
+        select k.judul, k.id, k.tahun from song s
+        join konten k on k.id = s.id_konten
+        join songwriter_write_song sws on sws.id_song = k.id
+        where sws.id_songwriter='{id_songwriter}'
+        """
     cursor.execute(query)
     songs = cursor.fetchall()
     return songs
@@ -176,7 +190,7 @@ def delete_downloaded_song(request):
         WHERE id_song = '{id_song}' AND email_downloader ='{email}'
     """)
     cursor.execute(
-            f"UPDATE SONG SET total_download = total_download - 1 WHERE id_konten = {id_song}"
+            f"UPDATE SONG SET total_download = total_download - 1 WHERE id_konten = '{id_song}'"
         )
     connection.commit()
     return JsonResponse({'message': 'Song deleted successfully', 'id_song': id_song})

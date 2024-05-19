@@ -9,10 +9,10 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .song-detail {
-        border: 1px solid #ccc;
-        padding: 20px;
-        max-width: 600px;
-        margin: 20px auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            max-width: 600px;
+            margin: 20px auto;
         }
         .song-info {
             margin-bottom: 20px;
@@ -23,24 +23,24 @@
         .controls button {
             margin-bottom: 10px; 
         }
- 
         .navbar {
             justify-content: flex-end;
         }
-
         .navbar-nav {
             flex-direction: row;
         }
-
         .navbar-collapse {
             justify-content: flex-end;
+        }
+        .slider {
+            width: 100%;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 {% endblock meta %}
 
 {% block content %}
-
     <div class="container">
         <div class="song-detail">
             <h2 class="text-center">SONG DETAILS</h2>
@@ -52,9 +52,11 @@
               </ul>
               <p><strong>Artist:</strong> {{ song.artist }}</p>
               <p><strong>Songwriter(s):</strong></p>
-              <ul>
-                  <li><strong>-</strong> {{ song.songwriter }}</li>
-              </ul>
+                <ul>
+                    {% for songwriter in song.songwriters %}
+                        <li>{{ songwriter }}</li>
+                    {% endfor %}
+                </ul>
               <p><strong>Durasi:</strong> {{ song.durasi }} menit</p>
               <p><strong>Tanggal Rilis:</strong> {{ song.tanggal_rilis }}</p>
               <p><strong>Tahun:</strong> {{ song.tahun }}</p>
@@ -63,17 +65,37 @@
               <p><strong>Album:</strong> {{ song.album }}</p>
               <div class="divider"></div>
               <div class="actions">
-                  <a href="#"><button class="btn btn-primary">Play</button></a>
-                  <a href="{% url 'play_song:add_to_playlist' playlist_id song_id %}" class="btn btn-primary">Add to Playlist</a>
-                
-                  <a href="#" class="btn btn-secondary">Kembali</a>
+                <form method="post">
+                    {% csrf_token %}
+                    <!-- Add Slider Here -->
+                    <input type="range" class="slider" min="0" max="100" value="50" id="songSlider">
+                    
+                    <button type="submit" class="btn btn-primary" name="Play">Play</button>
+                    {% if status_langganan == 'Premium' %}
+                        <button type="submit" class="btn btn-success" name="Download">Download</button>
+                    {% endif %}
+                </form>
+                {% if success_message %}
+                        <div class="popup" id="popup">
+                            <p>{{ success_message }}</p>
+                            
+                        </div>
+                {% endif %}
+                <a href="{% url 'play_song:add_to_playlist_new' song_id%}" class="btn btn-primary">Add to Playlist</a>
+                <a href="{% url 'dashboard:dashboard' %}" class="btn btn-secondary">Kembali</a>
               </div>
           </div>
-
-  </script>
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
+    <script>
+        // Example JavaScript for handling slider functionality
+        document.getElementById('songSlider').addEventListener('input', function() {
+            let value = this.value;
+            console.log('Slider Value:', value);
+            // Here you can add functionality to control the song
+        });
+    </script>
 {% endblock content %}

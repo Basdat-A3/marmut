@@ -18,7 +18,7 @@ def create_podcast(request):
             judul = request.POST.get('judul')
             genre_list = request.POST.getlist('genre')
             email_podcaster = request.COOKIES.get('email')
-            # email_podcaster = 'william.martin@countermail.com'  # Temporary email for testing
+    
             print(email_podcaster)
 
             # Generate unique IDs
@@ -64,19 +64,18 @@ def list_podcast(request):
     if isPodcaster == 'True':
         connection, cursor = get_database_cursor()
         
-
         cursor.execute("""
-        SELECT P.id_konten,  -- Select id_konten
-               K.judul AS "Judul",
-               COALESCE(COUNT(E.id_episode), 0) AS "Jumlah Episode",
-               COALESCE(SUM(E.durasi), 0) AS "Total Durasi"
-        FROM PODCAST P
-        LEFT JOIN EPISODE E ON P.id_konten = E.id_konten_podcast
-        LEFT JOIN KONTEN K ON P.id_konten = K.id
-        JOIN PODCASTER POD ON POD.email = P.email_podcaster
-        WHERE POD.email = %s
-        GROUP BY P.id_konten, K.judul;
-        """, [email_podcaster])
+            SELECT P.id_konten,
+                K.judul AS "Judul",
+                COALESCE(COUNT(E.id_episode), 0) AS "Jumlah Episode",
+                K.durasi AS "Total Durasi"
+            FROM PODCAST P
+            LEFT JOIN EPISODE E ON P.id_konten = E.id_konten_podcast
+            LEFT JOIN KONTEN K ON P.id_konten = K.id
+            JOIN PODCASTER POD ON POD.email = P.email_podcaster
+            WHERE POD.email = %s
+            GROUP BY P.id_konten, K.judul, K.durasi;
+            """, [email_podcaster])
 
         podcasts = cursor.fetchall()
         
@@ -202,16 +201,6 @@ def create_episode(request, podcast_id):
                 [id_episode, podcast_id, judul, deskripsi, durasi]
             )
             
-            # Update total duration in KONTEN table
-            cursor.execute(
-                """
-                UPDATE KONTEN
-                SET durasi = COALESCE(durasi, 0) + %s
-                WHERE id = %s
-                """,
-                [durasi, podcast_id]
-            )
-
             connection.commit()
             # close connection
             cursor.close()
@@ -279,10 +268,23 @@ def delete_podcast(request, podcast_id):
                     WHERE id_episode = %s;
                 """, [episode_id])
 
+            # delete from GENRE table
+            cursor.execute("""
+                DELETE FROM GENRE 
+                WHERE id_konten = %s;
+            """, [podcast_id])
+
             # Now delete the podcast
             cursor.execute("""
                 DELETE FROM PODCAST 
                 WHERE id_konten = %s;
+            """, [podcast_id])
+
+
+            # delete from KONTEN table
+            cursor.execute("""
+                DELETE FROM KONTEN
+                WHERE id = %s;
             """, [podcast_id])
 
             connection.commit()

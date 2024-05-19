@@ -1,5 +1,7 @@
 import uuid
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from utils.query import get_database_cursor
 from datetime import datetime, timedelta
 
@@ -22,7 +24,6 @@ def paket(request):
 def paket_payment(request, nama_paket):
     connection, cursor = get_database_cursor()
 
-    print(nama_paket)
     cursor.execute(f"\
         select * from paket where jenis='{nama_paket}'"
     )
@@ -30,7 +31,6 @@ def paket_payment(request, nama_paket):
     context = {
         "paket": paket
     }
-    print(paket)
 
     if request.method == "POST":
         metode = request.POST.get("metode")
@@ -54,20 +54,24 @@ def paket_payment(request, nama_paket):
         akhir_paket = sekarang + timedelta(days=hari)
 
         sekarang = sekarang.strftime("%Y-%m-%d %H:%M:%S") 
-        akhir_paket = akhir_paket.strftime("%Y-%m-%d %H:%M:%S") 
-
-        print(email, metode,nama_paket, nominal, sekarang, akhir_paket, transaction_id)
-        cursor.execute(f"\
-            INSERT INTO TRANSACTION VALUES ('{transaction_id}', '{nama_paket}', '{email}',\
-                '{sekarang}', '{akhir_paket}', '{metode}', {nominal})")
-        cursor.execute(f"\
-            INSERT INTO PREMIUM VALUES ('{email}')")
-        connection.commit()
-
-        # close connection
-        cursor.close()
-        connection.close()
-        return redirect('dashboard:riwayat')
+        akhir_paket = akhir_paket.strftime("%Y-%m-%d %H:%M:%S")
+        try:
+            cursor.execute(f"SELECT * FROM PREMIUM WHERE email = '{email}';")
+            print(cursor.fetchone())
+            cursor.execute(f"\
+                INSERT INTO TRANSACTION VALUES ('{transaction_id}', '{nama_paket}', '{email}',\
+                    '{sekarang}', '{akhir_paket}', '{metode}', {nominal})")
+            connection.commit()
+            response = HttpResponseRedirect(reverse('paket:riwayat'))
+            response.set_cookie('status_langganan', 'Premium')
+            return response
+        except Exception as e:
+            # Code that runs if the exception occurs
+            context = {
+                "paket": paket,
+                "message" : e
+            }
+            return render(request, "paket_payment.html", context)
 
 
     return render(request, "paket_payment.html", context)

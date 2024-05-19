@@ -6,7 +6,6 @@ BEGIN
         SELECT 1
         FROM transaction
         WHERE email = NEW.email
-          AND timestamp_dimulai <= NOW()
           AND timestamp_berakhir >= NOW()
     ) THEN
         RAISE EXCEPTION 'User already has an active subscription';
@@ -14,6 +13,9 @@ BEGIN
         INSERT INTO premium (email)
         VALUES (NEW.email)
         ON CONFLICT (email) DO NOTHING;
+
+        -- Hapus email dari tabel nonpremium setelah insert ke tabel premium
+        DELETE FROM nonpremium WHERE email = NEW.email;
     END IF;
     RETURN NEW;
 END;
@@ -24,18 +26,29 @@ BEFORE INSERT ON transaction
 FOR EACH ROW
 EXECUTE FUNCTION check_active_subscription();
 
--- total download (kuning)
-CREATE OR REPLACE FUNCTION increment_total_download()
+--- akun play song
+CREATE OR REPLACE FUNCTION create_akun_play_song_entries()
 RETURNS TRIGGER AS $$
+DECLARE
+    song_record RECORD;
 BEGIN
-    UPDATE song
-    SET total_download = total_download + 1
-    WHERE id_konten = NEW.id_konten;
+    -- Loop melalui setiap lagu dalam playlist yang baru ditambahkan
+    FOR song_record IN
+        SELECT id_song
+        FROM USER_PLAYLIST_SONGS
+        WHERE id_user_playlist = NEW.id_user_playlist AND email_pembuat = NEW.email_pembuat
+    LOOP
+        -- Insert entri baru ke dalam tabel AKUN_PLAY_SONG
+        INSERT INTO AKUN_PLAY_SONG (email_pemain, id_song, waktu)
+        VALUES (NEW.email_pemain, song_record.id_song, NEW.waktu);
+    END LOOP;
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER increment_total_download_trigger
-AFTER INSERT ON akun_play_user_playlist
+-- Buat trigger
+CREATE TRIGGER after_insert_akun_play_user_playlist
+AFTER INSERT ON AKUN_PLAY_USER_PLAYLIST
 FOR EACH ROW
-EXECUTE FUNCTION increment_total_download();
+EXECUTE FUNCTION create_akun_play_song_entries();
+

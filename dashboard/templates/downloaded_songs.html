@@ -59,7 +59,7 @@
               <td>{{song.0}}</td>
               <td>{{song.1}}</td>
               <td>
-                <a href="#" class="btn btn-primary">Lihat</a>
+                <a href="{% url 'play_song:song_detail_only' song.2 %}" class="btn btn-primary">Lihat</a>
                 <button type="button" data-title="{{song.0}}" class="btn btn-danger openModalBtn">
                     Hapus
                 </button>
