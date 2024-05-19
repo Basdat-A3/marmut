@@ -76,8 +76,9 @@
                         {% endif %}
                     </form>
                     {% if success_message %}
-                        <div class="alert alert-success mt-3" role="alert">
+                        <div class="popup" id="popup">
                             <p>{{ success_message }}</p>
+                            
                         </div>
                     {% endif %}
                     <a href="{% url 'play_song:add_to_playlist' playlist_id song_id %}" class="btn btn-primary">Add to Playlist</a>
