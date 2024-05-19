@@ -31,6 +31,7 @@ def song_detail(request, playlist_id, song_id):
                 VALUES (%s, %s, %s);
             """, (email_pemain, song_id, waktu))
             connection.commit()
+
         if 'Download' in request.POST:
             cursor.execute(
                 f'select total_download from song where id_konten = \'{song_id}\'')
@@ -47,7 +48,7 @@ def song_detail(request, playlist_id, song_id):
             )
 
             connection.commit()
-            success_message = f"Berhasil mengunduh lagu dengan judul '{song[0]}'!"
+           
 
     # Retrieve song details
     cursor.execute("""
@@ -86,6 +87,10 @@ def song_detail(request, playlist_id, song_id):
 
     songwriters = song[3].split(', ')
     status_langganan = request.COOKIES.get('status_langganan')
+
+    if request.method == 'POST':
+        if 'Download' in request.POST:
+            success_message = f"Berhasil mengunduh lagu dengan judul '{song[0]}'!"
 
 
     context = {
@@ -185,6 +190,10 @@ def song_detail_only(request, song_id):
     # make songwriters a list
     songwriters = song[3].split(', ')
     status_langganan = request.COOKIES.get('status_langganan')
+
+    if request.method == 'POST':
+        if 'Download' in request.POST:
+            success_message = f"Berhasil mengunduh lagu dengan judul '{song[0]}'!"
 
     context = {
         'song_id' : song_id,
