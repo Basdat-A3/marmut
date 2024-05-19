@@ -64,6 +64,9 @@ def paket_payment(request, nama_paket):
             connection.commit()
             response = HttpResponseRedirect(reverse('paket:riwayat'))
             response.set_cookie('status_langganan', 'Premium')
+            # close connection
+            cursor.close()
+            connection.close()
             return response
         except Exception as e:
             # Code that runs if the exception occurs
@@ -71,9 +74,13 @@ def paket_payment(request, nama_paket):
                 "paket": paket,
                 "message" : e
             }
+            # close connection
+            cursor.close()
+            connection.close()
             return render(request, "paket_payment.html", context)
-
-
+    # close connection
+    cursor.close()
+    connection.close()    
     return render(request, "paket_payment.html", context)
 
 def riwayat(request):

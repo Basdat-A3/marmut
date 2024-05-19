@@ -10,6 +10,9 @@ def get_album(id):
     query = f"select * from album where id_label='{id}'"
     cursor.execute(query)
     albums = cursor.fetchall()
+    # close connection
+    cursor.close()
+    connection.close()
     return albums
 
 def get_playlist(email):
@@ -17,6 +20,9 @@ def get_playlist(email):
     query = f"select * from user_playlist where email_pembuat='{email}'"
     cursor.execute(query)
     playlists = cursor.fetchall()
+    # close connection
+    cursor.close()
+    connection.close()
     return playlists
 
 def get_podcast(email):
@@ -28,6 +34,9 @@ def get_podcast(email):
     """
     cursor.execute(query)
     podcasts = cursor.fetchall()
+    # close connection
+    cursor.close()
+    connection.close()
     return podcasts
 
 def get_song(id_artist, id_songwriter):
@@ -60,6 +69,9 @@ def get_song(id_artist, id_songwriter):
         """
     cursor.execute(query)
     songs = cursor.fetchall()
+    # close connection
+    cursor.close()
+    connection.close()
     return songs
 
 def dashboard(request):
@@ -104,6 +116,9 @@ def dashboard(request):
         'playlist' : playlist,
         'album' : album,
     }
+    # close connection
+    cursor.close()
+    connection.close()
 
     return render(request, "dashboard.html", context)
 
@@ -193,4 +208,7 @@ def delete_downloaded_song(request):
             f"UPDATE SONG SET total_download = total_download - 1 WHERE id_konten = '{id_song}'"
         )
     connection.commit()
+    # close connection
+    cursor.close()
+    connection.close()
     return JsonResponse({'message': 'Song deleted successfully', 'id_song': id_song})
