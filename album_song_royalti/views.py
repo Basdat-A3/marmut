@@ -657,93 +657,6 @@ def delete_album_user(request):
     return redirect('album_song_royalti:list_album')
 
 
-def fetch_royalty_data(id_pemilik_hak_cipta, id_song):
-    connection, cursor = get_database_cursor()
-    cursor.execute('SELECT rate_royalti FROM pemilik_hak_cipta WHERE id = %s', [
-                   id_pemilik_hak_cipta])
-    rate_royalti = cursor.fetchone()
-
-    cursor.execute(
-        '''
-        SELECT song.id_album, song.total_play, song.total_download, album.judul, konten.judul
-        FROM song
-        JOIN album ON song.id_album = album.id
-        JOIN konten ON song.id_konten = konten.id
-        WHERE song.id_konten = %s
-        ''', [id_song]
-    )
-    song_data = cursor.fetchone()
-
-    if not rate_royalti or not song_data:
-        return None, None, None, None
-
-    album_title = song_data[3]
-    song_title = song_data[4]
-    cursor.close()
-    connection.close()
-    return rate_royalti, song_data, album_title, song_title
-
-
-def update_royalty(total_royalty, id_pemilik_hak_cipta, id_song):
-    connection, cursor = get_database_cursor()
-    cursor.execute(
-        '''
-        UPDATE royalti 
-        SET jumlah = %s 
-        WHERE id_pemilik_hak_cipta = %s AND id_song = %s
-        ''', [total_royalty, id_pemilik_hak_cipta, id_song]
-    )
-    cursor.connection.commit()
-    cursor.close()
-    connection.close()
-
-
-def process_royalties(all_royalti, id_pemilik_hak_cipta):
-    connection, cursor = get_database_cursor()
-    detailed_records = []
-    for record in all_royalti:
-        id_song = record[0]
-        rate_royalti, song_data, album_title, song_title = fetch_royalty_data(
-            id_pemilik_hak_cipta, id_song)
-        if rate_royalti and song_data:
-            total_royalty = rate_royalti[0] * song_data[1]
-            update_royalty(total_royalty,
-                           id_pemilik_hak_cipta, id_song)
-            detailed_record = (
-                id_song, song_title, album_title, song_data[1], song_data[2], total_royalty
-            )
-            detailed_records.append(detailed_record)
-    cursor.close()
-    connection.close()
-    return detailed_records
-
-
-def fetch_records(id_pemilik_hak_cipta):
-    connection, cursor = get_database_cursor()
-    cursor.execute('SELECT id_song FROM royalti WHERE id_pemilik_hak_cipta = %s', [
-                   id_pemilik_hak_cipta])
-    records = cursor.fetchall()
-    cursor.close()
-    connection.close()
-    return records
-
-
-def fetch_records_for_label(id_label):
-    connection, cursor = get_database_cursor()
-    cursor.execute(
-        '''
-        SELECT song.id_konten, song.id_album, song.total_play, song.total_download, konten.judul, album.judul
-        FROM song
-        JOIN konten ON song.id_konten = konten.id
-        JOIN album ON song.id_album = album.id
-        WHERE album.id_label = %s
-        ''', [id_label]
-    )
-    cursor.close()
-    connection.close()
-    return cursor.fetchall()
-
-
 def cek_royalti(request):
     connection, cursor = get_database_cursor()
     role = request.COOKIES.get('role')
@@ -751,11 +664,69 @@ def cek_royalti(request):
     isSongwriter = request.COOKIES.get('isSongwriter', "")
     all_royalti = []
 
+    def fetch_royalty_data(id_pemilik_hak_cipta, id_song):
+        cursor.execute('SELECT rate_royalti FROM pemilik_hak_cipta WHERE id = %s', [
+                       id_pemilik_hak_cipta])
+        rate_royalti = cursor.fetchone()
+
+        cursor.execute(
+            '''
+            SELECT song.id_album, song.total_play, song.total_download, album.judul, konten.judul
+            FROM song
+            JOIN album ON song.id_album = album.id
+            JOIN konten ON song.id_konten = konten.id
+            WHERE song.id_konten = %s
+            ''', [id_song]
+        )
+        song_data = cursor.fetchone()
+
+        if not rate_royalti or not song_data:
+            return None, None, None, None
+
+        album_title = song_data[3]
+        song_title = song_data[4]
+        return rate_royalti, song_data, album_title, song_title
+
+    def update_royalty(total_royalty, id_pemilik_hak_cipta, id_song):
+        cursor.execute(
+            '''
+            UPDATE royalti 
+            SET jumlah = %s 
+            WHERE id_pemilik_hak_cipta = %s AND id_song = %s
+            ''', [total_royalty, id_pemilik_hak_cipta, id_song]
+        )
+        cursor.connection.commit()
+
+    def process_royalties(records, id_pemilik_hak_cipta):
+        detailed_records = []
+        for record in records:
+            id_song = record[0]
+            rate_royalti, song_data, album_title, song_title = fetch_royalty_data(
+                id_pemilik_hak_cipta, id_song)
+            if rate_royalti and song_data:
+                total_royalty = rate_royalti[0] * song_data[1]
+                update_royalty(total_royalty,
+                               id_pemilik_hak_cipta, id_song)
+                detailed_record = (
+                    id_song, song_title, album_title, song_data[1], song_data[2], total_royalty
+                )
+                detailed_records.append(detailed_record)
+        return detailed_records
+
     id_pemilik_hak_cipta_set = set()
 
     if role == "label":
         id_label = request.COOKIES.get('id')
-        label_records = fetch_records_for_label(id_label)
+        cursor.execute(
+            '''
+            SELECT song.id_konten, song.id_album, song.total_play, song.total_download, konten.judul, album.judul
+            FROM song
+            JOIN konten ON song.id_konten = konten.id
+            JOIN album ON song.id_album = album.id
+            WHERE album.id_label = %s
+            ''', [id_label]
+        )
+        label_records = cursor.fetchall()
         for record in label_records:
             song_id = record[0]
             cursor.execute(
@@ -783,7 +754,9 @@ def cek_royalti(request):
 
         for id_pemilik_hak_cipta in id_pemilik_hak_cipta_set:
             if id_pemilik_hak_cipta:
-                records = fetch_records(id_pemilik_hak_cipta)
+                cursor.execute('SELECT id_song FROM royalti WHERE id_pemilik_hak_cipta = %s', [
+                               id_pemilik_hak_cipta])
+                records = cursor.fetchall()
                 if records:
                     all_royalti.extend(process_royalties(
                         records, id_pemilik_hak_cipta))
@@ -798,6 +771,7 @@ def cek_royalti(request):
     cursor.close()
     connection.close()
     return render(request, 'cek_royalti.html', context)
+
 
 
 def song_detail(request):
