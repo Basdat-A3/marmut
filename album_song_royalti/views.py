@@ -372,6 +372,7 @@ def list_album(request):
 
 
 def update_album_details(album_id):
+    connection, cursor = get_database_cursor()
     # Calculate the number of songs and the total duration of the songs in the album
     cursor.execute(
         '''
@@ -392,6 +393,8 @@ def update_album_details(album_id):
         ''', [jumlah_lagu, total_durasi, album_id]
     )
     connection.commit()
+    cursor.close()
+    connection.close()
 
 
 def list_song(request):
@@ -602,6 +605,7 @@ def delete_album_user(request):
 
 
 def fetch_royalty_data(cursor, id_pemilik_hak_cipta, id_song):
+    connection, cursor = get_database_cursor()
     cursor.execute('SELECT rate_royalti FROM pemilik_hak_cipta WHERE id = %s', [
                    id_pemilik_hak_cipta])
     rate_royalti = cursor.fetchone()
@@ -622,10 +626,13 @@ def fetch_royalty_data(cursor, id_pemilik_hak_cipta, id_song):
 
     album_title = song_data[3]
     song_title = song_data[4]
+    cursor.close()
+    connection.close()
     return rate_royalti, song_data, album_title, song_title
 
 
 def update_royalty(cursor, total_royalty, id_pemilik_hak_cipta, id_song):
+    connection, cursor = get_database_cursor()
     cursor.execute(
         '''
         UPDATE royalti 
@@ -634,9 +641,12 @@ def update_royalty(cursor, total_royalty, id_pemilik_hak_cipta, id_song):
         ''', [total_royalty, id_pemilik_hak_cipta, id_song]
     )
     cursor.connection.commit()
+    cursor.close()
+    connection.close()
 
 
 def process_royalties(cursor, all_royalti, id_pemilik_hak_cipta):
+    connection, cursor = get_database_cursor()
     detailed_records = []
     for record in all_royalti:
         id_song = record[0]
@@ -650,16 +660,22 @@ def process_royalties(cursor, all_royalti, id_pemilik_hak_cipta):
                 id_song, song_title, album_title, song_data[1], song_data[2], total_royalty
             )
             detailed_records.append(detailed_record)
+    cursor.close()
+    connection.close()
     return detailed_records
 
 
 def fetch_records(cursor, id_pemilik_hak_cipta):
+    connection, cursor = get_database_cursor()
     cursor.execute('SELECT id_song FROM royalti WHERE id_pemilik_hak_cipta = %s', [
                    id_pemilik_hak_cipta])
+    cursor.close()
+    connection.close()
     return cursor.fetchall()
 
 
 def fetch_records_for_label(cursor, id_label):
+    connection, cursor = get_database_cursor()
     cursor.execute(
         '''
         SELECT song.id_konten, song.id_album, song.total_play, song.total_download, konten.judul, album.judul
@@ -669,6 +685,8 @@ def fetch_records_for_label(cursor, id_label):
         WHERE album.id_label = %s
         ''', [id_label]
     )
+    cursor.close()
+    connection.close()
     return cursor.fetchall()
 
 
