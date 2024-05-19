@@ -74,12 +74,6 @@ def paket_payment(request, nama_paket):
             return render(request, "paket_payment.html", context)
 
 
-        # close connection
-        cursor.close()
-        connection.close()
-        return redirect('paket:riwayat')
-
-
     return render(request, "paket_payment.html", context)
 
 def riwayat(request):

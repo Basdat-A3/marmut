@@ -104,12 +104,14 @@ def login(request):
             cursor.execute(
                 'SELECT * FROM premium WHERE email = %s', [email])
             premium = cursor.fetchone()
+            print(f'premium: {premium}')
             if premium is not None:
                 status_langganan = "Premium"
                 cursor.execute("CALL check_and_update_subscription_status(%s)", [email])
                 connection.commit()
                 cursor.execute('SELECT * FROM nonpremium WHERE email = %s', [email])
                 nonpremium = cursor.fetchone()
+                print(f'nonpremium:{nonpremium}')
                 if nonpremium is not None:
                     status_langganan = "NonPremium"
 
